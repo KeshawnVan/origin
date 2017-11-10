@@ -1,4 +1,4 @@
-package star.helper;
+package star.factory;
 
 import star.constant.ConfigConstant;
 import star.utils.ProPertiesUtil;
@@ -9,7 +9,7 @@ import java.util.Properties;
  * @author keshawn
  * @date 2017/11/8
  */
-public final class ConfigHelper {
+public final class ConfigFactory {
 
     private static final Properties CONFIG_PROPERTIES = ProPertiesUtil.loadProperties(ConfigConstant.CONFIG_FILE);
 

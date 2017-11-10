@@ -1,10 +1,12 @@
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
+import star.annotation.Inject;
+import star.factory.BeanFactory;
 import star.utils.ClassUtil;
+import star.utils.CollectionUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * @author keshawn
@@ -32,6 +34,25 @@ public class TestUtil {
                 }
             } else {
                 break;
+            }
+        }
+    }
+
+    @Test
+    public void testIoc(){
+        Map<Class<?>, Object> beanMap = BeanFactory.getBeanMap();
+        if (CollectionUtil.isNotEmpty(beanMap)) {
+            for (Map.Entry<Class<?>, Object> beanEntry : beanMap.entrySet()) {
+                Class<?> beanClass = beanEntry.getKey();
+                Object beanInstance = beanEntry.getValue();
+                Field[] beanFields = beanClass.getDeclaredFields();
+                if (ArrayUtils.isNotEmpty(beanFields)){
+                    for (Field beanField : beanFields){
+                        if (beanField.isAnnotationPresent(Inject.class)){
+                            System.out.println(beanField.getName());
+                        }
+                    }
+                }
             }
         }
     }

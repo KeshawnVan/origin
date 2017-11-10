@@ -1,10 +1,9 @@
-package star.helper;
+package star.factory;
 
 import star.annotation.Controller;
 import star.annotation.Service;
 import star.utils.ClassUtil;
 
-import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,12 +11,12 @@ import java.util.Set;
  * @author keshawn
  * @date 2017/11/9
  */
-public final class ClassHelper {
+public final class ClassFactory {
 
     private static final Set<Class<?>> CLASS_SET;
 
     static {
-        String basePackage = ConfigHelper.getAppBasePackage();
+        String basePackage = ConfigFactory.getAppBasePackage();
         CLASS_SET = ClassUtil.getClassSet(basePackage);
     }
 
