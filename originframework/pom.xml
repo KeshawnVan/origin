@@ -52,8 +52,6 @@
         <!-- FreeMarker -->
         <freemarker.version>2.3.23</freemarker.version>
 
-
-
     </properties>
 
     <dependencies>
@@ -170,6 +168,14 @@
             <artifactId>commons-collections</artifactId>
             <version>3.2.2</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.18</version>
+        </dependency>
+
     </dependencies>
 
     <build>

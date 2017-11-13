@@ -30,6 +30,7 @@
           <element id="library" level="project" name="Maven: org.freemarker:freemarker:2.3.23" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.6" />
           <element id="library" level="project" name="Maven: commons-collections:commons-collections:3.2.2" />
+          <element id="library" level="project" name="Maven: org.yaml:snakeyaml:1.18" />
         </element>
       </element>
       <element id="directory" name="META-INF">

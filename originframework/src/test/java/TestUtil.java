@@ -4,6 +4,7 @@ import star.annotation.Inject;
 import star.factory.BeanFactory;
 import star.utils.ClassUtil;
 import star.utils.CollectionUtil;
+import star.utils.bean.YamlBean;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -55,5 +56,10 @@ public class TestUtil {
                 }
             }
         }
+    }
+    @Test
+    public void testClassType(){
+        YamlBean yamlBean = new YamlBean();
+        System.out.println(yamlBean.getClass().getTypeName());
     }
 }

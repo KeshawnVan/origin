@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import star.annotation.Controller;
 import star.annotation.Fresh;
 import star.annotation.Service;
+import star.constant.ConfigConstant;
 import star.core.IocCore;
 import star.exception.ImplementDuplicateException;
 import star.utils.CollectionUtil;
@@ -27,6 +28,8 @@ public final class BeanFactory {
 
     private static final Map<String, Class<?>> BEAN_CONTEXT = new HashMap<>(32);
 
+    private static final Map<String, String> YAML_BEAN_ID_MAPPING = ConfigFactory.getBeanIdMapping();
+
     static {
         Set<Class<?>> beanClassSet = ClassFactory.getBeanClassSet();
         beanClassSet.forEach(beanClass -> {
@@ -44,7 +47,7 @@ public final class BeanFactory {
     }
 
     public static Map<Class<?>, Class<?>> getServiceMappingMap() {
-        Map<Class<?>, Class<?>> serviceMap = new HashMap<>(16);
+        Map<Class<?>, Class<?>> serviceMap = new HashMap<>(ConfigConstant.INITIAL_CAPACITY);
         if (CollectionUtil.isNotEmpty(BEAN_MAP)) {
             for (Map.Entry<Class<?>, Object> beanEntry : BEAN_MAP.entrySet()) {
                 Class<?> beanClass = beanEntry.getKey();
@@ -85,7 +88,10 @@ public final class BeanFactory {
     }
 
     private static void buildBeanContext(Class<?> beanClass) {
-        if (beanClass.isAnnotationPresent(Service.class)) {
+        //先从yaml文件中找映射关系
+        if (YAML_BEAN_ID_MAPPING.containsKey(beanClass.getTypeName())) {
+            BEAN_CONTEXT.put(YAML_BEAN_ID_MAPPING.get(beanClass.getTypeName()), beanClass);
+        } else if (beanClass.isAnnotationPresent(Service.class)) {
             Service service = beanClass.getAnnotation(Service.class);
             String value = service.value();
             addBean(value, beanClass);

@@ -1,9 +1,16 @@
 package star.factory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import star.constant.ConfigConstant;
-import star.utils.ProPertiesUtil;
+import star.utils.ClassUtil;
+import star.utils.CollectionUtil;
+import star.utils.YamlUtil;
+import star.utils.bean.YamlBean;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author keshawn
@@ -11,33 +18,74 @@ import java.util.Properties;
  */
 public final class ConfigFactory {
 
-    private static final Properties CONFIG_PROPERTIES = ProPertiesUtil.loadProperties(ConfigConstant.CONFIG_FILE);
+    private static final YamlBean YAML_BEAN = YamlUtil.getYamlBean(ConfigConstant.CONFIG_FILE, YamlBean.class);
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigFactory.class);
+
+    private static final String ID = "id";
+
+    private static final String BEAN = "bean";
+
+    private static final String INTERFACE = "interface";
+
+    private static final String BEAN_ID = "beanId";
 
     public static String getJdbcDriver() {
-        return ProPertiesUtil.getString(CONFIG_PROPERTIES, ConfigConstant.JDBC_DRIVER);
+        return YAML_BEAN.getJdbcDriver();
     }
 
     public static String getJdbcUrl() {
-        return ProPertiesUtil.getString(CONFIG_PROPERTIES, ConfigConstant.JDBC_URL);
+        return YAML_BEAN.getJdbcUrl();
     }
 
     public static String getJdbcUsername() {
-        return ProPertiesUtil.getString(CONFIG_PROPERTIES, ConfigConstant.JDBC_USERNAME);
+        return YAML_BEAN.getJdbcUsername();
     }
 
     public static String getJdbcPassword() {
-        return ProPertiesUtil.getString(CONFIG_PROPERTIES, ConfigConstant.JDBC_PASSWORD);
+        return YAML_BEAN.getJdbcPassword();
     }
 
     public static String getAppBasePackage() {
-        return ProPertiesUtil.getString(CONFIG_PROPERTIES, ConfigConstant.APP_BASE_PACKAGE);
+        return YAML_BEAN.getBasePackage();
     }
 
     public static String getAppJspPath() {
-        return ProPertiesUtil.getString(CONFIG_PROPERTIES, ConfigConstant.APP_JSP_PATH);
+        return YAML_BEAN.getJspPath();
     }
 
     public static String getAppAssetPath() {
-        return ProPertiesUtil.getString(CONFIG_PROPERTIES, ConfigConstant.APP_ASSET_PATH);
+        return YAML_BEAN.getAssetPath();
+    }
+
+    public static Map<String, String> getBeanIdMapping() {
+        Map<String, String> yamlBeanIdMapping = new HashMap<>(ConfigConstant.INITIAL_CAPACITY);
+        List<Map<String, String>> beanIdMappingList = YAML_BEAN.getBeanIdMapping();
+        if (CollectionUtil.isNotEmpty(beanIdMappingList)) {
+            beanIdMappingList.forEach(map -> {
+                String beanId = map.get(ID);
+                String beanName = map.get(BEAN);
+                if (yamlBeanIdMapping.containsKey(beanName)) {
+                    LOGGER.error("beanName : " + beanName + " is repeat define beanId");
+                    throw new RuntimeException("beanName : " + beanName + " is repeat define beanId");
+                } else {
+                    yamlBeanIdMapping.put(beanName, beanId);
+                }
+            });
+        }
+        return yamlBeanIdMapping;
+    }
+
+    public static Map<Class<?>, String> getImplementMapping() {
+        Map<Class<?>, String> yamlImplementMapping = new HashMap<>(ConfigConstant.INITIAL_CAPACITY);
+        List<Map<String, String>> implementMappingList = YAML_BEAN.getImplementMapping();
+        if (CollectionUtil.isNotEmpty(implementMappingList)) {
+            implementMappingList.forEach(map -> {
+                String interfaceName = map.get(INTERFACE);
+                String beanId = map.get(BEAN_ID);
+                yamlImplementMapping.put(ClassUtil.loadClass(interfaceName, false), beanId);
+            });
+        }
+        return yamlImplementMapping;
     }
 }

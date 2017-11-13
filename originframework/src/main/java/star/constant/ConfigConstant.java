@@ -5,14 +5,19 @@ package star.constant;
  * @date 2017/11/8
  */
 public interface ConfigConstant {
-    String CONFIG_FILE = "origin.properties";
+    String CONFIG_FILE = "origin.yml";
 
-    String JDBC_DRIVER = "origin.jdbc.driver";
-    String JDBC_URL = "origin.jdbc.url";
-    String JDBC_USERNAME = "origin.jdbc.username";
-    String JDBC_PASSWORD = "origin.jdbc.password";
+    String JDBC_DRIVER = "jdbcDriver";
+    String JDBC_URL = "jdbcUrl";
+    String JDBC_USERNAME = "jdbcUsername";
+    String JDBC_PASSWORD = "jdbcPassword";
 
-    String APP_BASE_PACKAGE = "origin.app.base_package";
-    String APP_JSP_PATH = "origin.app.jsp_path";
-    String APP_ASSET_PATH = "origin.app.asset_path";
+    String APP_BASE_PACKAGE = "basePackage";
+    String APP_JSP_PATH = "jspPath";
+    String APP_ASSET_PATH = "assetPath";
+
+    String BEAN_ID_MAPPING = "beanIdMapping";
+    String IMPLEMENT_MAPPING = "implementMapping";
+
+    Integer INITIAL_CAPACITY = 16;
 }
