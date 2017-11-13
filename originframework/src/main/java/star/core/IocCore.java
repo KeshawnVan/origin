@@ -17,11 +17,22 @@ import java.util.Map;
  * @date 2017/11/9
  */
 public final class IocCore {
+    /**
+     * 获取所有的Bean类和Bean实例之间的映射关系
+     */
+    public static final Map<Class<?>, Object> BEAN_MAP = BeanFactory.getBeanMap();
+    /**
+     * 获取yml配置文件中接口与实现类beanId的映射关系
+     */
+    public static final Map<Class<?>, String> IMPLEMENT_MAPPING = ConfigFactory.getImplementMapping();
+    /**
+     * 获取所有带有@Service注解的类的接口与自身的映射关系
+     */
+    public static final Map<Class<?>, Class<?>> SERVICE_MAPPING = BeanFactory.getServiceMappingMap();
+
     static {
-        //获取所有的Bean类和Bean实例之间的映射关系
-        Map<Class<?>, Object> beanMap = BeanFactory.getBeanMap();
-        if (CollectionUtil.isNotEmpty(beanMap)) {
-            for (Map.Entry<Class<?>, Object> beanEntry : beanMap.entrySet()) {
+        if (CollectionUtil.isNotEmpty(BEAN_MAP)) {
+            for (Map.Entry<Class<?>, Object> beanEntry : BEAN_MAP.entrySet()) {
                 Class<?> beanClass = beanEntry.getKey();
                 Object beanInstance = beanEntry.getValue();
                 dependencyInjection(beanClass, beanInstance);
@@ -56,11 +67,10 @@ public final class IocCore {
     }
 
     private static void interfaceDependencyInjection(Object beanInstance, Field beanField, Class<?> beanFieldClass) {
-        //获取yml配置文件中接口与实现类beanId的映射关系
-        Map<Class<?>, String> yamlImplementMapping = ConfigFactory.getImplementMapping();
+
         //先查看配置文件中是否配置了映射
-        if (yamlImplementMapping.containsKey(beanFieldClass)) {
-            Object beanFieldInstance = BeanFactory.getBean(yamlImplementMapping.get(beanFieldClass));
+        if (IMPLEMENT_MAPPING.containsKey(beanFieldClass)) {
+            Object beanFieldInstance = BeanFactory.getBean(IMPLEMENT_MAPPING.get(beanFieldClass));
             if (beanFieldInstance != null) {
                 //通过反射初始化BeanField的值
                 ReflectionUtil.setField(beanInstance, beanField, beanFieldInstance);
@@ -68,15 +78,17 @@ public final class IocCore {
             return;
         }
 
-        //获取所有带有@Service注解的类的接口与自身的映射关系
-        Map<Class<?>, Class<?>> serviceMappingMap = BeanFactory.getServiceMappingMap();
+
         Inject inject = beanField.getAnnotation(Inject.class);
         String injectValue = inject.value();
         //如果使用@Inject注解未指定实现类，则从serviceMappingMap中寻找实现类进行注入
         if (StringUtil.isEmpty(injectValue)) {
-            Class<?> implementClass = serviceMappingMap.get(beanFieldClass);
+            Class<?> implementClass = SERVICE_MAPPING.get(beanFieldClass);
+            if (implementClass == null) {
+                throw new RuntimeException(beanFieldClass.getTypeName() + " have no implement error");
+            }
             //如果实现类为ImplementDuplicateException，则代表一个接口有多个实现类，而使用者又未指明使用那个实现类
-            if (implementClass.equals(ImplementDuplicateException.class)) {
+            if (ImplementDuplicateException.class.equals(implementClass)) {
                 throw new ImplementDuplicateException("cannot inject bean , this interface has more than one implement");
             } else {
                 Object beanFieldInstance = BeanFactory.getBean(implementClass);

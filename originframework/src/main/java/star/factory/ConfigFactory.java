@@ -2,11 +2,11 @@ package star.factory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import star.bean.YamlBean;
 import star.constant.ConfigConstant;
 import star.utils.ClassUtil;
 import star.utils.CollectionUtil;
 import star.utils.YamlUtil;
-import star.utils.bean.YamlBean;
 
 import java.util.HashMap;
 import java.util.List;

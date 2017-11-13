@@ -1,4 +1,4 @@
-package star.utils.bean;
+package star.bean;
 
 import java.util.List;
 import java.util.Map;

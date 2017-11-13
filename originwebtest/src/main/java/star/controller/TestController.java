@@ -15,7 +15,7 @@ public class TestController {
     @Inject("testServiceImpl2")
     private TestService testService;
 
-    public void hello(){
+    public void hello() {
         System.out.println(testService.hashCode());
         testService.hello();
     }

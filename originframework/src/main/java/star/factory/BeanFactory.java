@@ -48,9 +48,8 @@ public final class BeanFactory {
 
     public static Map<Class<?>, Class<?>> getServiceMappingMap() {
         Map<Class<?>, Class<?>> serviceMap = new HashMap<>(ConfigConstant.INITIAL_CAPACITY);
-        if (CollectionUtil.isNotEmpty(BEAN_MAP)) {
-            for (Map.Entry<Class<?>, Object> beanEntry : BEAN_MAP.entrySet()) {
-                Class<?> beanClass = beanEntry.getKey();
+        if (CollectionUtil.isNotEmpty(BEAN_CONTEXT)) {
+            for (Class<?> beanClass : BEAN_CONTEXT.values()) {
                 //目前只有带Service注解的需要做接口与实现类的映射关系
                 if (beanClass.isAnnotationPresent(Service.class)) {
                     Class<?>[] interfaces = beanClass.getInterfaces();

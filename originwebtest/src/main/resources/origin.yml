@@ -12,4 +12,4 @@ beanIdMapping:
     bean: "star.service.impl.TestServiceImpl2"
 implementMapping:
   - interface: "star.service.TestService"
-    beanId: "test123"
+    beanId: "test321"

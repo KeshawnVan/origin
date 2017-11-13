@@ -9,7 +9,7 @@ import star.utils.CollectionUtil;
 import star.utils.ReflectionUtil;
 import star.utils.StringUtil;
 import star.utils.YamlUtil;
-import star.utils.bean.YamlBean;
+import star.bean.YamlBean;
 
 import java.lang.reflect.Field;
 import java.util.Map;
