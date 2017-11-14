@@ -20,15 +20,15 @@ public final class IocCore {
     /**
      * 获取所有的Bean类和Bean实例之间的映射关系
      */
-    public static final Map<Class<?>, Object> BEAN_MAP = BeanFactory.getBeanMap();
+    private static final Map<Class<?>, Object> BEAN_MAP = BeanFactory.getBeanMap();
     /**
      * 获取yml配置文件中接口与实现类beanId的映射关系
      */
-    public static final Map<Class<?>, String> IMPLEMENT_MAPPING = ConfigFactory.getImplementMapping();
+    private static final Map<Class<?>, String> IMPLEMENT_MAPPING = ConfigFactory.getImplementMapping();
     /**
      * 获取所有带有@Service注解的类的接口与自身的映射关系
      */
-    public static final Map<Class<?>, Class<?>> SERVICE_MAPPING = BeanFactory.getServiceMappingMap();
+    private static final Map<Class<?>, Class<?>> SERVICE_MAPPING = BeanFactory.getServiceMappingMap();
 
     static {
         if (CollectionUtil.isNotEmpty(BEAN_MAP)) {
@@ -77,7 +77,6 @@ public final class IocCore {
             }
             return;
         }
-
 
         Inject inject = beanField.getAnnotation(Inject.class);
         String injectValue = inject.value();
