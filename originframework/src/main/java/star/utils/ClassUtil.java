@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
@@ -19,6 +20,9 @@ import java.util.jar.JarFile;
 public final class ClassUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClassUtil.class);
+
+    private static final String JAR = "jar";
+    private static final String FILE = "file";
 
     public static ClassLoader getClassLoader() {
         return Thread.currentThread().getContextClassLoader();
@@ -40,6 +44,10 @@ public final class ClassUtil {
         return cls;
     }
 
+    public static Class<?> loadClass(String className) {
+        return loadClass(className, false);
+    }
+
     public static Set<Class<?>> getClassSet(String packageName) {
         Set<Class<?>> classSet = new HashSet<>();
         try {
@@ -49,26 +57,12 @@ public final class ClassUtil {
                 URL url = urls.nextElement();
                 if (url != null) {
                     String protocol = url.getProtocol();
-                    if (protocol.equals("file")) {
+                    if (FILE.equals(protocol)) {
                         // 20%是URL的空格，将其代替，SUN公司也说明了这是一个BUG
                         String packagePath = url.getPath().replaceAll("%20", " ");
-                        addClass(classSet, packagePath, packageName);
-                    } else if (protocol.equals("jar")) {
-                        JarURLConnection jarURLConnection = (JarURLConnection) url.openConnection();
-                        if (jarURLConnection != null) {
-                            JarFile jarFile = jarURLConnection.getJarFile();
-                            if (jarFile != null) {
-                                Enumeration<JarEntry> jarEntries = jarFile.entries();
-                                while (jarEntries.hasMoreElements()) {
-                                    JarEntry jarEntry = jarEntries.nextElement();
-                                    String jarEntryName = jarEntry.getName();
-                                    if (jarEntryName.endsWith(".class")) {
-                                        String className = jarEntryName.substring(0, jarEntryName.lastIndexOf(".")).replaceAll("/", ".");
-                                        doAddClass(classSet, className);
-                                    }
-                                }
-                            }
-                        }
+                        addFileClass(classSet, packagePath, packageName);
+                    } else if (JAR.equals(protocol)) {
+                        addJarClass(classSet, url);
                     }
                 }
             }
@@ -80,7 +74,25 @@ public final class ClassUtil {
         return classSet;
     }
 
-    private static void addClass(Set<Class<?>> classSet, String packagePath, String packageName) {
+    private static void addJarClass(Set<Class<?>> classSet, URL url) throws IOException {
+        JarURLConnection jarURLConnection = (JarURLConnection) url.openConnection();
+        if (jarURLConnection != null) {
+            JarFile jarFile = jarURLConnection.getJarFile();
+            if (jarFile != null) {
+                Enumeration<JarEntry> jarEntries = jarFile.entries();
+                while (jarEntries.hasMoreElements()) {
+                    JarEntry jarEntry = jarEntries.nextElement();
+                    String jarEntryName = jarEntry.getName();
+                    if (jarEntryName.endsWith(".class")) {
+                        String className = jarEntryName.substring(0, jarEntryName.lastIndexOf(".")).replaceAll("/", ".");
+                        doAddClass(classSet, className);
+                    }
+                }
+            }
+        }
+    }
+
+    private static void addFileClass(Set<Class<?>> classSet, String packagePath, String packageName) {
         File[] files = new File(packagePath).listFiles(file -> file.isFile() && file.getName().endsWith(".class") || file.isDirectory());
         StringBuilder stringBuilder = new StringBuilder();
         for (File file : files) {
@@ -102,7 +114,7 @@ public final class ClassUtil {
                         subPackageName = stringBuilder.append(packageName).append(".").append(subPackageName).toString();
                         stringBuilder.setLength(0);
                     }
-                    addClass(classSet, subPackagePath, subPackageName);
+                    addFileClass(classSet, subPackagePath, subPackageName);
                 }
             }
         }

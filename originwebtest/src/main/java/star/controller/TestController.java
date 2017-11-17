@@ -13,6 +13,7 @@ import star.service.TestService;
  */
 @Controller
 @Fresh
+@Action("test")
 public class TestController {
     @Inject("testServiceImpl2")
     private TestService testService;

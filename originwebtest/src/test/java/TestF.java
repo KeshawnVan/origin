@@ -1,14 +1,14 @@
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
 import star.annotation.Inject;
+import star.bean.Handler;
+import star.constant.RequestMethod;
 import star.controller.TestController;
 import star.exception.ImplementDuplicateException;
 import star.factory.BeanFactory;
 import star.core.IocCore;
-import star.utils.CollectionUtil;
-import star.utils.ReflectionUtil;
-import star.utils.StringUtil;
-import star.utils.YamlUtil;
+import star.factory.ControllerFactory;
+import star.utils.*;
 import star.bean.YamlBean;
 
 import java.lang.reflect.Field;
@@ -98,5 +98,20 @@ public class TestF {
     public void testYaml(){
         YamlBean yamlBean = YamlUtil.getYamlBean("origin.yml",YamlBean.class);
         System.out.println(yamlBean);
+    }
+
+    @Test
+    public void testControllerFactory(){
+        Handler handler = ControllerFactory.getHandler(RequestMethod.GET,"/2");
+        System.out.println(handler);
+    }
+
+    @Test
+    public void testJsonUtil(){
+        YamlBean yamlBean = YamlUtil.getYamlBean("origin.yml",YamlBean.class);
+        String json = JsonUtil.encodeJson(yamlBean);
+        System.out.println(json);
+        YamlBean bean = JsonUtil.decodeJson(json,YamlBean.class);
+        System.out.println(bean);
     }
 }
