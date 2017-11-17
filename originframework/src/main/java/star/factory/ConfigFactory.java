@@ -11,6 +11,7 @@ import star.utils.YamlUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @author keshawn
@@ -62,30 +63,38 @@ public final class ConfigFactory {
         Map<String, String> yamlBeanIdMapping = new HashMap<>(ConfigConstant.INITIAL_CAPACITY);
         List<Map<String, String>> beanIdMappingList = YAML_BEAN.getBeanIdMapping();
         if (CollectionUtil.isNotEmpty(beanIdMappingList)) {
-            beanIdMappingList.forEach(map -> {
-                String beanId = map.get(ID);
-                String beanName = map.get(BEAN);
-                if (yamlBeanIdMapping.containsKey(beanName)) {
-                    LOGGER.error("beanName : " + beanName + " is repeat define beanId");
-                    throw new RuntimeException("beanName : " + beanName + " is repeat define beanId");
-                } else {
-                    yamlBeanIdMapping.put(beanName, beanId);
-                }
-            });
+            beanIdMappingList.forEach(convertBeanIdMapping(yamlBeanIdMapping));
         }
         return yamlBeanIdMapping;
+    }
+
+    private static Consumer<Map<String, String>> convertBeanIdMapping(Map<String, String> yamlBeanIdMapping) {
+        return map -> {
+            String beanId = map.get(ID);
+            String beanName = map.get(BEAN);
+            if (yamlBeanIdMapping.containsKey(beanName)) {
+                LOGGER.error("beanName : " + beanName + " is repeat define beanId");
+                throw new RuntimeException("beanName : " + beanName + " is repeat define beanId");
+            } else {
+                yamlBeanIdMapping.put(beanName, beanId);
+            }
+        };
     }
 
     public static Map<Class<?>, String> getImplementMapping() {
         Map<Class<?>, String> yamlImplementMapping = new HashMap<>(ConfigConstant.INITIAL_CAPACITY);
         List<Map<String, String>> implementMappingList = YAML_BEAN.getImplementMapping();
         if (CollectionUtil.isNotEmpty(implementMappingList)) {
-            implementMappingList.forEach(map -> {
-                String interfaceName = map.get(INTERFACE);
-                String beanId = map.get(BEAN_ID);
-                yamlImplementMapping.put(ClassUtil.loadClass(interfaceName, false), beanId);
-            });
+            implementMappingList.forEach(convertImplementMapping(yamlImplementMapping));
         }
         return yamlImplementMapping;
+    }
+
+    private static Consumer<Map<String, String>> convertImplementMapping(Map<Class<?>, String> yamlImplementMapping) {
+        return map -> {
+            String interfaceName = map.get(INTERFACE);
+            String beanId = map.get(BEAN_ID);
+            yamlImplementMapping.put(ClassUtil.loadClass(interfaceName, false), beanId);
+        };
     }
 }
