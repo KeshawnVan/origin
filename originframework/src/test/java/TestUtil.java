@@ -5,6 +5,7 @@ import star.factory.BeanFactory;
 import star.utils.ClassUtil;
 import star.utils.CollectionUtil;
 import star.bean.YamlBean;
+import star.utils.StringUtil;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -41,25 +42,31 @@ public class TestUtil {
 
     @Test
     public void testIoc(){
-        Map<Class<?>, Object> beanMap = BeanFactory.getBeanMap();
-        if (CollectionUtil.isNotEmpty(beanMap)) {
-            for (Map.Entry<Class<?>, Object> beanEntry : beanMap.entrySet()) {
-                Class<?> beanClass = beanEntry.getKey();
-                Object beanInstance = beanEntry.getValue();
-                Field[] beanFields = beanClass.getDeclaredFields();
-                if (ArrayUtils.isNotEmpty(beanFields)){
-                    for (Field beanField : beanFields){
-                        if (beanField.isAnnotationPresent(Inject.class)){
-                            System.out.println(beanField.getName());
-                        }
-                    }
-                }
-            }
-        }
+//        Map<Class<?>, Object> beanMap = BeanFactory.getBeanMap();
+//        if (CollectionUtil.isNotEmpty(beanMap)) {
+//            for (Map.Entry<Class<?>, Object> beanEntry : beanMap.entrySet()) {
+//                Class<?> beanClass = beanEntry.getKey();
+//                Object beanInstance = beanEntry.getValue();
+//                Field[] beanFields = beanClass.getDeclaredFields();
+//                if (ArrayUtils.isNotEmpty(beanFields)){
+//                    for (Field beanField : beanFields){
+//                        if (beanField.isAnnotationPresent(Inject.class)){
+//                            System.out.println(beanField.getName());
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
     @Test
     public void testClassType(){
         YamlBean yamlBean = new YamlBean();
         System.out.println(yamlBean.getClass().getTypeName());
+    }
+
+    @Test
+    public void testMethodDI(){
+        String s = "DASSD";
+        System.out.println(StringUtil.firstToLowerCase(s));
     }
 }

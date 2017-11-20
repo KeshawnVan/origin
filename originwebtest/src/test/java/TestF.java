@@ -84,14 +84,14 @@ public class TestF {
 
     @Test
     public void testDI(){
-        IocCore iocCore = new IocCore();
-        TestController testController = (TestController)BeanFactory.getBean("testController");
-        System.out.println(testController.hashCode());
-        testController.hello();
-        System.out.println("----------------");
-        testController = (TestController)BeanFactory.getBean("testController");
-        System.out.println(testController.hashCode());
-        testController.hello();
+//        IocCore iocCore = new IocCore();
+//        TestController testController = (TestController)BeanFactory.getBean("testController");
+//        System.out.println(testController.hashCode());
+//        testController.hello();
+//        System.out.println("----------------");
+//        testController = (TestController)BeanFactory.getBean("testController");
+//        System.out.println(testController.hashCode());
+//        testController.hello();
     }
 
     @Test
@@ -113,5 +113,7 @@ public class TestF {
         System.out.println(json);
         YamlBean bean = JsonUtil.decodeJson(json,YamlBean.class);
         System.out.println(bean);
+        String name = "fkx";
+        System.out.println(JsonUtil.encodeJson(name));
     }
 }

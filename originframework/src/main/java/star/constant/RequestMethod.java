@@ -5,11 +5,11 @@ package star.constant;
  * @date 2017/11/15
  */
 public interface RequestMethod {
-    String GET = "get";
+    String GET = "GET";
 
-    String POST = "post";
+    String POST = "POST";
 
-    String PUT = "put";
+    String PUT = "PUT";
 
-    String DELETE = "delete";
+    String DELETE = "DELETE";
 }

@@ -105,7 +105,7 @@ public final class BeanFactory {
         //如果未指定bean id，则取类名首字母小写
         if (StringUtil.isEmpty(beanName)) {
             String beanClassSimpleName = beanClass.getSimpleName();
-            String beanId = (new StringBuilder()).append(Character.toLowerCase(beanClassSimpleName.charAt(0))).append(beanClassSimpleName.substring(1)).toString();
+            String beanId = StringUtil.firstToLowerCase(beanClassSimpleName);
             if (BEAN_CONTEXT.containsKey(beanId)) {
                 LOGGER.error("cannot create bean :" + beanId, ", the beanId is duplicated :" + BEAN_CONTEXT.get(beanId).getTypeName() + " and " + beanClass.getTypeName());
             } else {
