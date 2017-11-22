@@ -70,10 +70,20 @@ public final class StringUtil {
         }
     }
 
-    public static String firstToLowerCase(String string){
-        if (isEmpty(string)){
+    public static String firstToLowerCase(String string) {
+        if (isEmpty(string)) {
             return "";
         }
         return (new StringBuilder()).append(Character.toLowerCase(string.charAt(0))).append(string.substring(1)).toString();
+    }
+
+    public static String castJsonString(String string) {
+        if (isEmpty(string)) {
+            return "";
+        }
+        if (string.startsWith("{")){
+            return string;
+        }
+        return "\"" + string + "\"";
     }
 }

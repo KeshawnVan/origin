@@ -3,10 +3,8 @@ import org.junit.Test;
 import star.annotation.Inject;
 import star.bean.Handler;
 import star.constant.RequestMethod;
-import star.controller.TestController;
 import star.exception.ImplementDuplicateException;
 import star.factory.BeanFactory;
-import star.core.IocCore;
 import star.factory.ControllerFactory;
 import star.utils.*;
 import star.bean.YamlBean;
@@ -52,7 +50,7 @@ public class TestF {
                                     //如果实现类为ImplementDuplicateException，则代表一个接口有多个实现类，而使用者又未指明使用那个实现类
                                     if (implementClass.equals(ImplementDuplicateException.class)) {
                                         //打印日志
-                                        throw new ImplementDuplicateException("cannot inject bean , this interface has more than one implement");
+                                        throw new ImplementDuplicateException("cannot inject User , this interface has more than one implement");
                                     } else {
                                         Object beanFieldInstance = BeanFactory.getBean(implementClass);
                                         if (beanFieldInstance != null) {
@@ -61,7 +59,7 @@ public class TestF {
                                         }
                                     }
                                 } else {
-                                    //@Inject注解未指定实现类 bean id
+                                    //@Inject注解未指定实现类 User id
                                     Object beanFieldInstance = BeanFactory.getBean(injectValue);
                                     if (beanFieldInstance != null) {
                                         //通过反射初始化BeanField的值

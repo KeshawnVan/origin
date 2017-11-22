@@ -35,6 +35,7 @@ import java.util.Map;
 @WebServlet(urlPatterns = "/*", loadOnStartup = 0)
 public class DispatcherServlet extends HttpServlet {
 
+    private static final String APPLICATION_JSON = "application/json";
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -85,8 +86,14 @@ public class DispatcherServlet extends HttpServlet {
                 } else {
                     parameterValue = paramMap.get(queryParam.value());
                 }
+                //如果请求体是JSON
+                Object jsonString = paramMap.get(APPLICATION_JSON);
+                if (jsonString != null) {
+                    parameterValue = jsonString;
+                }
+
                 Class<?> parameterType = parameter.getType();
-                String jsonParam = "\"" + parameterValue.toString() + "\"";
+                String jsonParam = StringUtil.castJsonString(parameterValue.toString());
                 parameterValues[i] = JsonUtil.decodeJson(jsonParam, parameterType);
             }
         }
@@ -104,19 +111,25 @@ public class DispatcherServlet extends HttpServlet {
         //获得请求体
         String body = CodeUtil.decodeURL(StreamUtil.getString(request.getInputStream()));
         if (StringUtil.isNotEmpty(body)) {
-            //处理表单提交
-            String[] params = StringUtils.split(body, "&");
-            if (ArrayUtils.isNotEmpty(params)) {
-                for (String param : params) {
-                    String[] paramArray = StringUtils.split(param, "=");
-                    if (ArrayUtils.isNotEmpty(paramArray) && paramArray.length == 2) {
-                        String paramName = paramArray[0];
-                        String paramValue = paramArray[1];
-                        paramMap.put(paramName, paramValue);
+            String contentType = request.getContentType();
+            //JSON格式的
+            if (APPLICATION_JSON.equals(contentType)) {
+                paramMap.put(APPLICATION_JSON, body);
+            } else {
+                //其他的都按文本处理
+                String[] params = StringUtils.split(body, "&");
+                if (ArrayUtils.isNotEmpty(params)) {
+                    for (String param : params) {
+                        String[] paramArray = StringUtils.split(param, "=");
+                        if (ArrayUtils.isNotEmpty(paramArray) && paramArray.length == 2) {
+                            String paramName = paramArray[0];
+                            String paramValue = paramArray[1];
+                            paramMap.put(paramName, paramValue);
+                        }
                     }
                 }
             }
-            //TODO 需考虑接收JSON
+
         }
         return paramMap;
     }

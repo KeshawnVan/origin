@@ -4,7 +4,7 @@ jdbcUsername: root
 jdbcPassword: root
 
 basePackage: star
-jspPath: /WEB-INF/view
+jspPath: /view
 assetPath: /asset
 
 beanIdMapping:

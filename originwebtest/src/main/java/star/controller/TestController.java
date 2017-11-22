@@ -1,6 +1,7 @@
 package star.controller;
 
 import star.annotation.*;
+import star.bean.User;
 import star.constant.RequestMethod;
 import star.service.TestService;
 
@@ -10,16 +11,19 @@ import star.service.TestService;
  */
 @Controller
 @Fresh
-@Action("test")
 public class TestController {
     @Inject("testServiceImpl2")
     private TestService testService;
 
-    @Action(value = "/hello", method = RequestMethod.GET)
+    @Action(value = "/hello")
     public void hello(@QueryParam("n") String name, int age) {
         System.out.println(testService.hashCode());
         testService.hello();
         System.out.println(name);
         System.out.println(age);
+    }
+    @Action(value = "json")
+    public void json(User user){
+        System.out.println(user.toString());
     }
 }
