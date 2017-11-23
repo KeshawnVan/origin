@@ -1,10 +1,10 @@
 package star.servlet;
 
+import com.alibaba.druid.sql.visitor.functions.Char;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import star.annotation.QueryParam;
 import star.bean.Handler;
-import star.bean.Param;
 import star.constant.ConfigConstant;
 import star.core.LoadCore;
 import star.factory.BeanFactory;
@@ -20,12 +20,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author keshawn
@@ -36,6 +35,14 @@ import java.util.Map;
 public class DispatcherServlet extends HttpServlet {
 
     private static final String APPLICATION_JSON = "application/json";
+
+    private static final String HTTP_SERVLET_REQUEST = "httpServletRequest";
+
+    private static final String HTTP_SERVLET_RESPONSE = "httpServletResponse";
+
+    private static final String HTTP_SESSION = "httpSession";
+
+    private static final String SERVLET_CONTEXT = "servletContext";
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -60,8 +67,7 @@ public class DispatcherServlet extends HttpServlet {
             Class<?> controllerClass = handler.getControllerClass();
             Object controllerBean = BeanFactory.getBean(controllerClass);
             //创建请求参数对象
-            Map<String, Object> paramMap = buildParamMap(request);
-            Param param = new Param(paramMap);
+            Map<String, Object> paramMap = buildParamMap(request, response);
             Method method = handler.getActionMethod();
             //方法参数注入
             Object[] parameterValues = buildParameterValues(paramMap, method);
@@ -78,35 +84,89 @@ public class DispatcherServlet extends HttpServlet {
             for (int i = 0; i < parametersLength; i++) {
                 Parameter parameter = parameters[i];
                 String parameterName = parameter.getName();
+                Class<?> parameterType = parameter.getType();
                 Object parameterValue;
                 QueryParam queryParam = parameter.getAnnotation(QueryParam.class);
                 //如果使用QueryParam，则使用注解上的值去解析参数
                 if (queryParam == null) {
-                    parameterValue = paramMap.get(parameterName);
+                    parameterValue = getByParamMap(paramMap, parameterName);
                 } else {
-                    parameterValue = paramMap.get(queryParam.value());
+                    parameterValue = getByParamMap(paramMap, queryParam.value());
                 }
                 //如果请求体是JSON
                 Object jsonString = paramMap.get(APPLICATION_JSON);
                 if (jsonString != null) {
                     parameterValue = jsonString;
                 }
-
-                Class<?> parameterType = parameter.getType();
-                String jsonParam = StringUtil.castJsonString(parameterValue.toString());
-                parameterValues[i] = JsonUtil.decodeJson(jsonParam, parameterType);
+                //如果parameterValue没找到匹配的参数，则可能是一个接收对象,也可能是容器内置对象
+                if (parameterValue == null) {
+                    parameterValue = beanParameterInject(paramMap, parameterType, parameterValue);
+                }
+                //如果parameterValue不为空且为String类型，则认为需要进行转型
+                if (parameterValue != null && parameterValue instanceof String) {
+                    String jsonParam = StringUtil.castJsonString(parameterValue);
+                    parameterValues[i] = JsonUtil.decodeJson(jsonParam, parameterType);
+                } else {
+                    parameterValues[i] = parameterValue;
+                }
             }
         }
         return parameterValues;
     }
 
-    private Map<String, Object> buildParamMap(HttpServletRequest request) throws IOException {
+    private Object getByParamMap(Map<String, Object> paramMap, String parameterName) {
+        Object parameterValue = paramMap.get(parameterName);
+        if (parameterValue instanceof List) {
+            parameterValue = JsonUtil.encodeJson(parameterValue);
+        }
+        return parameterValue;
+    }
+
+    private Object beanParameterInject(Map<String, Object> paramMap, Class<?> parameterType, Object parameterValue) {
+        //如果parameterType是基本类型，基本类型的包装类，或者Request等，不对该对象注入值
+        if (!(parameterType.isPrimitive()
+                || parameterType.equals(Integer.class)
+                || parameterType.equals(String.class)
+                || parameterType.equals(Long.class)
+                || parameterType.equals(Double.class)
+                || parameterType.equals(Byte.class)
+                || parameterType.equals(Short.class)
+                || parameterType.equals(Float.class)
+                || parameterType.equals(Char.class)
+                || parameterType.equals(HttpServletRequest.class)
+                || parameterType.equals(HttpServletResponse.class)
+                || parameterType.equals(HttpSession.class)
+                || parameterType.equals(ServletContext.class)
+                || parameterType.equals(Map.class)
+                || parameterType.equals(List.class)
+        )) {
+            parameterValue = MapToBeanUtil.buildBean(paramMap, parameterType);
+        } else if (parameterType.equals(HttpServletRequest.class)) {
+            parameterValue = paramMap.get(HTTP_SERVLET_REQUEST);
+        } else if (parameterType.equals(HttpServletResponse.class)) {
+            parameterValue = paramMap.get(HTTP_SERVLET_RESPONSE);
+        } else if (parameterType.equals(HttpSession.class)) {
+            parameterValue = paramMap.get(HTTP_SESSION);
+        } else if (parameterType.equals(ServletContext.class)) {
+            parameterValue = paramMap.get(SERVLET_CONTEXT);
+        }
+        return parameterValue;
+    }
+
+    private Map<String, Object> buildParamMap(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.setCharacterEncoding("UTF-8");
         Map<String, Object> paramMap = new HashMap<>(ConfigConstant.INITIAL_CAPACITY);
+
+        paramMap.put(HTTP_SERVLET_REQUEST, request);
+        paramMap.put(HTTP_SERVLET_RESPONSE, response);
+        paramMap.put(HTTP_SESSION, request.getSession());
+        paramMap.put(SERVLET_CONTEXT, request.getSession().getServletContext());
+
         Enumeration<String> paramNames = request.getParameterNames();
         while (paramNames.hasMoreElements()) {
             String paramName = paramNames.nextElement();
             String paramValue = request.getParameter(paramName);
-            paramMap.put(paramName, paramValue);
+            putParamMap(paramMap, paramName, paramValue);
         }
         //获得请求体
         String body = CodeUtil.decodeURL(StreamUtil.getString(request.getInputStream()));
@@ -124,7 +184,7 @@ public class DispatcherServlet extends HttpServlet {
                         if (ArrayUtils.isNotEmpty(paramArray) && paramArray.length == 2) {
                             String paramName = paramArray[0];
                             String paramValue = paramArray[1];
-                            paramMap.put(paramName, paramValue);
+                            putParamMap(paramMap, paramName, paramValue);
                         }
                     }
                 }
@@ -132,5 +192,22 @@ public class DispatcherServlet extends HttpServlet {
 
         }
         return paramMap;
+    }
+
+    private void putParamMap(Map<String, Object> paramMap, String paramName, String paramValue) {
+        //如果key相同，使用List去存储
+        if (paramMap.containsKey(paramName)) {
+            Object duplicateValue = paramMap.get(paramName);
+            if (duplicateValue instanceof List) {
+                ((List) duplicateValue).add(paramValue);
+            } else {
+                List<Object> paramValueList = new LinkedList<>();
+                paramValueList.add(duplicateValue);
+                paramValueList.add(paramValue);
+                paramMap.put(paramName, paramValueList);
+            }
+        } else {
+            paramMap.put(paramName, paramValue);
+        }
     }
 }

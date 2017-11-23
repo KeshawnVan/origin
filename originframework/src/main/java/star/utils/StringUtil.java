@@ -12,6 +12,9 @@ import java.util.regex.Pattern;
  * @date 2017/11/8
  */
 public final class StringUtil {
+
+    private static final Pattern PATTERN = Pattern.compile("[A-Z]([a-z\\d]+)?");
+
     public static boolean isEmpty(String string) {
         if (string != null) {
             string = string.trim();
@@ -77,13 +80,42 @@ public final class StringUtil {
         return (new StringBuilder()).append(Character.toLowerCase(string.charAt(0))).append(string.substring(1)).toString();
     }
 
+    public static String castJsonString(Object object) {
+        if (object != null) {
+            return castJsonString(object.toString());
+        } else {
+            return "";
+        }
+    }
+
     public static String castJsonString(String string) {
         if (isEmpty(string)) {
             return "";
         }
-        if (string.startsWith("{")){
+        if (string.startsWith("{") || string.startsWith("[")) {
             return string;
         }
         return "\"" + string + "\"";
+    }
+
+    public static String camel2Underline(String line) {
+        if (line == null || "".equals(line)) {
+            return "";
+        }
+        line = String.valueOf(line.charAt(0)).toUpperCase().concat(line.substring(1));
+        StringBuffer sb = new StringBuffer();
+        Matcher matcher = PATTERN.matcher(line);
+        while (matcher.find()) {
+            String word = matcher.group();
+            sb.append(word.toLowerCase());
+            sb.append(matcher.end() == line.length() ? "" : "_");
+        }
+        return sb.toString();
+    }
+
+    public static String getSetMethodName(String fieldName) {
+        String prefix = "set";
+        String fieldFirst = fieldName.substring(0, 1).toUpperCase();
+        return prefix + fieldFirst + fieldName.substring(1, fieldName.length());
     }
 }

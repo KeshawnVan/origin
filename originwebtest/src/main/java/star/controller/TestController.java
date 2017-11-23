@@ -2,8 +2,11 @@ package star.controller;
 
 import star.annotation.*;
 import star.bean.User;
-import star.constant.RequestMethod;
 import star.service.TestService;
+import star.utils.JsonUtil;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author keshawn
@@ -22,8 +25,13 @@ public class TestController {
         System.out.println(name);
         System.out.println(age);
     }
+
     @Action(value = "json")
-    public void json(User user){
+    public void json(User user, String name, Long[] list, HttpServletRequest httpServletRequest, HttpSession session) {
         System.out.println(user.toString());
+        System.out.println(name);
+        System.out.println(JsonUtil.encodeJson(list));
+        System.out.println(httpServletRequest);
+        System.out.println(session);
     }
 }
