@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static star.utils.StringUtil.checkUrlPrefix;
+
 /**
  * @author keshawn
  * @date 2017/11/17
@@ -23,8 +25,6 @@ public final class ControllerFactory {
      * 存放请求与处理器的映射关系
      */
     private static final Map<Request, Handler> ACTION_MAP = new HashMap<>(ConfigConstant.INITIAL_CAPACITY);
-
-    private static final String URL_PREFIX = "/";
 
     static {
         //获取所有的Controller类
@@ -73,7 +73,7 @@ public final class ControllerFactory {
 
     private static String getRequestPath(String classRequestMapping, StringBuilder requestMappingBuilder, Action methodAction) {
         String requestPath;
-        String methodRequestMapping = checkPrefix(methodAction.value());
+        String methodRequestMapping = checkUrlPrefix(methodAction.value());
         //如果类上没有URL映射，就直接取方法上指定的映射
         if (classRequestMapping == null) {
             requestPath = methodRequestMapping;
@@ -93,17 +93,7 @@ public final class ControllerFactory {
         if (controllerClass.isAnnotationPresent(Action.class)) {
             Action classAction = controllerClass.getAnnotation(Action.class);
             String requestMapping = classAction.value();
-            classRequestMapping = checkPrefix(requestMapping);
-        }
-        return classRequestMapping;
-    }
-
-    private static String checkPrefix(String requestMapping) {
-        String classRequestMapping;
-        if (requestMapping.startsWith(URL_PREFIX)) {
-            classRequestMapping = requestMapping;
-        } else {
-            classRequestMapping = URL_PREFIX + requestMapping;
+            classRequestMapping = checkUrlPrefix(requestMapping);
         }
         return classRequestMapping;
     }

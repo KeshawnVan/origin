@@ -6,6 +6,7 @@ import star.bean.YamlBean;
 import star.constant.ConfigConstant;
 import star.utils.ClassUtil;
 import star.utils.CollectionUtil;
+import star.utils.StringUtil;
 import star.utils.YamlUtil;
 
 import java.util.HashMap;
@@ -31,6 +32,8 @@ public final class ConfigFactory {
 
     private static final String BEAN_ID = "beanId";
 
+    private static final String BACKLASH = "/";
+
     public static String getJdbcDriver() {
         return YAML_BEAN.getJdbcDriver();
     }
@@ -52,11 +55,13 @@ public final class ConfigFactory {
     }
 
     public static String getAppJspPath() {
-        return YAML_BEAN.getJspPath();
+        String jspPath = YAML_BEAN.getJspPath();
+        return jspPath.endsWith(BACKLASH) ? StringUtil.removeLast(jspPath) : jspPath;
     }
 
     public static String getAppAssetPath() {
-        return YAML_BEAN.getAssetPath();
+        String assetPath = YAML_BEAN.getAssetPath();
+        return assetPath.endsWith(BACKLASH) ? StringUtil.removeLast(assetPath) : assetPath;
     }
 
     public static Map<String, String> getBeanIdMapping() {

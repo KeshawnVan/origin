@@ -3,7 +3,9 @@ package star.servlet;
 import com.alibaba.druid.sql.visitor.functions.Char;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import star.annotation.Internal;
 import star.annotation.QueryParam;
+import star.annotation.Stream;
 import star.bean.Handler;
 import star.constant.ConfigConstant;
 import star.core.LoadCore;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
@@ -35,6 +38,12 @@ import java.util.*;
 public class DispatcherServlet extends HttpServlet {
 
     private static final String APPLICATION_JSON = "application/json";
+
+    private static final String UTF_8 = "UTF-8";
+
+    private static final String BACKLASH = "/";
+
+    private static final String JSP_SUFFIX = ".jsp";
 
     private static final String HTTP_SERVLET_REQUEST = "httpServletRequest";
 
@@ -51,10 +60,10 @@ public class DispatcherServlet extends HttpServlet {
         ServletContext servletContext = config.getServletContext();
         //注册处理JSP的Servlet
         ServletRegistration jspServlet = servletContext.getServletRegistration("jsp");
-        jspServlet.addMapping(ConfigFactory.getAppJspPath() + "*");
+        jspServlet.addMapping(ConfigFactory.getAppJspPath() + BACKLASH + "*");
         //注册处理静态资源的默认Servlet
         ServletRegistration defaultServlet = servletContext.getServletRegistration("default");
-        defaultServlet.addMapping(ConfigFactory.getAppAssetPath() + "*");
+        defaultServlet.addMapping(ConfigFactory.getAppAssetPath() + BACKLASH + "*");
     }
 
     @Override
@@ -72,7 +81,56 @@ public class DispatcherServlet extends HttpServlet {
             //方法参数注入
             Object[] parameterValues = buildParameterValues(paramMap, method);
             Object result = ReflectionUtil.invokeMethod(controllerBean, method, parameterValues);
+            //处理结果
+            resultHandler(request, response, method, result);
         }
+        //Jsp重定向请求处理
+        jspRedirectHandler(request, response, requestPath);
+    }
+
+    private void jspRedirectHandler(HttpServletRequest request, HttpServletResponse response, String requestPath) throws ServletException, IOException {
+        String requestContextPath = request.getContextPath();
+        if (requestPath.startsWith(requestContextPath) && requestPath.endsWith(JSP_SUFFIX)) {
+            String forwardPath = requestPath.substring(requestContextPath.length() - 1, requestPath.length());
+            request.getRequestDispatcher(forwardPath).forward(request, response);
+        }
+    }
+
+    private void resultHandler(HttpServletRequest request, HttpServletResponse response, Method method, Object result) throws IOException, ServletException {
+        String requestContextPath = request.getContextPath();
+        if (result != null) {
+            //如果带有@Stream注解则代表以流的方式打回数据，内容默认使用JSON
+            if (method.isAnnotationPresent(Stream.class)) {
+                writeResult(response, result);
+            } else if (method.isAnnotationPresent(Internal.class)) {
+                //跳转到到其他Action,如果以/开头认为是重定向，否则为转发
+                String path = result.toString();
+                if (path.startsWith(BACKLASH)) {
+                    response.sendRedirect(requestContextPath + path);
+                } else {
+                    request.getRequestDispatcher(path).forward(request, response);
+                }
+            } else {
+                //跳转到到Jsp,如果以/开头认为是重定向，否则为转发
+                String path = result.toString();
+                if (path.startsWith(BACKLASH)) {
+                    response.sendRedirect(requestContextPath + ConfigFactory.getAppJspPath() + path + JSP_SUFFIX);
+                } else {
+                    request.getRequestDispatcher(ConfigFactory.getAppJspPath() + BACKLASH + path + JSP_SUFFIX).forward(request, response);
+                }
+            }
+        }
+    }
+
+
+    private void writeResult(HttpServletResponse response, Object result) throws IOException {
+        response.setContentType(APPLICATION_JSON);
+        response.setCharacterEncoding(UTF_8);
+        PrintWriter printWriter = response.getWriter();
+        String jsonResult = JsonUtil.encodeJson(result);
+        printWriter.write(jsonResult);
+        printWriter.flush();
+        printWriter.close();
     }
 
     private Object[] buildParameterValues(Map<String, Object> paramMap, Method method) {
@@ -154,7 +212,7 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     private Map<String, Object> buildParamMap(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding(UTF_8);
         Map<String, Object> paramMap = new HashMap<>(ConfigConstant.INITIAL_CAPACITY);
 
         paramMap.put(HTTP_SERVLET_REQUEST, request);

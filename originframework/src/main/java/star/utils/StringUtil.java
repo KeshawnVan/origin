@@ -15,6 +15,11 @@ public final class StringUtil {
 
     private static final Pattern PATTERN = Pattern.compile("[A-Z]([a-z\\d]+)?");
 
+    private static final String URL_PREFIX = "/";
+
+    private static final String BLANK = "";
+
+
     public static boolean isEmpty(String string) {
         if (string != null) {
             string = string.trim();
@@ -75,7 +80,7 @@ public final class StringUtil {
 
     public static String firstToLowerCase(String string) {
         if (isEmpty(string)) {
-            return "";
+            return BLANK;
         }
         return (new StringBuilder()).append(Character.toLowerCase(string.charAt(0))).append(string.substring(1)).toString();
     }
@@ -84,13 +89,13 @@ public final class StringUtil {
         if (object != null) {
             return castJsonString(object.toString());
         } else {
-            return "";
+            return BLANK;
         }
     }
 
     public static String castJsonString(String string) {
         if (isEmpty(string)) {
-            return "";
+            return BLANK;
         }
         if (string.startsWith("{") || string.startsWith("[")) {
             return string;
@@ -99,8 +104,8 @@ public final class StringUtil {
     }
 
     public static String camel2Underline(String line) {
-        if (line == null || "".equals(line)) {
-            return "";
+        if (isEmpty(line)) {
+            return BLANK;
         }
         line = String.valueOf(line.charAt(0)).toUpperCase().concat(line.substring(1));
         StringBuffer sb = new StringBuffer();
@@ -117,5 +122,22 @@ public final class StringUtil {
         String prefix = "set";
         String fieldFirst = fieldName.substring(0, 1).toUpperCase();
         return prefix + fieldFirst + fieldName.substring(1, fieldName.length());
+    }
+
+    public static String checkUrlPrefix(String requestMapping) {
+        String classRequestMapping;
+        if (requestMapping.startsWith(URL_PREFIX)) {
+            classRequestMapping = requestMapping;
+        } else {
+            classRequestMapping = URL_PREFIX + requestMapping;
+        }
+        return classRequestMapping;
+    }
+
+    public static String removeLast(String string){
+        if (isEmpty(string)){
+            return BLANK;
+        }
+        return string.substring(0,string.length() - 1);
     }
 }
