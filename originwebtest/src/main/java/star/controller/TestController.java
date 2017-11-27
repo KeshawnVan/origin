@@ -55,4 +55,9 @@ public class TestController {
         session.setAttribute("b", name);
         return "/internal";
     }
+
+    @Action("blank")
+    public String blank(){
+        return "test";
+    }
 }

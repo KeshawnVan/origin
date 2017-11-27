@@ -89,7 +89,9 @@ public final class BeanFactory {
     private static void buildBeanContext(Class<?> beanClass) {
         //先从yaml文件中找映射关系
         if (YAML_BEAN_ID_MAPPING.containsKey(beanClass.getTypeName())) {
-            BEAN_CONTEXT.put(YAML_BEAN_ID_MAPPING.get(beanClass.getTypeName()), beanClass);
+            String beanName = YAML_BEAN_ID_MAPPING.get(beanClass.getTypeName());
+            checkBeanIdDuplicated(beanName);
+            BEAN_CONTEXT.put(beanName, beanClass);
         } else if (beanClass.isAnnotationPresent(Service.class)) {
             Service service = beanClass.getAnnotation(Service.class);
             String value = service.value();
@@ -101,23 +103,24 @@ public final class BeanFactory {
         }
     }
 
+    private static void checkBeanIdDuplicated(String beanName) {
+        if (BEAN_CONTEXT.containsKey(beanName)) {
+            LOGGER.error("cannot create bean :" + beanName, ", the beanId is duplicated :" + BEAN_CONTEXT.get(beanName).getTypeName() + " and " + beanName);
+            throw new RuntimeException();
+        }
+    }
+
     private static void addBean(String beanName, Class<?> beanClass) {
         //如果未指定bean id，则取类名首字母小写
         if (StringUtil.isEmpty(beanName)) {
             String beanClassSimpleName = beanClass.getSimpleName();
             String beanId = StringUtil.firstToLowerCase(beanClassSimpleName);
-            if (BEAN_CONTEXT.containsKey(beanId)) {
-                LOGGER.error("cannot create bean :" + beanId, ", the beanId is duplicated :" + BEAN_CONTEXT.get(beanId).getTypeName() + " and " + beanClass.getTypeName());
-            } else {
-                BEAN_CONTEXT.put(beanId, beanClass);
-            }
+            checkBeanIdDuplicated(beanName);
+            BEAN_CONTEXT.put(beanId, beanClass);
         } else {
             String beanId = beanName;
-            if (BEAN_CONTEXT.containsKey(beanId)) {
-                LOGGER.error("cannot create bean :" + beanId, ", the beanId is duplicated :" + BEAN_CONTEXT.get(beanId).getTypeName() + " and " + beanClass.getTypeName());
-            } else {
-                BEAN_CONTEXT.put(beanId, beanClass);
-            }
+            checkBeanIdDuplicated(beanName);
+            BEAN_CONTEXT.put(beanId, beanClass);
         }
     }
 }

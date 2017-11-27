@@ -75,13 +75,6 @@
             <version>${jsp.version}</version>
         </dependency>
 
-        <!-- EhCache -->
-        <dependency>
-            <groupId>org.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-            <version>${ehcache.version}</version>
-        </dependency>
-
         <!-- Cglib -->
         <dependency>
             <groupId>cglib</groupId>
@@ -106,12 +99,6 @@
             <version>${aspectj.version}</version>
         </dependency>
 
-        <!-- Log4j -->
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
         <!-- Log4j12 -->
         <dependency>
             <groupId>org.slf4j</groupId>
