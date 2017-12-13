@@ -1,5 +1,6 @@
 package star.controller;
 
+import com.google.common.collect.Lists;
 import star.annotation.*;
 import star.bean.User;
 import star.constant.RequestMethod;
@@ -8,6 +9,8 @@ import star.utils.JsonUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * @author keshawn
@@ -16,7 +19,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 @Fresh
 public class TestController {
-    @Inject("testServiceImpl2")
+    @Inject
     private TestService testService;
 
     @Action(value = "/hello", method = RequestMethod.GET)
@@ -27,10 +30,13 @@ public class TestController {
         System.out.println(age);
         httpServletRequest.setAttribute("name", name);
         session.setAttribute("name", name);
+        List<String> list = Lists.newArrayList("sasd","sadsa","aa");
+
         return "test";
     }
 
     @Action(value = "json")
+    @Stream
     public String json(User user, String name, Long[] list, HttpServletRequest httpServletRequest, HttpSession session) {
         System.out.println(user.toString());
         System.out.println(name);

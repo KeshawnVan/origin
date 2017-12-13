@@ -1,16 +1,30 @@
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import star.annotation.Inject;
 import star.bean.Handler;
+import star.bean.PartnerLevel;
+import star.bean.YamlBean;
 import star.constant.RequestMethod;
 import star.exception.ImplementDuplicateException;
 import star.factory.BeanFactory;
 import star.factory.ControllerFactory;
 import star.utils.*;
-import star.bean.YamlBean;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static star.utils.StringUtil.checkTimeValid;
 
 /**
  * @author keshawn
@@ -113,5 +127,98 @@ public class TestF {
         System.out.println(bean);
         String name = "fkx";
         System.out.println(JsonUtil.encodeJson(name));
+    }
+
+    @Test
+    public void testLists(){
+        List<String> list = Lists.newArrayList("a","b","c","d","e","f","g");
+        list.forEach(a -> System.out.println(a));
+        Lists.partition(list,2).forEach(a -> a.forEach(b -> System.out.println(b)));
+    }
+
+    @Test
+    public void testW(){
+        String placeholder = ",?";
+        StringBuilder stringBuilder = new StringBuilder("(?");
+        int size = 1000;
+        for (int i = 0; i < size; i++) {
+            stringBuilder.append(placeholder);
+        }
+        stringBuilder.append(")");
+    }
+
+    @Test
+    public void buildJson(){
+        Map<String,Object> jsonMap = new HashMap<>();
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("skuId","2961041");
+        paramMap.put("phoneNum","15225261060");
+        jsonMap.put("methodName","checkCode");
+        jsonMap.put("jsonParams",paramMap);
+        System.out.println(JsonUtil.encodeJson(jsonMap));
+    }
+
+    @Test
+    public void testReg(){
+        System.out.println(checkTimeValid("2099-08-10 01:17:57"));
+    }
+
+    @Test
+    public void testUrlEncode()throws Exception{
+        System.out.println(URLEncoder.encode("test","UNICODE"));
+        System.out.println(URLEncoder.encode("范开翔#","UTF-8"));
+    }
+    @Test
+    public void testDecode(){
+        String json = "{methodName:checkCode,jsonParams:{skuId:2961041,phoneNum:15225261060}}";
+        Map map = JsonUtil.decodeJson(json,Map.class);
+        System.out.println(map);
+    }
+    private String scale2digit(BigDecimal bigDecimal) {
+        if (bigDecimal == null) {
+            return "0.00";
+        }
+        return bigDecimal.setScale(2, RoundingMode.HALF_UP).toString();
+    }
+
+    @Test
+    public void testBig(){
+        System.out.println(scale2digit(new BigDecimal(12)));
+        System.out.println(scale2digit(null));
+        String s = scale2digit(new BigDecimal(12));
+        String ss = "10.01";
+        String[] array = ss.split("\\.");
+        System.out.println(array[0]);
+        System.out.println(array[1]);
+
+    }
+
+    @Test
+    public void testInstant(){
+        System.out.println(JsonUtil.encodeJson(Instant.now()));
+        Instant instant = JsonUtil.decodeJson(JsonUtil.encodeJson(Instant.now()),Instant.class);
+        System.out.println(instant);
+    }
+
+    @Test
+    public void jackson(){
+        String s = "{\"receiveInstantDate\":\"2017-12-06 13:17:22\",\"sender\":\"+111\",\"transId\":\"3\",\"type\":0,\"messageEquipmentId\":\"10000\",\"content\":\"test\",\"shortCode\":\"test\"}";
+        Map<String,Object> map = JsonUtil.decodeJson(s,Map.class);
+        System.out.println(map);
+    }
+
+    @Test
+    public void testEm(){
+        System.out.println(PartnerLevel.SUP_DEALER.toString());
+        System.out.println(PartnerLevel.values());
+        String level = "DEALER";
+        int num  = 0;
+        PartnerLevel[] values = PartnerLevel.values();
+        for (PartnerLevel value : values) {
+            if (value.toString().equals(level)){
+                num = value.getCode();
+            }
+        }
+        System.out.println(num);
     }
 }

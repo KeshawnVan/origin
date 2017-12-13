@@ -19,6 +19,8 @@ public final class StringUtil {
 
     private static final String BLANK = "";
 
+    private static final Pattern TIME_PATTERN = Pattern.compile("^(((20[0-9][0-9]-(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|(20[0-3][0-9]-(0[2469]|11)-(0[1-9]|[12][0-9]|30))) (20|21|22|23|[0-1][0-9]):[0-5][0-9]:[0-5][0-9])$");
+
 
     public static boolean isEmpty(String string) {
         if (string != null) {
@@ -53,15 +55,7 @@ public final class StringUtil {
     }
 
     public static boolean checkStringIsAllDigital(String str) {
-        if (null != str) {
-            int len = str.length();
-            Pattern p = Pattern.compile("[0-9]{" + len + "}");
-            Matcher m = p.matcher(str);
-            if (!m.matches()) {
-                return false;
-            }
-        }
-        return true;
+        return StringUtils.isNumeric(str);
     }
 
     public static boolean isSame(Object first, Object second) {
@@ -139,5 +133,10 @@ public final class StringUtil {
             return BLANK;
         }
         return string.substring(0,string.length() - 1);
+    }
+
+    public static boolean checkTimeValid(String patternString) {
+        Matcher matcher= TIME_PATTERN.matcher(patternString);
+        return matcher.matches();
     }
 }
