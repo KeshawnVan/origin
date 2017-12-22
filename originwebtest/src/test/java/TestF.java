@@ -1,16 +1,21 @@
-import com.google.common.base.Strings;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import star.annotation.Inject;
 import star.bean.Handler;
 import star.bean.PartnerLevel;
+import star.bean.User;
 import star.bean.YamlBean;
 import star.constant.RequestMethod;
+import star.controller.TestController;
 import star.exception.ImplementDuplicateException;
 import star.factory.BeanFactory;
 import star.factory.ControllerFactory;
+import star.proxy.DynamicProxy;
+import star.service.TestService;
+import star.service.impl.TestServiceImpl;
 import star.utils.*;
 
 import java.lang.reflect.Field;
@@ -20,9 +25,8 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.ZoneOffset;
+import java.util.*;
 
 import static star.utils.StringUtil.checkTimeValid;
 
@@ -31,6 +35,10 @@ import static star.utils.StringUtil.checkTimeValid;
  * @date 2017/11/8
  */
 public class TestF {
+
+    public static final String UTF_8 = "UTF-8";
+    public static final String UNICODE = "UNICODE";
+
     @Test
     public void test() {
         System.out.println(StringUtil.isNotEmpty("   "));
@@ -95,7 +103,7 @@ public class TestF {
     }
 
     @Test
-    public void testDI(){
+    public void testDI() {
 //        IocCore iocCore = new IocCore();
 //        TestController testController = (TestController)BeanFactory.getBean("testController");
 //        System.out.println(testController.hashCode());
@@ -107,37 +115,37 @@ public class TestF {
     }
 
     @Test
-    public void testYaml(){
-        YamlBean yamlBean = YamlUtil.getYamlBean("origin.yml",YamlBean.class);
+    public void testYaml() {
+        YamlBean yamlBean = YamlUtil.getYamlBean("origin.yml", YamlBean.class);
         System.out.println(yamlBean);
     }
 
     @Test
-    public void testControllerFactory(){
-        Handler handler = ControllerFactory.getHandler(RequestMethod.GET,"/2");
+    public void testControllerFactory() {
+        Handler handler = ControllerFactory.getHandler(RequestMethod.GET, "/2");
         System.out.println(handler);
     }
 
     @Test
-    public void testJsonUtil(){
-        YamlBean yamlBean = YamlUtil.getYamlBean("origin.yml",YamlBean.class);
+    public void testJsonUtil() {
+        YamlBean yamlBean = YamlUtil.getYamlBean("origin.yml", YamlBean.class);
         String json = JsonUtil.encodeJson(yamlBean);
         System.out.println(json);
-        YamlBean bean = JsonUtil.decodeJson(json,YamlBean.class);
+        YamlBean bean = JsonUtil.decodeJson(json, YamlBean.class);
         System.out.println(bean);
         String name = "fkx";
         System.out.println(JsonUtil.encodeJson(name));
     }
 
     @Test
-    public void testLists(){
-        List<String> list = Lists.newArrayList("a","b","c","d","e","f","g");
+    public void testLists() {
+        List<String> list = Lists.newArrayList("a", "b", "c", "d", "e", "f", "g");
         list.forEach(a -> System.out.println(a));
-        Lists.partition(list,2).forEach(a -> a.forEach(b -> System.out.println(b)));
+        Lists.partition(list, 2).forEach(a -> a.forEach(b -> System.out.println(b)));
     }
 
     @Test
-    public void testW(){
+    public void testW() {
         String placeholder = ",?";
         StringBuilder stringBuilder = new StringBuilder("(?");
         int size = 1000;
@@ -148,32 +156,34 @@ public class TestF {
     }
 
     @Test
-    public void buildJson(){
-        Map<String,Object> jsonMap = new HashMap<>();
-        Map<String,Object> paramMap = new HashMap<>();
-        paramMap.put("skuId","2961041");
-        paramMap.put("phoneNum","15225261060");
-        jsonMap.put("methodName","checkCode");
-        jsonMap.put("jsonParams",paramMap);
+    public void buildJson() {
+        Map<String, Object> jsonMap = new HashMap<>();
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("skuId", "2961041");
+        paramMap.put("phoneNum", "15225261060");
+        jsonMap.put("methodName", "checkCode");
+        jsonMap.put("jsonParams", paramMap);
         System.out.println(JsonUtil.encodeJson(jsonMap));
     }
 
     @Test
-    public void testReg(){
+    public void testReg() {
         System.out.println(checkTimeValid("2099-08-10 01:17:57"));
     }
 
     @Test
-    public void testUrlEncode()throws Exception{
-        System.out.println(URLEncoder.encode("test","UNICODE"));
-        System.out.println(URLEncoder.encode("范开翔#","UTF-8"));
+    public void testUrlEncode() throws Exception {
+        System.out.println(URLEncoder.encode("test", "UNICODE"));
+        System.out.println(URLEncoder.encode("范开翔#", "UTF-8"));
     }
+
     @Test
-    public void testDecode(){
+    public void testDecode() {
         String json = "{methodName:checkCode,jsonParams:{skuId:2961041,phoneNum:15225261060}}";
-        Map map = JsonUtil.decodeJson(json,Map.class);
+        Map map = JsonUtil.decodeJson(json, Map.class);
         System.out.println(map);
     }
+
     private String scale2digit(BigDecimal bigDecimal) {
         if (bigDecimal == null) {
             return "0.00";
@@ -182,7 +192,7 @@ public class TestF {
     }
 
     @Test
-    public void testBig(){
+    public void testBig() {
         System.out.println(scale2digit(new BigDecimal(12)));
         System.out.println(scale2digit(null));
         String s = scale2digit(new BigDecimal(12));
@@ -194,31 +204,116 @@ public class TestF {
     }
 
     @Test
-    public void testInstant(){
+    public void testInstant() {
         System.out.println(JsonUtil.encodeJson(Instant.now()));
-        Instant instant = JsonUtil.decodeJson(JsonUtil.encodeJson(Instant.now()),Instant.class);
+        Instant instant = JsonUtil.decodeJson(JsonUtil.encodeJson(Instant.now()), Instant.class);
         System.out.println(instant);
     }
 
     @Test
-    public void jackson(){
+    public void jackson() {
         String s = "{\"receiveInstantDate\":\"2017-12-06 13:17:22\",\"sender\":\"+111\",\"transId\":\"3\",\"type\":0,\"messageEquipmentId\":\"10000\",\"content\":\"test\",\"shortCode\":\"test\"}";
-        Map<String,Object> map = JsonUtil.decodeJson(s,Map.class);
+        Map<String, Object> map = JsonUtil.decodeJson(s, Map.class);
         System.out.println(map);
     }
 
     @Test
-    public void testEm(){
+    public void testEm() {
         System.out.println(PartnerLevel.SUP_DEALER.toString());
         System.out.println(PartnerLevel.values());
         String level = "DEALER";
-        int num  = 0;
+        int num = 0;
         PartnerLevel[] values = PartnerLevel.values();
         for (PartnerLevel value : values) {
-            if (value.toString().equals(level)){
+            if (value.toString().equals(level)) {
                 num = value.getCode();
             }
         }
         System.out.println(num);
+    }
+
+    @Test
+    public void TestBuilder() {
+        User user = GenericLambdaBuilder
+                .build(User.class)
+                .with(User::setAge, 10)
+                .with(User::setName, "asd")
+                .get();
+        System.out.println(JsonUtil.encodeJson(user));
+    }
+
+
+    public static void hello() {
+        System.out.println("Hello World");
+    }
+
+    @Test
+    public void testBuilder(){
+        User fkx = User.newBuilder().age(10).name("fkx").build();
+        String json = JSON.toJSONStringWithDateFormat(fkx,"yyyy-MM-dd HH:mm:ss", SerializerFeature.DisableCircularReferenceDetect);
+        System.out.println(json);
+    }
+
+    @Test
+    public void testProper(){
+        Properties properties = PropertiesUtil.loadProperties("log4j.properties");
+        Set<String> keys = PropertiesUtil.getAllKey(properties);
+        System.out.println(keys);
+    }
+
+    @Test
+    public void testTimeZone(){
+        LocalDateTime localDateTime = LocalDateTime.now();
+        Instant instant = localDateTime.atZone(ZoneOffset.ofHours(2).normalized()).toInstant();
+        LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneOffset.ofHours(2));
+        System.out.println(dateTime);
+    }
+
+    @Test
+    public void testProxy(){
+        TestServiceImpl testService = new TestServiceImpl();
+        DynamicProxy proxy = new DynamicProxy(testService);
+        TestService proxyService = proxy.getProxy();
+        proxy.setBeforeSupplier(()->User.newBuilder().age(10).name("fkx").build());
+//        proxy.setAfterConsumer(p -> {
+//            User user = (User) p;
+//            System.out.println(user.getName());
+//        });
+        proxyService.hello();
+    }
+
+    @Test
+    public void testCode()throws Exception{
+        String s = "E卡商品特殊标识";
+        String code = convert(s);
+        System.out.println(code);
+        String ss = "\\u0045\\u5361\\u5546\\u54c1\\u7279\\u6b8a\\u6807\\u8bc6";
+        System.out.println(URLDecoder.decode(ss,UNICODE));
+    }
+    public String convert(String str)
+    {
+        str = (str == null ? "" : str);
+        String tmp;
+        StringBuffer sb = new StringBuffer(1000);
+        char c;
+        int i, j;
+        sb.setLength(0);
+        for (i = 0; i < str.length(); i++)
+        {
+            c = str.charAt(i);
+            sb.append("\\u");
+            j = (c >>>8); //取出高8位
+            tmp = Integer.toHexString(j);
+            if (tmp.length() == 1)
+                sb.append("0");
+            sb.append(tmp);
+            j = (c & 0xFF); //取出低8位
+            tmp = Integer.toHexString(j);
+            if (tmp.length() == 1)
+                sb.append("0");
+            sb.append(tmp);
+
+        }
+        return (new String(sb));
     }
 }

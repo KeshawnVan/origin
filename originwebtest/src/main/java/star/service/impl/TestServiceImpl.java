@@ -10,7 +10,17 @@ import star.service.TestService;
 @Service
 public class TestServiceImpl implements TestService {
 
+    private String s = "asda";
+
     public void hello() {
         System.out.println("hello origin ioc");
+    }
+
+    public String getS() {
+        return s;
+    }
+
+    public void setS(String s) {
+        this.s = s;
     }
 }

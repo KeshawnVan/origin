@@ -19,7 +19,12 @@ public final class StringUtil {
 
     private static final String BLANK = "";
 
+    private static final String SET = "set";
+
+    private static final String GET = "get";
+
     private static final Pattern TIME_PATTERN = Pattern.compile("^(((20[0-9][0-9]-(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|(20[0-3][0-9]-(0[2469]|11)-(0[1-9]|[12][0-9]|30))) (20|21|22|23|[0-1][0-9]):[0-5][0-9]:[0-5][0-9])$");
+
 
 
     public static boolean isEmpty(String string) {
@@ -113,7 +118,13 @@ public final class StringUtil {
     }
 
     public static String getSetMethodName(String fieldName) {
-        String prefix = "set";
+        String prefix = SET;
+        String fieldFirst = fieldName.substring(0, 1).toUpperCase();
+        return prefix + fieldFirst + fieldName.substring(1, fieldName.length());
+    }
+
+    public static String getGetMethodName(String fieldName) {
+        String prefix = GET;
         String fieldFirst = fieldName.substring(0, 1).toUpperCase();
         return prefix + fieldFirst + fieldName.substring(1, fieldName.length());
     }
