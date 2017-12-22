@@ -10,9 +10,10 @@ import org.slf4j.LoggerFactory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedHashSet;
 import java.util.Properties;
 import java.util.Set;
+
+import static java.util.stream.Collectors.toSet;
 
 public final class PropertiesUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesUtil.class);
@@ -79,10 +80,6 @@ public final class PropertiesUtil {
     }
 
     public static Set getAllKey(Properties properties) {
-        Set<String> set = new LinkedHashSet<>();
-        for (Object key : properties.keySet()) {
-            set.add(key.toString());
-        }
-        return set;
+        return properties.keySet().stream().map(key -> key.toString()).collect(toSet());
     }
 }

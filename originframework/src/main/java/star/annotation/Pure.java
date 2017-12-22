@@ -6,10 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 如果不需要代理，在类或方法上使用该注解
  * @author keshawn
- * @date 2017/11/9
+ * @date 2017/12/22
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Internal {
+public @interface Pure {
 }

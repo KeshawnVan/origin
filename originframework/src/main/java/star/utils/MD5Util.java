@@ -8,6 +8,9 @@ import java.security.NoSuchAlgorithmException;
  */
 
 public final class MD5Util {
+
+    private static final String MD5 = "MD5";
+
     private MD5Util() {
     }
 
@@ -33,7 +36,7 @@ public final class MD5Util {
      * @throws NoSuchAlgorithmException 异常
      */
     public static byte[] md5Digest(byte[] src) throws NoSuchAlgorithmException {
-        java.security.MessageDigest alg = java.security.MessageDigest.getInstance("MD5");
+        java.security.MessageDigest alg = java.security.MessageDigest.getInstance(MD5);
         return alg.digest(src);
     }
 }

@@ -8,11 +8,14 @@ import star.annotation.Service;
 import star.constant.ConfigConstant;
 import star.core.IocCore;
 import star.exception.ImplementDuplicateException;
+import star.proxy.Proxy;
+import star.proxy.ProxyManager;
 import star.utils.CollectionUtil;
 import star.utils.ReflectionUtil;
 import star.utils.StringUtil;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,11 +27,17 @@ public final class BeanFactory {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BeanFactory.class);
 
-    private static final Map<Class<?>, Object> BEAN_MAP = new HashMap<>(32);
+    private static final int INITIAL_CAPACITY = 32;
 
-    private static final Map<String, Class<?>> BEAN_CONTEXT = new HashMap<>(32);
+    private static final Map<Class<?>, Object> BEAN_MAP = new HashMap<>(INITIAL_CAPACITY);
+
+    private static final Map<String, Class<?>> BEAN_CONTEXT = new HashMap<>(INITIAL_CAPACITY);
 
     private static final Map<String, String> YAML_BEAN_ID_MAPPING = ConfigFactory.getBeanIdMapping();
+
+    private static final Map<Class<?>, List<Proxy>> TARGET_MAP = ProxyFactory.getTargetMap();
+
+    private static final Map<Class<?>, Object> CLASS_PROXY_MAP = ProxyFactory.getClassProxyMap();
 
     static {
         Set<Class<?>> beanClassSet = ClassFactory.getBeanClassSet();
@@ -36,10 +45,21 @@ public final class BeanFactory {
             buildBeanContext(beanClass);
             //带有@Fresh注解为多例,每次依赖注入都进行类的初始化，不加入实例中
             if (!beanClass.isAnnotationPresent(Fresh.class)) {
-                Object object = ReflectionUtil.newInstance(beanClass);
+                Object object = getSingletonInstance(beanClass);
                 BEAN_MAP.put(beanClass, object);
             }
         });
+    }
+
+    private static Object getSingletonInstance(Class<?> beanClass) {
+        //如果该类存在代理，则使用代理对象
+        Object object;
+        if (CLASS_PROXY_MAP.containsKey(beanClass)){
+            object = CLASS_PROXY_MAP.get(beanClass);
+        }else {
+            object = ReflectionUtil.newInstance(beanClass);
+        }
+        return object;
     }
 
     public static Map<Class<?>, Object> getBeanMap() {
@@ -70,14 +90,16 @@ public final class BeanFactory {
     public static <T> T getBean(Class<T> cls) {
         //带有@Fresh注解为多例，每次都进行类的初始化,并进行依赖注入
         if (cls.isAnnotationPresent(Fresh.class)) {
-            T beanInstance = (T) ReflectionUtil.newInstance(cls);
+            //查看该类是否存在代理
+            List<Proxy> proxyList = TARGET_MAP.get(cls);
+            T beanInstance = CollectionUtil.isNotEmpty(proxyList) ? ProxyManager.createProxy(cls, proxyList) : ReflectionUtil.newInstance(cls);
             IocCore.dependencyInjection(cls, beanInstance);
             return beanInstance;
         } else {
             if (!BEAN_MAP.containsKey(cls)) {
                 throw new RuntimeException("can not get bean by class: " + cls);
             }
-            return (T) BEAN_MAP.get(cls);
+            return (T) getSingletonInstance(cls);
         }
     }
 
@@ -121,6 +143,13 @@ public final class BeanFactory {
             String beanId = beanName;
             checkBeanIdDuplicated(beanName);
             BEAN_CONTEXT.put(beanId, beanClass);
+        }
+    }
+
+    public static void setSingletonBean(Class<?> cls, Object object){
+        //BEAN_MAP中只存储单例的对象
+        if (!cls.isAnnotationPresent(Fresh.class)){
+            BEAN_MAP.put(cls, object);
         }
     }
 }

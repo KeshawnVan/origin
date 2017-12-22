@@ -23,6 +23,7 @@ public final class ClassUtil {
 
     private static final String JAR = "jar";
     private static final String FILE = "file";
+    private static final String REGEX = "%20";
 
     public static ClassLoader getClassLoader() {
         return Thread.currentThread().getContextClassLoader();
@@ -59,7 +60,7 @@ public final class ClassUtil {
                     String protocol = url.getProtocol();
                     if (FILE.equals(protocol)) {
                         // 20%是URL的空格，将其代替，SUN公司也说明了这是一个BUG
-                        String packagePath = url.getPath().replaceAll("%20", " ");
+                        String packagePath = url.getPath().replaceAll(REGEX, " ");
                         addFileClass(classSet, packagePath, packageName);
                     } else if (JAR.equals(protocol)) {
                         addJarClass(classSet, url);

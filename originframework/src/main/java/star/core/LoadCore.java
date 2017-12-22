@@ -3,6 +3,7 @@ package star.core;
 import star.factory.BeanFactory;
 import star.factory.ClassFactory;
 import star.factory.ControllerFactory;
+import star.factory.ProxyFactory;
 import star.utils.ClassUtil;
 
 /**
@@ -15,6 +16,7 @@ public final class LoadCore {
         Class<?>[] classes = {
                 ClassFactory.class,
                 BeanFactory.class,
+                ProxyFactory.class,
                 IocCore.class,
                 ControllerFactory.class
         };

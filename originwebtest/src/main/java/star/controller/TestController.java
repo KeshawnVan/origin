@@ -9,7 +9,6 @@ import star.utils.JsonUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -17,7 +16,6 @@ import java.util.List;
  * @date 2017/11/10
  */
 @Controller
-@Fresh
 public class TestController {
     @Inject
     private TestService testService;
@@ -64,6 +62,7 @@ public class TestController {
 
     @Action("blank")
     public String blank(){
+        System.out.println("test");
         return "test";
     }
 }

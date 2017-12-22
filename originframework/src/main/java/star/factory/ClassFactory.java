@@ -4,8 +4,10 @@ import star.annotation.Controller;
 import star.annotation.Service;
 import star.utils.ClassUtil;
 
-import java.util.HashSet;
+import java.lang.annotation.Annotation;
 import java.util.Set;
+
+import static java.util.stream.Collectors.toSet;
 
 /**
  * @author keshawn
@@ -33,23 +35,14 @@ public final class ClassFactory {
     }
 
     public static Set<Class<?>> getBeanClassSet() {
-        Set<Class<?>> classSet = new HashSet<>();
-        CLASS_SET.forEach(cls -> {
-            if (cls.isAnnotationPresent(Controller.class) || cls.isAnnotationPresent(Service.class)) {
-                classSet.add(cls);
-            }
-        });
-        return classSet;
+        return CLASS_SET.stream().filter(cls -> cls.isAnnotationPresent(Controller.class) || cls.isAnnotationPresent(Service.class)).collect(toSet());
     }
 
-    public static Set<Class<?>> getAnnotationClassSet(Class annotation) {
-        Set<Class<?>> classSet = new HashSet<>();
-        CLASS_SET.forEach(cls -> {
-            if (cls.isAnnotationPresent(annotation)) {
-                classSet.add(cls);
-            }
-        });
-        return classSet;
+    public static Set<Class<?>> getAnnotationClassSet(Class<? extends Annotation> annotation) {
+        return CLASS_SET.stream().filter(cls -> cls.isAnnotationPresent(annotation)).collect(toSet());
     }
 
+    public static Set<Class<?>> getClassSetBySuper(Class<?> superClass){
+        return CLASS_SET.stream().filter(cls -> superClass.isAssignableFrom(cls) && !superClass.equals(cls)).collect(toSet());
+    }
 }

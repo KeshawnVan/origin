@@ -13,7 +13,10 @@ import star.controller.TestController;
 import star.exception.ImplementDuplicateException;
 import star.factory.BeanFactory;
 import star.factory.ControllerFactory;
+import star.factory.ProxyFactory;
 import star.proxy.DynamicProxy;
+import star.proxy.Proxy;
+import star.proxy.ProxyManager;
 import star.service.TestService;
 import star.service.impl.TestServiceImpl;
 import star.utils.*;
@@ -315,5 +318,13 @@ public class TestF {
 
         }
         return (new String(sb));
+    }
+
+    @Test
+    public void testAop(){
+        Map<Class<?>, List<Proxy>> targetMap = ProxyFactory.getTargetMap();
+        List<Proxy> proxyList = targetMap.get(TestController.class);
+        TestController controller = ProxyManager.createProxy(TestController.class, proxyList);
+        controller.blank();
     }
 }

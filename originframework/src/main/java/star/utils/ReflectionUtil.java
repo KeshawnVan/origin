@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Set;
 
 /**
  * @author keshawn
@@ -15,7 +14,7 @@ public final class ReflectionUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtil.class);
 
-    public static Object newInstance(Class<?> cls) {
+    public static <T> T newInstance(Class<T> cls) {
         Object instance;
         try {
             instance = cls.newInstance();
@@ -23,7 +22,7 @@ public final class ReflectionUtil {
             LOGGER.error("new instance failure", e);
             throw new RuntimeException(e);
         }
-        return instance;
+        return (T) instance;
     }
 
     public static Object invokeMethod(Object object, Method method, Object... args) {
