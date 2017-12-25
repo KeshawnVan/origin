@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-import static star.utils.StringUtil.camel2Underline;
 
 /**
  * @author keshawn
@@ -27,7 +26,7 @@ public class MapToBeanUtil {
             Field[] fields = beanClass.getDeclaredFields();
             for (Field field : fields) {
                 String fieldName = field.getName();
-                Object mapValue = map.get(camel2Underline(fieldName));
+                Object mapValue = map.get(StringUtil.camelToUnderlineLowerCase(fieldName));
                 String jsonValue = StringUtil.castJsonString(mapValue);
                 Class<?> fieldClass = field.getType();
                 ReflectionUtil.setField(bean, field, JsonUtil.decodeJson(jsonValue, fieldClass));

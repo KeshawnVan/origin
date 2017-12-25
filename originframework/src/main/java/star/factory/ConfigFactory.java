@@ -54,6 +54,10 @@ public final class ConfigFactory {
         return YAML_BEAN.getBasePackage();
     }
 
+    public static String getAutoCast() {
+        return YAML_BEAN.getAutoCast();
+    }
+
     public static String getAppJspPath() {
         String jspPath = YAML_BEAN.getJspPath();
         return jspPath.endsWith(BACKLASH) ? StringUtil.removeLast(jspPath) : jspPath;

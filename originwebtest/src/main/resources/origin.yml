@@ -1,11 +1,12 @@
-jdbcDriver: com.mysql.jdbc.Driver
-jdbcUrl: jdbc:mysql://localhost:3306/origin
+jdbcDriver: com.mysql.cj.jdbc.Driver
+jdbcUrl: jdbc:mysql://localhost:3306/origin?serverTimezone=GMT&useUnicode=true&characterEncoding=UTF-8&useSSL=false
 jdbcUsername: root
 jdbcPassword: root
 
 basePackage: star
 jspPath: /view
 assetPath: /asset
+autoCast: true
 
 beanIdMapping:
   - id: test123

@@ -17,13 +17,15 @@ public class YamlBean {
     private String jspPath;
     private String assetPath;
 
+    private String autoCast;
+
     private List<Map<String, String>> beanIdMapping;
     private List<Map<String, String>> implementMapping;
 
     public YamlBean() {
     }
 
-    public YamlBean(String jdbcDriver, String jdbcUrl, String jdbcUsername, String jdbcPassword, String basePackage, String jspPath, String assetPath, List<Map<String, String>> beanIdMapping, List<Map<String, String>> implementMapping) {
+    public YamlBean(String jdbcDriver, String jdbcUrl, String jdbcUsername, String jdbcPassword, String basePackage, String jspPath, String assetPath, String autoCast, List<Map<String, String>> beanIdMapping, List<Map<String, String>> implementMapping) {
         this.jdbcDriver = jdbcDriver;
         this.jdbcUrl = jdbcUrl;
         this.jdbcUsername = jdbcUsername;
@@ -31,6 +33,7 @@ public class YamlBean {
         this.basePackage = basePackage;
         this.jspPath = jspPath;
         this.assetPath = assetPath;
+        this.autoCast = autoCast;
         this.beanIdMapping = beanIdMapping;
         this.implementMapping = implementMapping;
     }
@@ -89,6 +92,14 @@ public class YamlBean {
 
     public void setAssetPath(String assetPath) {
         this.assetPath = assetPath;
+    }
+
+    public String getAutoCast() {
+        return autoCast;
+    }
+
+    public void setAutoCast(String autoCast) {
+        this.autoCast = autoCast;
     }
 
     public List<Map<String, String>> getBeanIdMapping() {

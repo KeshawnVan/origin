@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  */
 public final class StringUtil {
 
-    private static final Pattern PATTERN = Pattern.compile("[A-Z]([a-z\\d]+)?");
+    private static final String UNDER_LINE = "_";
 
     private static final String URL_PREFIX = "/";
 
@@ -24,7 +24,6 @@ public final class StringUtil {
     private static final String GET = "get";
 
     private static final Pattern TIME_PATTERN = Pattern.compile("^(((20[0-9][0-9]-(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|(20[0-3][0-9]-(0[2469]|11)-(0[1-9]|[12][0-9]|30))) (20|21|22|23|[0-1][0-9]):[0-5][0-9]:[0-5][0-9])$");
-
 
 
     public static boolean isEmpty(String string) {
@@ -102,21 +101,6 @@ public final class StringUtil {
         return "\"" + string + "\"";
     }
 
-    public static String camel2Underline(String line) {
-        if (isEmpty(line)) {
-            return BLANK;
-        }
-        line = String.valueOf(line.charAt(0)).toUpperCase().concat(line.substring(1));
-        StringBuffer sb = new StringBuffer();
-        Matcher matcher = PATTERN.matcher(line);
-        while (matcher.find()) {
-            String word = matcher.group();
-            sb.append(word.toLowerCase());
-            sb.append(matcher.end() == line.length() ? "" : "_");
-        }
-        return sb.toString();
-    }
-
     public static String getSetMethodName(String fieldName) {
         String prefix = SET;
         String fieldFirst = fieldName.substring(0, 1).toUpperCase();
@@ -139,15 +123,78 @@ public final class StringUtil {
         return classRequestMapping;
     }
 
-    public static String removeLast(String string){
-        if (isEmpty(string)){
+    public static String removeLast(String string) {
+        if (isEmpty(string)) {
             return BLANK;
         }
-        return string.substring(0,string.length() - 1);
+        return string.substring(0, string.length() - 1);
     }
 
     public static boolean checkTimeValid(String patternString) {
-        Matcher matcher= TIME_PATTERN.matcher(patternString);
+        Matcher matcher = TIME_PATTERN.matcher(patternString);
         return matcher.matches();
     }
+
+    public static String camelToUnderlineLowerCase(String camel) {
+        return camelToUnderline(camel).toString().toLowerCase();
+    }
+
+    public static String camelToUnderlineUpperCase(String camel) {
+        return camelToUnderline(camel).toString().toUpperCase();
+    }
+
+    private static StringBuilder camelToUnderline(String camel) {
+        char[] chars = camel.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0, j = 0; i < chars.length; i++, j++) {
+            char s = chars[i];
+            if (s + 1 > 65 && s + 1 < 91) {
+                char _ = 95;
+                sb.append(_);
+                j++;
+                sb.append(s);
+                continue;
+            }
+            sb.append(s);
+        }
+        return sb;
+    }
+
+    /**
+     * 将下划线大写方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。</br>
+     * 例如：HELLO_WORLD->HelloWorld
+     *
+     * @param name 转换前的下划线大写方式命名的字符串
+     * @return 转换后的驼峰式命名的字符串
+     */
+    public static String underLineToCamel(String name) {
+        StringBuilder result = new StringBuilder();
+        // 快速检查
+        if (isEmpty(name)) {
+            return BLANK;
+        } else if (!name.contains(UNDER_LINE)) {
+            // 不含下划线，仅将首字母小写
+            return name.substring(0, 1).toLowerCase() + name.substring(1);
+        }
+        // 用下划线将原始字符串分割
+        String[] camels = name.split(UNDER_LINE);
+        for (String camel : camels) {
+            // 跳过原始字符串中开头、结尾的下换线或双重下划线
+            if (camel.isEmpty()) {
+                continue;
+            }
+            // 处理真正的驼峰片段
+            if (result.length() == 0) {
+                // 第一个驼峰片段，全部字母都小写
+                result.append(camel.toLowerCase());
+            } else {
+                // 其他的驼峰片段，首字母大写
+                result.append(camel.substring(0, 1).toUpperCase());
+                result.append(camel.substring(1).toLowerCase());
+            }
+        }
+        return result.toString();
+    }
+
 }
+

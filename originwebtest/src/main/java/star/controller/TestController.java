@@ -55,12 +55,14 @@ public class TestController {
     @Action("b")
     public String b(String name, HttpServletRequest request, HttpSession session) {
         System.out.println("b");
+        System.out.println(name);
         request.setAttribute("b", name);
         session.setAttribute("b", name);
         return "/internal";
     }
 
     @Action("blank")
+    @Pure
     public String blank(){
         System.out.println("test");
         return "test";

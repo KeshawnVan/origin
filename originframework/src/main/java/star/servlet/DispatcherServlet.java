@@ -1,6 +1,7 @@
 package star.servlet;
 
 import com.alibaba.druid.sql.visitor.functions.Char;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import star.annotation.Internal;
@@ -27,7 +28,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author keshawn
@@ -259,10 +263,7 @@ public class DispatcherServlet extends HttpServlet {
             if (duplicateValue instanceof List) {
                 ((List) duplicateValue).add(paramValue);
             } else {
-                List<Object> paramValueList = new LinkedList<>();
-                paramValueList.add(duplicateValue);
-                paramValueList.add(paramValue);
-                paramMap.put(paramName, paramValueList);
+                paramMap.put(paramName, Lists.newArrayList(duplicateValue, paramValue));
             }
         } else {
             paramMap.put(paramName, paramValue);
