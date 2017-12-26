@@ -145,19 +145,20 @@ public final class StringUtil {
 
     private static StringBuilder camelToUnderline(String camel) {
         char[] chars = camel.toCharArray();
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0, j = 0; i < chars.length; i++, j++) {
             char s = chars[i];
             if (s + 1 > 65 && s + 1 < 91) {
-                char _ = 95;
-                sb.append(_);
+                // _ = 95
+                char underline = 95;
+                stringBuilder.append(underline);
                 j++;
-                sb.append(s);
+                stringBuilder.append(s);
                 continue;
             }
-            sb.append(s);
+            stringBuilder.append(s);
         }
-        return sb;
+        return stringBuilder;
     }
 
     /**

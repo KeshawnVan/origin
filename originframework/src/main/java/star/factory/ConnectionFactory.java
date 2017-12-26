@@ -39,16 +39,18 @@ public class ConnectionFactory {
 
     public static Connection getConnection() {
         Connection connection = connectionThreadLocal.get();
-        if (connection == null) {
-            try {
-                connection = druidDataSource.getConnection();
-            } catch (SQLException e) {
-                LOGGER.error("get jdbc connection error", e);
-            } finally {
-                connectionThreadLocal.set(connection);
+        synchronized (ConnectionFactory.class) {
+            if (connection == null) {
+                try {
+                    connection = druidDataSource.getConnection();
+                } catch (SQLException e) {
+                    LOGGER.error("get jdbc connection error", e);
+                } finally {
+                    connectionThreadLocal.set(connection);
+                }
             }
+            return connection;
         }
-        return connection;
     }
 
     public static void closeConnection() {
