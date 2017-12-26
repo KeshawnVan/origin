@@ -18,6 +18,8 @@ public class ConnectionFactory {
     private static final String JDBC_USERNAME = ConfigFactory.getJdbcUsername();
     private static final String JDBC_PASSWORD = ConfigFactory.getJdbcPassword();
 
+    private static volatile ConnectionFactory instance;
+
     private static final DruidDataSource druidDataSource = new DruidDataSource();
 
     private static ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal<>();
@@ -39,7 +41,7 @@ public class ConnectionFactory {
 
     public static Connection getConnection() {
         Connection connection = connectionThreadLocal.get();
-        synchronized (ConnectionFactory.class) {
+        synchronized (instance) {
             if (connection == null) {
                 try {
                     connection = druidDataSource.getConnection();
