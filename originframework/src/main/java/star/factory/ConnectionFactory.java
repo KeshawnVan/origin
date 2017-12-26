@@ -11,14 +11,12 @@ import java.sql.SQLException;
  * @author keshawn
  * @date 2017/12/25
  */
-public final class ConnectionFactory {
+public class ConnectionFactory {
 
     private static final String JDBC_DRIVER = ConfigFactory.getJdbcDriver();
     private static final String JDBC_URL = ConfigFactory.getJdbcUrl();
     private static final String JDBC_USERNAME = ConfigFactory.getJdbcUsername();
     private static final String JDBC_PASSWORD = ConfigFactory.getJdbcPassword();
-
-    private static volatile ConnectionFactory instance;
 
     private static final DruidDataSource druidDataSource = new DruidDataSource();
 
@@ -44,7 +42,7 @@ public final class ConnectionFactory {
 
     public static Connection getConnection() {
         Connection connection = connectionThreadLocal.get();
-        synchronized (instance) {
+        synchronized (ConnectionFactory.class) {
             if (connection == null) {
                 try {
                     connection = druidDataSource.getConnection();
