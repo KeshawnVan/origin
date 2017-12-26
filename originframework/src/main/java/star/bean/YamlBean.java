@@ -17,25 +17,14 @@ public final class YamlBean {
     private String jspPath;
     private String assetPath;
 
-    private String autoCast;
+    private Boolean autoCast = Boolean.TRUE;
+
+    private Map<String, Object> datasource;
 
     private List<Map<String, String>> beanIdMapping;
     private List<Map<String, String>> implementMapping;
 
     public YamlBean() {
-    }
-
-    public YamlBean(String jdbcDriver, String jdbcUrl, String jdbcUsername, String jdbcPassword, String basePackage, String jspPath, String assetPath, String autoCast, List<Map<String, String>> beanIdMapping, List<Map<String, String>> implementMapping) {
-        this.jdbcDriver = jdbcDriver;
-        this.jdbcUrl = jdbcUrl;
-        this.jdbcUsername = jdbcUsername;
-        this.jdbcPassword = jdbcPassword;
-        this.basePackage = basePackage;
-        this.jspPath = jspPath;
-        this.assetPath = assetPath;
-        this.autoCast = autoCast;
-        this.beanIdMapping = beanIdMapping;
-        this.implementMapping = implementMapping;
     }
 
     public String getJdbcDriver() {
@@ -94,12 +83,20 @@ public final class YamlBean {
         this.assetPath = assetPath;
     }
 
-    public String getAutoCast() {
+    public Boolean getAutoCast() {
         return autoCast;
     }
 
-    public void setAutoCast(String autoCast) {
+    public void setAutoCast(Boolean autoCast) {
         this.autoCast = autoCast;
+    }
+
+    public Map<String, Object> getDatasource() {
+        return datasource;
+    }
+
+    public void setDatasource(Map<String, Object> datasource) {
+        this.datasource = datasource;
     }
 
     public List<Map<String, String>> getBeanIdMapping() {

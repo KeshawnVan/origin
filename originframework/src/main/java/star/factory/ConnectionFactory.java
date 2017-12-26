@@ -17,6 +17,9 @@ public class ConnectionFactory {
     private static final String JDBC_URL = ConfigFactory.getJdbcUrl();
     private static final String JDBC_USERNAME = ConfigFactory.getJdbcUsername();
     private static final String JDBC_PASSWORD = ConfigFactory.getJdbcPassword();
+    private static final Integer MAX_ACTIVE = ConfigFactory.getMaxActive();
+    private static final Integer MIN_IDLE = ConfigFactory.getMinIdle();
+    private static final Integer INITIAL_SIZE = ConfigFactory.getInitialSize();
 
     private static final DruidDataSource druidDataSource = new DruidDataSource();
 
@@ -31,7 +34,11 @@ public class ConnectionFactory {
             druidDataSource.setUrl(JDBC_URL);
             druidDataSource.setUsername(JDBC_USERNAME);
             druidDataSource.setPassword(JDBC_PASSWORD);
-
+            druidDataSource.setMaxActive(MAX_ACTIVE);
+            druidDataSource.setMinIdle(MIN_IDLE);
+            druidDataSource.setInitialSize(INITIAL_SIZE);
+            druidDataSource.setDefaultAutoCommit(Boolean.FALSE);
+            druidDataSource.setDefaultReadOnly(Boolean.FALSE);
         } catch (ClassNotFoundException e) {
             LOGGER.error("JDBC Driver error", e);
         }

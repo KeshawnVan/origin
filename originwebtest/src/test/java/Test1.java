@@ -77,21 +77,23 @@ public class Test1 {
         Connection connection = ConnectionFactory.getConnection();
         String sql = "insert into user values(?,?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setLong(1, 6L);
-        preparedStatement.setString(2, "a");
+        preparedStatement.setLong(1, 8L);
+        preparedStatement.setString(2, "test");
         preparedStatement.setInt(3, 22);
-        boolean execute = preparedStatement.execute();
-        System.out.println(execute);
+        int i = preparedStatement.executeUpdate();
+        System.out.println(i);
         preparedStatement.close();
+        connection.commit();
         ConnectionFactory.closeConnection();
     }
 
     @Test
     public void testSelect() throws Exception {
         Connection connection = ConnectionFactory.getConnection();
-        String sql = "select * from user where id = 5";
+        String sql = "select * from user where id = 4";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         boolean execute = preparedStatement.execute();
+        System.out.println(execute);
         ResultSet resultSet = preparedStatement.getResultSet();
         resultSet.next();
         String string = resultSet.getString(2);
@@ -128,7 +130,8 @@ public class Test1 {
 
     @Test
     public void testDefault(){
-        String autoCast = ConfigFactory.getAutoCast();
+        Boolean autoCast = ConfigFactory.getAutoCast();
         System.out.println(autoCast);
+        System.out.println(-1L <= 0);
     }
 }
