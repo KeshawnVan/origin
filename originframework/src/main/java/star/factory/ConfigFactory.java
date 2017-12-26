@@ -34,6 +34,9 @@ public final class ConfigFactory {
 
     private static final String BACKLASH = "/";
 
+    private ConfigFactory() {
+    }
+
     public static String getJdbcDriver() {
         return YAML_BEAN.getJdbcDriver();
     }

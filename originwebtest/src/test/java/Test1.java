@@ -2,6 +2,7 @@ import com.google.common.reflect.Reflection;
 import org.junit.Test;
 import star.bean.User;
 import star.dao.UserRepository;
+import star.factory.ConfigFactory;
 import star.factory.ConnectionFactory;
 import star.proxy.CGLibProxy;
 import star.proxy.DynamicProxy;
@@ -123,5 +124,11 @@ public class Test1 {
         RepositoryProxy proxy = new RepositoryProxy(UserRepository.class);
         UserRepository userRepository = proxy.getProxy();
         userRepository.findById(1L);
+    }
+
+    @Test
+    public void testDefault(){
+        String autoCast = ConfigFactory.getAutoCast();
+        System.out.println(autoCast);
     }
 }

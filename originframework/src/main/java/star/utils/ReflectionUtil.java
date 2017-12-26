@@ -14,6 +14,9 @@ public final class ReflectionUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtil.class);
 
+    private ReflectionUtil() {
+    }
+
     public static <T> T newInstance(Class<T> cls) {
         Object instance;
         try {

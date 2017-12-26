@@ -11,7 +11,7 @@ import java.sql.SQLException;
  * @author keshawn
  * @date 2017/12/25
  */
-public class ConnectionFactory {
+public final class ConnectionFactory {
 
     private static final String JDBC_DRIVER = ConfigFactory.getJdbcDriver();
     private static final String JDBC_URL = ConfigFactory.getJdbcUrl();
@@ -35,6 +35,9 @@ public class ConnectionFactory {
         } catch (ClassNotFoundException e) {
             LOGGER.error("JDBC Driver error", e);
         }
+    }
+
+    private ConnectionFactory() {
     }
 
     public static Connection getConnection() {

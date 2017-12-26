@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * @author keshawn
  * @date 2017/11/13
  */
-public class Request {
+public final class Request {
     /**
      * 请求方法
      */

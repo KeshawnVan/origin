@@ -8,7 +8,7 @@ import java.math.RoundingMode;
  * @date 2017/11/8
  */
 
-public class NumberUtil {
+public final class NumberUtil {
 
     private static final int SCALE = 2;
 

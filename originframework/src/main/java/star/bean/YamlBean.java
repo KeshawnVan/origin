@@ -7,7 +7,7 @@ import java.util.Map;
  * @author keshawn
  * @date 2017/11/13
  */
-public class YamlBean {
+public final class YamlBean {
     private String jdbcDriver;
     private String jdbcUrl;
     private String jdbcUsername;

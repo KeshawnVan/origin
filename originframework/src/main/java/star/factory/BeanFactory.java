@@ -51,6 +51,9 @@ public final class BeanFactory {
         });
     }
 
+    private BeanFactory() {
+    }
+
     private static Object getSingletonInstance(Class<?> beanClass) {
         //如果该类存在代理，则使用代理对象
         Object object;

@@ -10,7 +10,7 @@ import java.util.List;
  * @author keshawn
  * @date 2017/12/21
  */
-public class ProxyChain {
+public final class ProxyChain {
 
     private final Class<?> targetClass;
     private final Object targetObject;

@@ -18,6 +18,9 @@ import static java.util.stream.Collectors.toSet;
 public final class PropertiesUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesUtil.class);
 
+    private PropertiesUtil() {
+    }
+
     public static Properties loadProperties(String filePath) {
         Properties properties = null;
         InputStream inputStream = null;

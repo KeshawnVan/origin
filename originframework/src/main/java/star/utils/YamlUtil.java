@@ -12,11 +12,14 @@ import java.io.FileNotFoundException;
  * @author keshawn
  * @date 2017/11/13
  */
-public class YamlUtil {
+public final class YamlUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(YamlUtil.class);
 
-    public static <T> T getYamlBean(String configPath,Class<T> yamlBeanClass){
+    private YamlUtil() {
+    }
+
+    public static <T> T getYamlBean(String configPath, Class<T> yamlBeanClass){
         Yaml yaml = new Yaml();
         T yamlBean = null;
         try {

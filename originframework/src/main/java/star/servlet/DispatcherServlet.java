@@ -39,7 +39,7 @@ import java.util.Map;
  * 请求转发器
  */
 @WebServlet(urlPatterns = "/*", loadOnStartup = 0)
-public class DispatcherServlet extends HttpServlet {
+public final class DispatcherServlet extends HttpServlet {
 
     private static final String APPLICATION_JSON = "application/json";
 

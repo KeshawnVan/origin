@@ -25,6 +25,9 @@ public final class ClassUtil {
     private static final String FILE = "file";
     private static final String REGEX = "%20";
 
+    private ClassUtil() {
+    }
+
     public static ClassLoader getClassLoader() {
         return Thread.currentThread().getContextClassLoader();
     }

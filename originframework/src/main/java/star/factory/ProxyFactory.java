@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.toSet;
  * @author keshawn
  * @date 2017/12/22
  */
-public class ProxyFactory {
+public final class ProxyFactory {
 
     private static final int INITIAL_CAPACITY = 1;
 
@@ -29,6 +29,8 @@ public class ProxyFactory {
 
     private static final Map<Class<?>, Object> CLASS_PROXY_MAP = createClassProxyMap(TARGET_MAP);
 
+    private ProxyFactory() {
+    }
 
     private static Set<Class<?>> createTargetClassSet(Aspect aspect){
         Class<? extends Annotation> annotation = aspect.value();

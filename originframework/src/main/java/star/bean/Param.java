@@ -9,7 +9,7 @@ import java.util.Map;
  * @date 2017/11/17
  * 请求参数对象
  */
-public class Param {
+public final class Param {
     private Map<String, Object> paramMap;
 
     public Param(Map<String, Object> paramMap) {

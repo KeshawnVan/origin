@@ -22,6 +22,9 @@ public final class ClassFactory {
         CLASS_SET = ClassUtil.getClassSet(basePackage);
     }
 
+    private ClassFactory() {
+    }
+
     public static Set<Class<?>> getClassSet() {
         return CLASS_SET;
     }

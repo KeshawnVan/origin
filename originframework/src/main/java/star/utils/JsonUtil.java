@@ -15,6 +15,9 @@ public final class JsonUtil {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+    private JsonUtil() {
+    }
+
     public static <T> String encodeJson(T object) {
         String json;
         try {

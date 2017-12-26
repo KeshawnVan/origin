@@ -11,7 +11,7 @@ import java.util.Map;
  * @author keshawn
  * @date 2017/11/23
  */
-public class MapToBeanUtil {
+public final class MapToBeanUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MapToBeanUtil.class);
 

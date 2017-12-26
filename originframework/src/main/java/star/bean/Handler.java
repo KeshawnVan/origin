@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
  * @author keshawn
  * @date 2017/11/14
  */
-public class Handler {
+public final class Handler {
     /**
      * Controller 类
      */

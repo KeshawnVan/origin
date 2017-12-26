@@ -18,6 +18,9 @@ public final class BeanConvertUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BeanConvertUtil.class);
 
+    private BeanConvertUtil() {
+    }
+
     public static Map<String, Object> toMap(Object obj) {
         Map<String, Object> result = new HashMap<String, Object>(12);
         List<Field> fields = getFields(obj.getClass());

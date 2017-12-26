@@ -16,6 +16,9 @@ public final class CodeUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(CodeUtil.class);
     private static final String UTF_8 = "UTF-8";
 
+    private CodeUtil() {
+    }
+
     public static String encodeURL(String source) {
         String target;
         try {

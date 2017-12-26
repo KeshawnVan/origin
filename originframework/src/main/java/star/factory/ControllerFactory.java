@@ -44,6 +44,9 @@ public final class ControllerFactory {
         }
     }
 
+    private ControllerFactory() {
+    }
+
     private static void buildMethodHandler(Class<?> controllerClass, String classRequestMapping, StringBuilder requestMappingBuilder, Method method) {
         if (method.isAnnotationPresent(Action.class)) {
             Action methodAction = method.getAnnotation(Action.class);
@@ -83,9 +86,6 @@ public final class ControllerFactory {
             requestMappingBuilder.setLength(0);
         }
         return requestPath;
-    }
-
-    private ControllerFactory() {
     }
 
     private static String getClassRequestMapping(Class<?> controllerClass) {

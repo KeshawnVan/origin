@@ -6,6 +6,9 @@ package star.utils;
  */
 public final class CastUtil {
 
+    private CastUtil() {
+    }
+
     public static String castString(Object object) {
         return castString(object, "");
     }
