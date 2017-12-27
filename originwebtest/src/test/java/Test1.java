@@ -1,3 +1,4 @@
+import com.google.common.collect.Lists;
 import com.google.common.reflect.Reflection;
 import org.junit.Test;
 import star.bean.User;
@@ -14,11 +15,15 @@ import star.utils.JsonUtil;
 import star.utils.ReflectionUtil;
 import star.utils.StringUtil;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.List;
 import java.util.Map;
+
+import static star.utils.JsonUtil.decodeArrayJson;
 
 /**
  * @author keshawn
@@ -122,16 +127,40 @@ public class Test1 {
     }
 
     @Test
-    public void testInterfacesProxy(){
+    public void testInterfacesProxy() {
         RepositoryProxy proxy = new RepositoryProxy(UserRepository.class);
         UserRepository userRepository = proxy.getProxy();
-        userRepository.findById(1L);
+        User user = userRepository.findById(3L);
+        System.out.println(JsonUtil.encodeJson(user));
     }
 
     @Test
-    public void testDefault(){
+    public void testDefault() {
         Boolean autoCast = ConfigFactory.getAutoCast();
         System.out.println(autoCast);
         System.out.println(-1L <= 0);
+    }
+
+    @Test
+    public void testJsonList() {
+        User user1 = User.newBuilder().name("f").age(1).id(1L).build();
+        User user2 = User.newBuilder().name("k").age(2).id(2L).build();
+        User user3 = User.newBuilder().name("x").age(3).id(3L).build();
+        List<User> users = Lists.newArrayList(user1, user2, user3);
+        String json = JsonUtil.encodeJson(users);
+        System.out.println(json);
+        List<User> userList = decodeArrayJson(json, User.class);
+        System.out.println(userList);
+    }
+
+    @Test
+    public void testType() throws Exception {
+        Field age = User.class.getDeclaredField("age");
+        Field id = User.class.getDeclaredField("id");
+        System.out.println(age.getType());
+        Class<?> type = age.getType();
+        System.out.println(type);
+        System.out.println(type == int.class);
+        System.out.println(id.getType() == Long.class);
     }
 }
