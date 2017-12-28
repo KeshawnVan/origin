@@ -1,5 +1,6 @@
 import com.google.common.collect.Lists;
 import com.google.common.reflect.Reflection;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import star.bean.Status;
 import star.bean.User;
@@ -23,8 +24,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static star.utils.JsonUtil.decodeArrayJson;
 
@@ -132,13 +132,19 @@ public class Test1 {
     }
 
     @Test
-    public void testInterfacesProxy() {
+    public void findById() {
         RepositoryProxy proxy = new RepositoryProxy(UserRepository.class);
         UserRepository userRepository = proxy.getProxy();
-        User user = userRepository.findById(10L);
+        User user = userRepository.findById(1L);
         System.out.println(JsonUtil.encodeJson(user));
     }
-
+    @Test
+    public void findByIds() {
+        RepositoryProxy proxy = new RepositoryProxy(UserRepository.class);
+        UserRepository userRepository = proxy.getProxy();
+        List<User> users = userRepository.findByIds(Lists.newArrayList(1L,2L));
+        System.out.println(JsonUtil.encodeJson(users));
+    }
     @Test
     public void testDefault() {
         Boolean autoCast = ConfigFactory.getAutoCast();
@@ -167,5 +173,22 @@ public class Test1 {
         System.out.println(type);
         System.out.println(type == int.class);
         System.out.println(id.getType() == Long.class);
+    }
+
+    @Test
+    public void prepare(){
+        String sql = "select * from user where id = #{id} and name = #{name}";
+        String[] between = StringUtils.substringsBetween(sql,"#{", "}");
+        for (int i = 0; i < between.length; i++) {
+            String s = between[i];
+            System.out.println(i+s);
+        }
+        String s = StringUtils.replaceAll(sql, "\\#\\{([^\\\\}]+)\\}", "?");
+        System.out.println(s);
+    }
+
+    @Test
+    public void testCollection(){
+        System.out.println(Collection.class.isAssignableFrom(Map.class));
     }
 }

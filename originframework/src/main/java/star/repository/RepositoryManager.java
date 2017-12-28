@@ -1,11 +1,11 @@
 package star.repository;
 
-import com.google.common.collect.Lists;
 import star.annotation.Column;
 import star.annotation.Table;
 import star.factory.ConfigFactory;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -32,8 +32,8 @@ public final class RepositoryManager {
         }
     }
 
-    public static Map<String, String> buildFieldMap(Field[] fields) {
-        return Lists.newArrayList(fields).stream()
+    public static Map<String, String> buildFieldMap(List<Field> fields) {
+        return fields.stream()
                 .collect(Collectors.toMap(field -> field.getName(),
                         field -> field.isAnnotationPresent(Column.class)
                                 ? field.getAnnotation(Column.class).value()

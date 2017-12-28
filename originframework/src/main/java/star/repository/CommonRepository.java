@@ -1,6 +1,7 @@
 package star.repository;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ public interface CommonRepository<T, ID extends Serializable> {
 
     List<T> findAll();
 
-    List<T> findByIds();
+    List<T> findByIds(Collection<ID> ids);
 
     T save(T t);
 
