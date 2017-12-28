@@ -22,4 +22,8 @@ public interface RepositoryConstant {
 
     String FIND_BY_ID = "findById";
 
+    String BLANK = " ";
+
+    int CLEAR = 0;
+
 }
