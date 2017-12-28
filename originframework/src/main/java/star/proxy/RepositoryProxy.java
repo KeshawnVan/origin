@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import static star.constant.RepositoryConstant.*;
 import static star.utils.StringUtil.camelToUnderlineUpperCase;
 
 /**
@@ -26,22 +27,6 @@ import static star.utils.StringUtil.camelToUnderlineUpperCase;
  * @date 2017/12/25
  */
 public class RepositoryProxy implements InvocationHandler {
-
-    private static final String FIND_BY_ID = "findById";
-
-    private static final String SELECT = "select ";
-
-    private static final String FROM = " from ";
-
-    private static final String WHERE = " where ";
-
-    private static final String ID = "id";
-
-    private static final String DELIMITER = ",";
-
-    private static final String EQUALS = " = ";
-
-    private static final String PLACEHOLDER = "?";
 
     private static final int INITIAL_CAPACITY = 2;
 
