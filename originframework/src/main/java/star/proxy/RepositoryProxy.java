@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.util.Map;
 
 import static star.constant.RepositoryConstant.*;
+import static star.repository.PreparedStatementLoader.setPreparedStatement;
 import static star.repository.RepositoryManager.*;
 import static star.repository.ResultSetParser.getResult;
 

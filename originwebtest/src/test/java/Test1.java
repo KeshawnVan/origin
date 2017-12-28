@@ -1,6 +1,7 @@
 import com.google.common.collect.Lists;
 import com.google.common.reflect.Reflection;
 import org.junit.Test;
+import star.bean.Status;
 import star.bean.User;
 import star.dao.UserRepository;
 import star.factory.ConfigFactory;
@@ -20,6 +21,8 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -80,11 +83,13 @@ public class Test1 {
     @Test
     public void testJDBC() throws Exception {
         Connection connection = ConnectionFactory.getConnection();
-        String sql = "insert into user values(?,?,?)";
+        String sql = "insert into user values(?,?,?,?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setLong(1, 8L);
+        preparedStatement.setLong(1, 11L);
         preparedStatement.setString(2, "test");
         preparedStatement.setInt(3, 22);
+        preparedStatement.setTimestamp(4,null);
+        preparedStatement.setObject(5, null);
         int i = preparedStatement.executeUpdate();
         System.out.println(i);
         preparedStatement.close();
@@ -108,14 +113,14 @@ public class Test1 {
 
     @Test
     public void testJson() {
-        User user = User.newBuilder().name("fkx").age(22).build();
-        String s = JsonUtil.encodeJson(user);
-        Map map = JsonUtil.decodeJson(s, Map.class);
-        map.put("test", "test");
-        String ss = JsonUtil.encodeJson(map);
-        System.out.println(ss);
-        User user1 = JsonUtil.decodeJson(ss, User.class);
-        System.out.println(JsonUtil.encodeJson(user1));
+//        User user = User.newBuilder().name("fkx").age(22).build();
+//        String s = JsonUtil.encodeJson(user);
+//        Map map = JsonUtil.decodeJson(s, Map.class);
+//        map.put("test", "test");
+//        String ss = JsonUtil.encodeJson(map);
+//        System.out.println(ss);
+//        User user1 = JsonUtil.decodeJson(ss, User.class);
+//        System.out.println(JsonUtil.encodeJson(user1));
     }
 
     @Test
@@ -130,7 +135,7 @@ public class Test1 {
     public void testInterfacesProxy() {
         RepositoryProxy proxy = new RepositoryProxy(UserRepository.class);
         UserRepository userRepository = proxy.getProxy();
-        User user = userRepository.findById(3L);
+        User user = userRepository.findById(10L);
         System.out.println(JsonUtil.encodeJson(user));
     }
 
@@ -143,14 +148,14 @@ public class Test1 {
 
     @Test
     public void testJsonList() {
-        User user1 = User.newBuilder().name("f").age(1).id(1L).build();
-        User user2 = User.newBuilder().name("k").age(2).id(2L).build();
-        User user3 = User.newBuilder().name("x").age(3).id(3L).build();
-        List<User> users = Lists.newArrayList(user1, user2, user3);
-        String json = JsonUtil.encodeJson(users);
-        System.out.println(json);
-        List<User> userList = decodeArrayJson(json, User.class);
-        System.out.println(userList);
+//        User user1 = User.newBuilder().name("f").age(1).id(1L).build();
+//        User user2 = User.newBuilder().name("k").age(2).id(2L).build();
+//        User user3 = User.newBuilder().name("x").age(3).id(3L).build();
+//        List<User> users = Lists.newArrayList(user1, user2, user3);
+//        String json = JsonUtil.encodeJson(users);
+//        System.out.println(json);
+//        List<User> userList = decodeArrayJson(json, User.class);
+//        System.out.println(userList);
     }
 
     @Test

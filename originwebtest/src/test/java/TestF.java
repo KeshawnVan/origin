@@ -252,9 +252,9 @@ public class TestF {
 
     @Test
     public void testBuilder(){
-        User fkx = User.newBuilder().age(10).name("fkx").build();
-        String json = JSON.toJSONStringWithDateFormat(fkx,"yyyy-MM-dd HH:mm:ss", SerializerFeature.DisableCircularReferenceDetect);
-        System.out.println(json);
+//        User fkx = User.newBuilder().age(10).name("fkx").build();
+//        String json = JSON.toJSONStringWithDateFormat(fkx,"yyyy-MM-dd HH:mm:ss", SerializerFeature.DisableCircularReferenceDetect);
+//        System.out.println(json);
     }
 
     @Test
@@ -277,7 +277,7 @@ public class TestF {
         TestServiceImpl testService = new TestServiceImpl();
         DynamicProxy proxy = new DynamicProxy(testService);
         TestService proxyService = proxy.getProxy();
-        proxy.setBeforeSupplier(()->User.newBuilder().age(10).name("fkx").build());
+//        proxy.setBeforeSupplier(()->User.newBuilder().age(10).name("fkx").build());
 //        proxy.setAfterConsumer(p -> {
 //            User user = (User) p;
 //            System.out.println(user.getName());

@@ -6,8 +6,6 @@ import star.annotation.Table;
 import star.factory.ConfigFactory;
 
 import java.lang.reflect.Field;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -51,12 +49,5 @@ public final class RepositoryManager {
             stringBuilder.append(databaseName).append(BLANK).append(fieldName);
             return stringBuilder.toString();
         }).collect(Collectors.joining(DELIMITER));
-    }
-
-    public static void setPreparedStatement(PreparedStatement preparedStatement, Object[] args) throws SQLException {
-        for (int i = 0; i < args.length; i++) {
-            Object arg = args[i];
-            preparedStatement.setObject(i + 1, arg);
-        }
     }
 }

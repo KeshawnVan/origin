@@ -3,6 +3,11 @@ package star.bean;
 import star.annotation.Column;
 import star.annotation.Table;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 /**
  * @author keshawn
  * @date 2017/11/22
@@ -16,17 +21,19 @@ public class User {
     @Column("age")
     private int age;
 
+    private Instant birthday;
+
+    private Status status;
+
     public User() {
     }
 
-    private User(Builder builder) {
-        setId(builder.id);
-        setName(builder.name);
-        setAge(builder.age);
-    }
-
-    public static Builder newBuilder() {
-        return new Builder();
+    public User(Long id, String name, int age, Instant birthday, Status status) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.birthday = birthday;
+        this.status = status;
     }
 
     public Long getId() {
@@ -53,31 +60,21 @@ public class User {
         this.age = age;
     }
 
-    public static final class Builder {
-        private Long id;
-        private String name;
-        private int age;
 
-        private Builder() {
-        }
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder age(int age) {
-            this.age = age;
-            return this;
-        }
-
-        public User build() {
-            return new User(this);
-        }
+    public Instant getBirthday() {
+        return birthday;
     }
+
+    public void setBirthday(Instant birthday) {
+        this.birthday = birthday;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
 }
