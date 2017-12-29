@@ -12,9 +12,21 @@ public interface RepositoryConstant {
 
     String WHERE = " where ";
 
+    String LIKE = " like ";
+
     String FIND = "find";
 
     String ID = "id";
+
+    String BY = "By";
+
+    String SEPARATOR = "And";
+
+    String AND = " and ";
+
+    String FUZZY_QUERY = "Like";
+
+    String BATCH_QUERY = "In";
 
     String DELIMITER = ",";
 
@@ -43,6 +55,32 @@ public interface RepositoryConstant {
     String QUERY = "query";
 
     String BLANK = " ";
+
+    String PERCENT = "%";
+
+    String LESS_THAN = "LessThan";
+
+    String LESS_THAN_EQUAL = "LessThanEqual";
+
+    String GREATER_THAN = "GreaterThan";
+
+    String GREATER_THAN_EQUAL = "GreaterThanEqual";
+
+    String LESS = "<";
+
+    String LESS_EQUAL = "<=";
+
+    String GREATER = ">";
+
+    String GREATER_EQUAL = ">=";
+
+    String NOT = "Not";
+
+    String UNEQUAL = "<>";
+
+    String NOT_IN = " not in";
+
+    String ABSENT = "NotIn";
 
     int CLEAR = 0;
 

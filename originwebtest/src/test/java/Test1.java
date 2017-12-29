@@ -12,6 +12,7 @@ import star.repository.RepositoryProxy;
 import star.service.TestService;
 import star.service.impl.TestServiceImpl;
 import star.service.impl.TestServiceImpl2;
+import star.utils.CastUtil;
 import star.utils.JsonUtil;
 import star.utils.ReflectionUtil;
 import star.utils.StringUtil;
@@ -22,6 +23,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static star.utils.CastUtil.castString;
 
 /**
  * @author keshawn
@@ -130,14 +134,14 @@ public class Test1 {
     public void findById() {
         RepositoryProxy proxy = new RepositoryProxy(UserRepository.class);
         UserRepository userRepository = proxy.getProxy();
-        User user = userRepository.findById(1L);
+        User user = userRepository.findById(2L);
         System.out.println(JsonUtil.encodeJson(user));
     }
     @Test
     public void findByIds() {
         RepositoryProxy proxy = new RepositoryProxy(UserRepository.class);
         UserRepository userRepository = proxy.getProxy();
-        List<User> users = userRepository.findByIds(Lists.newArrayList(1L,2L));
+        List<User> users = userRepository.findByIdIn(Lists.newArrayList(1L,2L));
         System.out.println(JsonUtil.encodeJson(users));
     }
     @Test
@@ -185,5 +189,27 @@ public class Test1 {
     @Test
     public void testCollection(){
         System.out.println(Collection.class.isAssignableFrom(Map.class));
+    }
+
+    @Test
+    public void testMethodName(){
+        String methodName = "findByNameInAndAge";
+
+    }
+
+    @Test
+    public void findByNameInAndAge() {
+        RepositoryProxy proxy = new RepositoryProxy(UserRepository.class);
+        UserRepository userRepository = proxy.getProxy();
+        List<User> users = userRepository.findByNameInAndAge(Lists.newArrayList("na","a"),22);
+        System.out.println(JsonUtil.encodeJson(users));
+    }
+
+    @Test
+    public void findByName(){
+        RepositoryProxy proxy = new RepositoryProxy(UserRepository.class);
+        UserRepository userRepository = proxy.getProxy();
+        List<User> users = userRepository.findByName("test");
+        System.out.println(JsonUtil.encodeJson(users));
     }
 }

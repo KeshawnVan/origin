@@ -11,4 +11,6 @@ import java.util.List;
  */
 public interface UserRepository extends CommonRepository<User,Long> {
     List<User> findByName(String name);
+
+    List<User> findByNameInAndAge(List<String> names, Integer age);
 }

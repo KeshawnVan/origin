@@ -6,6 +6,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static star.constant.RepositoryConstant.*;
 
 /**
  * @author keshawn
@@ -199,5 +203,9 @@ public final class StringUtil {
         return result.toString();
     }
 
+    public static String generateBracketPlaceHolder(Integer size) {
+        String joinPlaceHolder = Stream.generate(() -> PLACEHOLDER).limit(size).collect(Collectors.joining(DELIMITER));
+        return LEFT_BRACKET + joinPlaceHolder + RIGHT_BRACKET;
+    }
 }
 

@@ -1,6 +1,7 @@
 package star.repository;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -13,5 +14,5 @@ public interface SqlGenerator {
      *
      * @return 生成的带占位符的SQL
      */
-    String generate(Method method, ConcurrentHashMap<String, String> sqlMap, String tableName, String selectAllColumns, Object[] params);
+    String generate(Method method, ConcurrentHashMap<String, String> sqlMap, String tableName, String selectAllColumns, Object[] params, Map<String, String> fieldMap);
 }

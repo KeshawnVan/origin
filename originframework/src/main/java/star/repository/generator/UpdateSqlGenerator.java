@@ -3,6 +3,7 @@ package star.repository.generator;
 import star.repository.SqlGenerator;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -21,7 +22,7 @@ public class UpdateSqlGenerator implements SqlGenerator {
     }
 
     @Override
-    public String generate(Method method, ConcurrentHashMap<String, String> sqlMap, String tableName, String selectAllColumns, Object[] params) {
+    public String generate(Method method, ConcurrentHashMap<String, String> sqlMap, String tableName, String selectAllColumns, Object[] params, Map<String, String> fieldMap) {
         return null;
     }
 }

@@ -3,14 +3,4 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-    <!-- Druid监控Servlet -->
-    <servlet>
-        <servlet-name>DruidStatView</servlet-name>
-        <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>DruidStatView</servlet-name>
-        <url-pattern>/druid/*</url-pattern>
-    </servlet-mapping>
-
 </web-app>

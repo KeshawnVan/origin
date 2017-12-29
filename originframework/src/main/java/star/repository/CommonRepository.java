@@ -13,7 +13,7 @@ public interface CommonRepository<T, ID extends Serializable> {
 
     List<T> findAll();
 
-    List<T> findByIds(Collection<ID> ids);
+    List<T> findByIdIn(Collection<ID> ids);
 
     T save(T t);
 
