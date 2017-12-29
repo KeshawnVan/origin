@@ -21,7 +21,7 @@ public class TestController {
     private TestService testService;
 
     @Action(value = "/hello", method = RequestMethod.GET)
-    public String hello(@QueryParam("n") String name, int age, HttpServletRequest httpServletRequest, HttpSession session) {
+    public String hello(@QueryParam("n") String name, Integer age, HttpServletRequest httpServletRequest, HttpSession session) {
         System.out.println(testService.hashCode());
         testService.hello();
         System.out.println(name);
@@ -66,5 +66,11 @@ public class TestController {
     public String blank(){
         System.out.println("test");
         return "test";
+    }
+
+    @Action("h")
+    public String h(){
+        testService.hello();
+        return "";
     }
 }

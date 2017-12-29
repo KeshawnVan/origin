@@ -3,7 +3,10 @@ import com.google.common.reflect.Reflection;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import star.bean.User;
+import star.controller.TestController;
+import star.core.LoadCore;
 import star.dao.UserRepository;
+import star.factory.BeanFactory;
 import star.factory.ConfigFactory;
 import star.factory.ConnectionFactory;
 import star.proxy.CGLibProxy;
@@ -12,10 +15,7 @@ import star.repository.RepositoryProxy;
 import star.service.TestService;
 import star.service.impl.TestServiceImpl;
 import star.service.impl.TestServiceImpl2;
-import star.utils.CastUtil;
-import star.utils.JsonUtil;
-import star.utils.ReflectionUtil;
-import star.utils.StringUtil;
+import star.utils.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -25,6 +25,7 @@ import java.sql.ResultSet;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static star.core.IocCore.dependencyInjection;
 import static star.utils.CastUtil.castString;
 
 /**
@@ -211,5 +212,40 @@ public class Test1 {
         UserRepository userRepository = proxy.getProxy();
         List<User> users = userRepository.findByName("test");
         System.out.println(JsonUtil.encodeJson(users));
+    }
+    /**
+     * 获取所有的Bean类和Bean实例之间的映射关系
+     */
+    private static final Map<Class<?>, Object> BEAN_MAP = BeanFactory.getBeanMap();
+    /**
+     * 获取yml配置文件中接口与实现类beanId的映射关系
+     */
+    private static final Map<Class<?>, String> IMPLEMENT_MAPPING = ConfigFactory.getImplementMapping();
+    /**
+     * 获取所有带有@Service注解的类的接口与自身的映射关系
+     */
+    private static final Map<Class<?>, Class<?>> SERVICE_MAPPING = BeanFactory.getServiceMappingMap();
+    @Test
+    public void fixIoc(){
+        if (CollectionUtil.isNotEmpty(BEAN_MAP)) {
+            for (Map.Entry<Class<?>, Object> beanEntry : BEAN_MAP.entrySet()) {
+                Class<?> beanClass = beanEntry.getKey();
+                Object beanInstance = beanEntry.getValue();
+                dependencyInjection(beanClass, beanInstance);
+            }
+        }
+        TestController testController = (TestController)BEAN_MAP.get(TestController.class);
+        testController.h();
+
+
+    }
+
+    @Test
+    public void testInit(){
+        LoadCore.init();
+        TestController testController = (TestController)BeanFactory.getBean("testController");
+        System.out.println(JsonUtil.encodeJson(testController));
+        testController.h();
+
     }
 }

@@ -21,7 +21,7 @@ public final class LoadCore {
                 ControllerFactory.class
         };
         for (Class<?> cls : classes) {
-            ClassUtil.loadClass(cls.getName());
+            ClassUtil.loadClass(cls.getName(),true);
         }
     }
 }
