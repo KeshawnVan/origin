@@ -22,7 +22,7 @@ public final class PreparedStatementLoader {
 
     /**
      * 有序设置PreparedStatement，一般仅用于自动生成的查询方法
-     *
+     * 用户自定义SQL不应使用本方法
      * @param preparedStatement
      * @param params
      * @throws SQLException

@@ -2,14 +2,13 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.Reflection;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
-import star.bean.Status;
 import star.bean.User;
 import star.dao.UserRepository;
 import star.factory.ConfigFactory;
 import star.factory.ConnectionFactory;
 import star.proxy.CGLibProxy;
 import star.proxy.DynamicProxy;
-import star.proxy.RepositoryProxy;
+import star.repository.RepositoryProxy;
 import star.service.TestService;
 import star.service.impl.TestServiceImpl;
 import star.service.impl.TestServiceImpl2;
@@ -22,11 +21,7 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.*;
-
-import static star.utils.JsonUtil.decodeArrayJson;
 
 /**
  * @author keshawn

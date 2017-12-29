@@ -2,6 +2,7 @@ package star.repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import star.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
@@ -9,7 +10,7 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.*;
 
 import static star.utils.DateUtil.*;
 
@@ -45,6 +46,89 @@ public final class ResultSetParser {
         return wasNull ? null : result;
     }
 
+    /**
+     * 方法返回值为集合时，通过ResultSet构建返回值
+     * 目前只处理List和Set两种情况
+     *
+     * @param fields
+     * @param resultSet
+     * @param originType
+     * @param returnType
+     * @return
+     * @throws SQLException
+     */
+    public static Object buildCollectionResult(List<Field> fields, ResultSet resultSet, Class<?> originType, Class<?> returnType) throws SQLException {
+
+        if (List.class.isAssignableFrom(returnType)) {
+            return buildResults(fields, resultSet, originType, new ArrayList<>());
+        }
+        if (Set.class.isAssignableFrom(returnType)) {
+            return buildResults(fields, resultSet, originType, new HashSet());
+        }
+        LOGGER.warn("buildCollectionResult cannot match suitable type : {}", returnType);
+        return buildResults(fields, resultSet, originType, new ArrayList<>());
+    }
+
+    /**
+     * 通过ResultSet构建Collection类型的对象
+     *
+     * @param fields
+     * @param resultSet
+     * @param originType
+     * @param collection
+     * @return
+     * @throws SQLException
+     */
+    public static Collection buildResults(List<Field> fields, ResultSet resultSet, Class<?> originType, Collection collection) throws SQLException {
+        while (resultSet.next()) {
+            Object result = ReflectionUtil.newInstance(originType);
+            fieldInject(fields, result, resultSet);
+            collection.add(result);
+        }
+        return collection;
+    }
+
+    /**
+     * 通过ResultSet构建Bean对象
+     *
+     * @param fields
+     * @param resultSet
+     * @param originType
+     * @return
+     * @throws SQLException
+     */
+    public static Object buildResult(List<Field> fields, ResultSet resultSet, Class<?> originType) throws SQLException {
+        Object result = null;
+        while (resultSet.next()) {
+            result = ReflectionUtil.newInstance(originType);
+            fieldInject(fields, result, resultSet);
+        }
+        return result;
+    }
+
+    /**
+     * 从ResultSet中取值并反射设值给bean
+     *
+     * @param fields
+     * @param result
+     * @param resultSet
+     * @throws SQLException
+     */
+    public static void fieldInject(List<Field> fields, Object result, ResultSet resultSet) throws SQLException {
+        for (Field field : fields) {
+            Object resultSetObject = getResult(resultSet, field);
+            ReflectionUtil.setField(result, field, resultSetObject);
+        }
+    }
+
+    /**
+     * 从ResultSet中取单列的值，做类型匹配
+     *
+     * @param resultSet
+     * @param field
+     * @return
+     * @throws SQLException
+     */
     public static Object getResult(ResultSet resultSet, Field field) throws SQLException {
         Class<?> fieldType = field.getType();
         String fieldName = field.getName();
@@ -95,6 +179,15 @@ public final class ResultSetParser {
         return resultSet.getObject(fieldName);
     }
 
+    /**
+     * 从ResultSet中取单列的值，对基本类型做类型匹配
+     *
+     * @param fieldType
+     * @param fieldName
+     * @param resultSet
+     * @return
+     * @throws SQLException
+     */
     private static Object primitiveTypeHandler(Class<?> fieldType, String fieldName, ResultSet resultSet) throws SQLException {
         if (fieldType == int.class) {
             return checkAndGetResult(fieldName, resultSet, resultSet::getInt);

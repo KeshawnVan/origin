@@ -1,6 +1,7 @@
 package star.bean;
 
 import star.annotation.Column;
+import star.annotation.Id;
 import star.annotation.Table;
 
 import java.time.Instant;
@@ -14,6 +15,7 @@ import java.util.Date;
  */
 @Table("USER")
 public class User {
+    @Id
     private Long id;
 
     private String name;

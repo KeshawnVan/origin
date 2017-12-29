@@ -12,6 +12,8 @@ public interface RepositoryConstant {
 
     String WHERE = " where ";
 
+    String FIND = "find";
+
     String ID = "id";
 
     String DELIMITER = ",";
@@ -29,6 +31,16 @@ public interface RepositoryConstant {
     String FIND_BY_ID = "findById";
 
     String FIND_BY_IDS = "findByIds";
+
+    String FIND_ALL = "findAll";
+
+    String SAVE = "save";
+
+    String UPDATE = "update";
+
+    String DELETE = "delete";
+
+    String QUERY = "query";
 
     String BLANK = " ";
 
