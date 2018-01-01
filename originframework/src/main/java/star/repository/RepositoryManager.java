@@ -1,12 +1,16 @@
 package star.repository;
 
+import com.google.common.collect.Lists;
 import star.annotation.Column;
 import star.annotation.Id;
 import star.annotation.Table;
 import star.factory.ConfigFactory;
+import star.utils.ArrayUtil;
+import star.utils.CastUtil;
 import star.utils.CollectionUtil;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,6 +26,7 @@ import static star.utils.StringUtil.camelToUnderlineUpperCase;
 public final class RepositoryManager {
 
     private static final boolean AUTO_CAST = ConfigFactory.getAutoCast();
+    public static final String DEFAULT_SIZE = "1";
 
     private RepositoryManager() {
     }
@@ -80,5 +85,22 @@ public final class RepositoryManager {
             }
         }
         return idList.get(0);
+    }
+
+    /**
+     * 通过方法名和每个参数的size生成方法名，用于缓存SQL
+     * @param methodName
+     * @param params
+     * @return
+     */
+    public static String generateArgsMethodName(String methodName, Object[] params){
+        if (ArrayUtil.isEmpty(params)){
+            return methodName;
+        }else {
+            String argsName = Lists.newArrayList(params).stream()
+                    .map(param -> Collection.class.isAssignableFrom(param.getClass()) ? CastUtil.castString(((Collection) param).size()) : DEFAULT_SIZE)
+                    .collect(Collectors.joining());
+            return methodName + argsName;
+        }
     }
 }
