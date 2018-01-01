@@ -6,6 +6,11 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static star.constant.RepositoryConstant.DELETE;
+import static star.constant.RepositoryConstant.FROM;
+import static star.constant.RepositoryConstant.WHERE;
+import static star.repository.MethodNameParser.generateConditionSqlByMethodName;
+
 /**
  * @author keshawn
  * @date 2017/12/29
@@ -23,6 +28,7 @@ public class DeleteSqlGenerator implements SqlGenerator {
 
     @Override
     public String generate(Method method, ConcurrentHashMap<String, String> sqlMap, String tableName, String selectAllColumns, Object[] params, Map<String, String> fieldMap) {
-        return null;
+        String deletePrefix = DELETE + FROM + tableName + WHERE;
+        return generateConditionSqlByMethodName(deletePrefix, params, fieldMap, method.getName());
     }
 }

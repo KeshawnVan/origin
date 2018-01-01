@@ -238,4 +238,15 @@ public class Test1 {
         System.out.println(repositoryMap);
 
     }
+
+    @Test
+    public void testDeleteById()throws Exception{
+        LoadCore.init();
+        UserRepository userRepository = BeanFactory.getBean(UserRepository.class);
+        Integer deleteById = userRepository.deleteById(3L);
+        Connection connection = ConnectionFactory.getConnection();
+        connection.commit();
+        System.out.println(deleteById);
+
+    }
 }

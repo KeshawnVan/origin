@@ -16,6 +16,8 @@ public interface RepositoryConstant {
 
     String FIND = "find";
 
+    String DELETE = "delete";
+
     String ID = "id";
 
     String BY = "By";
@@ -49,8 +51,6 @@ public interface RepositoryConstant {
     String SAVE = "save";
 
     String UPDATE = "update";
-
-    String DELETE = "delete";
 
     String QUERY = "query";
 
