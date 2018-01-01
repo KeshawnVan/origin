@@ -2,7 +2,10 @@ package star.service.impl;
 
 import star.annotation.Fresh;
 import star.annotation.Service;
+import star.bean.User;
 import star.service.TestService;
+
+import java.util.List;
 
 /**
  * @author keshawn
@@ -13,5 +16,10 @@ import star.service.TestService;
 public class TestServiceImpl2 implements TestService {
     public void hello() {
         System.out.println("good");
+    }
+
+    @Override
+    public List<User> findByNamesAndAge() {
+        return null;
     }
 }

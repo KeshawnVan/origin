@@ -1,7 +1,7 @@
 jdbcDriver: com.mysql.cj.jdbc.Driver
 jdbcUrl: jdbc:mysql://localhost:3306/origin?serverTimezone=GMT&useUnicode=true&characterEncoding=UTF-8&useSSL=false
 jdbcUsername: root
-jdbcPassword: root
+jdbcPassword: fkx147258
 
 basePackage: star
 jspPath: /view
@@ -16,7 +16,7 @@ beanIdMapping:
 
 implementMapping:
   - interface: star.service.TestService
-    beanId: test321
+    beanId: test123
 
 #Druid Settings Begin
 

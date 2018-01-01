@@ -38,7 +38,7 @@ public final class QuerySqlGenerator implements SqlGenerator {
         String argsMethodName = RepositoryManager.generateArgsMethodName(methodName, params);
 
         if (sqlMap.containsKey(argsMethodName)) {
-            return argsMethodName;
+            return sqlMap.get(argsMethodName);
         } else {
             String sql = generateSql(method, sqlMap, tableName, selectAllColumns, params, fieldMap);
             sqlMap.put(argsMethodName, sql);

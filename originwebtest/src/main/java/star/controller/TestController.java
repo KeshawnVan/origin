@@ -69,8 +69,8 @@ public class TestController {
     }
 
     @Action("h")
-    public String h(){
-        testService.hello();
-        return "";
+    @Stream
+    public List<User> h(){
+        return testService.findByNamesAndAge();
     }
 }

@@ -9,8 +9,10 @@ import star.dao.UserRepository;
 import star.factory.BeanFactory;
 import star.factory.ConfigFactory;
 import star.factory.ConnectionFactory;
+import star.factory.RepositoryFactory;
 import star.proxy.CGLibProxy;
 import star.proxy.DynamicProxy;
+import star.repository.CommonRepository;
 import star.repository.RepositoryProxy;
 import star.service.TestService;
 import star.service.impl.TestServiceImpl;
@@ -22,6 +24,9 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -85,11 +90,11 @@ public class Test1 {
         Connection connection = ConnectionFactory.getConnection();
         String sql = "insert into user values(?,?,?,?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setLong(1, 11L);
-        preparedStatement.setString(2, "test");
-        preparedStatement.setInt(3, 22);
-        preparedStatement.setTimestamp(4,null);
-        preparedStatement.setObject(5, null);
+        preparedStatement.setObject(1, null);
+        preparedStatement.setString(2, "liuna");
+        preparedStatement.setInt(3, 23);
+        preparedStatement.setTimestamp(4, Timestamp.from(Instant.now()));
+        preparedStatement.setInt(5, 1);
         int i = preparedStatement.executeUpdate();
         System.out.println(i);
         preparedStatement.close();
@@ -135,7 +140,7 @@ public class Test1 {
     public void findById() {
         RepositoryProxy proxy = new RepositoryProxy(UserRepository.class);
         UserRepository userRepository = proxy.getProxy();
-        User user = userRepository.findById(2L);
+        User user = userRepository.findById(3L);
         System.out.println(JsonUtil.encodeJson(user));
     }
     @Test
@@ -202,7 +207,7 @@ public class Test1 {
     public void findByNameInAndAge() {
         RepositoryProxy proxy = new RepositoryProxy(UserRepository.class);
         UserRepository userRepository = proxy.getProxy();
-        List<User> users = userRepository.findByNameInAndAge(Lists.newArrayList("na","a"),22);
+        List<User> users = userRepository.findByNameInAndAge(Lists.newArrayList("na","liuna"),23);
         System.out.println(JsonUtil.encodeJson(users));
     }
 
@@ -210,34 +215,8 @@ public class Test1 {
     public void findByName(){
         RepositoryProxy proxy = new RepositoryProxy(UserRepository.class);
         UserRepository userRepository = proxy.getProxy();
-        List<User> users = userRepository.findByName("test");
+        List<User> users = userRepository.findByName("fkx");
         System.out.println(JsonUtil.encodeJson(users));
-    }
-    /**
-     * 获取所有的Bean类和Bean实例之间的映射关系
-     */
-    private static final Map<Class<?>, Object> BEAN_MAP = BeanFactory.getBeanMap();
-    /**
-     * 获取yml配置文件中接口与实现类beanId的映射关系
-     */
-    private static final Map<Class<?>, String> IMPLEMENT_MAPPING = ConfigFactory.getImplementMapping();
-    /**
-     * 获取所有带有@Service注解的类的接口与自身的映射关系
-     */
-    private static final Map<Class<?>, Class<?>> SERVICE_MAPPING = BeanFactory.getServiceMappingMap();
-    @Test
-    public void fixIoc(){
-        if (CollectionUtil.isNotEmpty(BEAN_MAP)) {
-            for (Map.Entry<Class<?>, Object> beanEntry : BEAN_MAP.entrySet()) {
-                Class<?> beanClass = beanEntry.getKey();
-                Object beanInstance = beanEntry.getValue();
-                dependencyInjection(beanClass, beanInstance);
-            }
-        }
-        TestController testController = (TestController)BEAN_MAP.get(TestController.class);
-        testController.h();
-
-
     }
 
     @Test
@@ -246,6 +225,17 @@ public class Test1 {
         TestController testController = (TestController)BeanFactory.getBean("testController");
         System.out.println(JsonUtil.encodeJson(testController));
         testController.h();
+
+    }
+
+    @Test
+    public void getReMap(){
+        Map<Class<?>, CommonRepository> repositoryMap = RepositoryFactory.getRepositoryMap();
+        CommonRepository commonRepository = repositoryMap.get(UserRepository.class);
+        Object byId = commonRepository.findById(1L);
+        System.out.println(JsonUtil.encodeJson(byId));
+
+        System.out.println(repositoryMap);
 
     }
 }

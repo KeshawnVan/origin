@@ -10,6 +10,7 @@ import star.core.IocCore;
 import star.exception.ImplementDuplicateException;
 import star.proxy.Proxy;
 import star.proxy.ProxyManager;
+import star.repository.CommonRepository;
 import star.utils.CollectionUtil;
 import star.utils.ReflectionUtil;
 import star.utils.StringUtil;
@@ -18,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static star.constant.RepositoryConstant.BLANK;
 
 /**
  * @author keshawn
@@ -39,6 +42,8 @@ public final class BeanFactory {
 
     private static final Map<Class<?>, Object> CLASS_PROXY_MAP = ProxyFactory.getClassProxyMap();
 
+    private static final Map<Class<?>,CommonRepository> REPOSITORY_MAP = RepositoryFactory.getRepositoryMap();
+
     static {
         Set<Class<?>> beanClassSet = ClassFactory.getBeanClassSet();
         beanClassSet.forEach(beanClass -> {
@@ -49,6 +54,7 @@ public final class BeanFactory {
                 BEAN_MAP.put(beanClass, object);
             }
         });
+        BEAN_MAP.putAll(REPOSITORY_MAP);
     }
 
     private BeanFactory() {
@@ -126,6 +132,7 @@ public final class BeanFactory {
             String value = controller.value();
             addBean(value, beanClass);
         }
+        ClassFactory.getClassSetBySuper(CommonRepository.class).forEach(cls -> addBean(BLANK,cls));
     }
 
     private static void checkBeanIdDuplicated(String beanName) {

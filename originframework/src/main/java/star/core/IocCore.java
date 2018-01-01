@@ -5,6 +5,7 @@ import star.annotation.Inject;
 import star.exception.ImplementDuplicateException;
 import star.factory.BeanFactory;
 import star.factory.ConfigFactory;
+import star.repository.CommonRepository;
 import star.utils.CollectionUtil;
 import star.utils.ReflectionUtil;
 import star.utils.StringUtil;
@@ -30,6 +31,7 @@ public final class IocCore {
      */
     private static final Map<Class<?>, Class<?>> SERVICE_MAPPING = BeanFactory.getServiceMappingMap();
 
+
     static {
         if (CollectionUtil.isNotEmpty(BEAN_MAP)) {
             for (Map.Entry<Class<?>, Object> beanEntry : BEAN_MAP.entrySet()) {
@@ -53,8 +55,8 @@ public final class IocCore {
     private static void fieldDependencyInjection(Class<?> beanClass, Object beanInstance, Field beanField) {
         if (beanField.isAnnotationPresent(Inject.class)) {
             Class<?> beanFieldClass = beanField.getType();
-            //如果是接口，注入实现类，否则注入类自身
-            if (beanFieldClass.isInterface()) {
+            //如果是接口，且不为持久化接口，注入实现类，否则注入类自身
+            if (beanFieldClass.isInterface() && !CommonRepository.class.isAssignableFrom(beanFieldClass)) {
                 interfaceDependencyInjection(beanInstance, beanField, beanFieldClass);
             } else {
                 Object beanFieldInstance = BeanFactory.getBean(beanFieldClass);

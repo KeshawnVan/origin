@@ -51,6 +51,7 @@ public class RepositoryProxy implements InvocationHandler {
         SqlExecutor sqlExecutor = SqlExecutorFactory.getExecutor(methodName);
 
         String sql = sqlGenerator.generate(method, SQL_MAP, tableName, selectAllColumns, params, fieldMap);
+        System.out.println(sql);
         return sqlExecutor.execute(sql, method, params, fields, beanClass, idField);
     }
 
