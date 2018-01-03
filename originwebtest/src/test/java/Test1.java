@@ -249,4 +249,11 @@ public class Test1 {
         System.out.println(deleteById);
 
     }
+
+    @Test
+    public void testMD5(){
+        String psw = "qaz147";
+        String md5Digest = MD5Util.md5Digest(MD5Util.md5Digest(psw)+"startimes");
+        System.out.println(md5Digest);
+    }
 }

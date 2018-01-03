@@ -23,7 +23,7 @@ public class TestServiceImpl implements TestService {
     private String s = "asda";
 
     public void hello() {
-        System.out.println(JsonUtil.encodeJson(userRepository.findByNameInAndAge(Lists.newArrayList("liuna","na"),23)));
+        System.out.println(JsonUtil.encodeJson(userRepository.findByNameInAndAge(Lists.newArrayList("a","na"),23)));
     }
 
     @Override
