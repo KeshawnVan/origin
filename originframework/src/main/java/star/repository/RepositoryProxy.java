@@ -5,6 +5,7 @@ import star.repository.factory.SqlExecutorFactory;
 import star.repository.factory.SqlGeneratorFactory;
 import star.utils.ArrayUtil;
 import star.utils.ClassUtil;
+import star.utils.ReflectionUtil;
 
 import java.lang.reflect.*;
 import java.util.List;
@@ -57,7 +58,7 @@ public class RepositoryProxy implements InvocationHandler {
     private String buildSql(Method method, Object[] params, String methodName, String argsMethodName) {
         String sql = null;
         if (SQL_MAP.containsKey(argsMethodName)) {
-             SQL_MAP.get(argsMethodName);
+            SQL_MAP.get(argsMethodName);
         } else {
             SqlGenerator sqlGenerator = SqlGeneratorFactory.getGenerator(methodName);
             sql = sqlGenerator.generate(method, SQL_MAP, tableName, selectAllColumns, params, fieldMap);
@@ -71,7 +72,7 @@ public class RepositoryProxy implements InvocationHandler {
         if (actualTypeArguments != null) {
             return;
         }
-        actualTypeArguments = getActualTypeArguments();
+        actualTypeArguments = getActualTypeArguments(repositoryInterface);
         String beanClassName = actualTypeArguments[0].getTypeName();
         beanClass = ClassUtil.loadClass(beanClassName, true);
         tableName = getTableName(beanClass);
@@ -87,9 +88,9 @@ public class RepositoryProxy implements InvocationHandler {
      *
      * @return
      */
-    private Type[] getActualTypeArguments() {
-        Type[] genericInterfaces = repositoryInterface.getGenericInterfaces();
-        actualTypeArguments = ((ParameterizedType) genericInterfaces[0]).getActualTypeArguments();
+    private Type[] getActualTypeArguments(Class<?> cls) {
+        Type[] genericInterfaces = cls.getGenericInterfaces();
+        Type[] actualTypeArguments = ReflectionUtil.getActualTypeArguments(genericInterfaces[0]);
         if (actualTypeArguments.length != TYPE_LENGTH) {
             throw new RuntimeException("actualTypeArguments length is invalid : " + actualTypeArguments.length);
         }

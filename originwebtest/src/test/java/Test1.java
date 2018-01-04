@@ -3,6 +3,7 @@ import com.google.common.reflect.Reflection;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import star.bean.User;
+import star.constant.DateConstant;
 import star.controller.TestController;
 import star.core.LoadCore;
 import star.dao.UserRepository;
@@ -21,17 +22,16 @@ import star.utils.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static star.core.IocCore.dependencyInjection;
-import static star.utils.CastUtil.castString;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author keshawn
@@ -143,13 +143,15 @@ public class Test1 {
         User user = userRepository.findById(3L);
         System.out.println(JsonUtil.encodeJson(user));
     }
+
     @Test
     public void findByIds() {
         RepositoryProxy proxy = new RepositoryProxy(UserRepository.class);
         UserRepository userRepository = proxy.getProxy();
-        List<User> users = userRepository.findByIdIn(Lists.newArrayList(1L,2L));
+        List<User> users = userRepository.findByIdIn(Lists.newArrayList(1L, 2L));
         System.out.println(JsonUtil.encodeJson(users));
     }
+
     @Test
     public void testDefault() {
         Boolean autoCast = ConfigFactory.getAutoCast();
@@ -181,24 +183,24 @@ public class Test1 {
     }
 
     @Test
-    public void prepare(){
+    public void prepare() {
         String sql = "select * from user where id = #{id} and name = #{name}";
-        String[] between = StringUtils.substringsBetween(sql,"#{", "}");
+        String[] between = StringUtils.substringsBetween(sql, "#{", "}");
         for (int i = 0; i < between.length; i++) {
             String s = between[i];
-            System.out.println(i+s);
+            System.out.println(i + s);
         }
         String s = StringUtils.replaceAll(sql, "\\#\\{([^\\\\}]+)\\}", "?");
         System.out.println(s);
     }
 
     @Test
-    public void testCollection(){
+    public void testCollection() {
         System.out.println(Collection.class.isAssignableFrom(Map.class));
     }
 
     @Test
-    public void testMethodName(){
+    public void testMethodName() {
         String methodName = "findByNameInAndAge";
 
     }
@@ -207,12 +209,12 @@ public class Test1 {
     public void findByNameInAndAge() {
         RepositoryProxy proxy = new RepositoryProxy(UserRepository.class);
         UserRepository userRepository = proxy.getProxy();
-        List<User> users = userRepository.findByNameInAndAge(Lists.newArrayList("na","liuna"),23);
+        List<User> users = userRepository.findByNameInAndAge(Lists.newArrayList("na", "liuna"), 23);
         System.out.println(JsonUtil.encodeJson(users));
     }
 
     @Test
-    public void findByName(){
+    public void findByName() {
         RepositoryProxy proxy = new RepositoryProxy(UserRepository.class);
         UserRepository userRepository = proxy.getProxy();
         List<User> users = userRepository.findByName("fkx");
@@ -220,16 +222,16 @@ public class Test1 {
     }
 
     @Test
-    public void testInit(){
+    public void testInit() {
         LoadCore.init();
-        TestController testController = (TestController)BeanFactory.getBean("testController");
+        TestController testController = (TestController) BeanFactory.getBean("testController");
         System.out.println(JsonUtil.encodeJson(testController));
         testController.h();
 
     }
 
     @Test
-    public void getReMap(){
+    public void getReMap() {
         Map<Class<?>, CommonRepository> repositoryMap = RepositoryFactory.getRepositoryMap();
         CommonRepository commonRepository = repositoryMap.get(UserRepository.class);
         Object byId = commonRepository.findById(1L);
@@ -240,7 +242,7 @@ public class Test1 {
     }
 
     @Test
-    public void testDeleteById()throws Exception{
+    public void testDeleteById() throws Exception {
         LoadCore.init();
         UserRepository userRepository = BeanFactory.getBean(UserRepository.class);
         Integer deleteById = userRepository.deleteById(3L);
@@ -251,9 +253,46 @@ public class Test1 {
     }
 
     @Test
-    public void testMD5(){
+    public void testMD5() {
         String psw = "qaz147";
-        String md5Digest = MD5Util.md5Digest(MD5Util.md5Digest(psw)+"startimes");
+        String md5Digest = MD5Util.md5Digest(MD5Util.md5Digest(psw) + "startimes");
         System.out.println(md5Digest);
+    }
+
+    @Test
+    public void testPadom() throws Exception {
+//        PodamFactory podamFactory = new PodamFactoryImpl();
+//        User user = podamFactory.manufacturePojo(User.class);
+//        System.out.println(JsonUtil.encodeJson(user));
+//        User user1 = podamFactory.manufacturePojo(User.class, List.class);
+//        System.out.println(JsonUtil.encodeJson(user1));
+//        List list = podamFactory.manufacturePojo(List.class, User.class);
+//        System.out.println(JsonUtil.encodeJson(list));
+////        if (type instanceof ParameterizedType) { // 判断获取的类型是否是参数类型
+////            System.out.println(type);
+////            Type[] typesto = ((ParameterizedType) type).getActualTypeArguments();// 强制转型为带参数的泛型类型，
+////            // getActualTypeArguments()方法获取类型中的实际类型，如map<String,Integer>中的
+////            // String，integer因为可能是多个，所以使用数组
+////            for (Type type2 : typesto) {
+////                System.out.println("泛型类型" + type2);
+////            }
+////        }
+////        Object pojo = podamFactory.manufacturePojo(((ParameterizedTypeImpl) type).getRawType(), ((ParameterizedType) type).getActualTypeArguments()[0]);
+////        System.out.println(JsonUtil.encodeJson(pojo));
+        Method findByNamesAndAge = TestServiceImpl.class.getMethod("findByNamesAndAge");
+        Type type = findByNamesAndAge.getGenericReturnType();
+        Object manufacture = PojoManufactureUtil.manufacture(User.class);
+        System.out.println(JsonUtil.encodeJson(PojoManufactureUtil.manufacture(type)));
+        System.out.println(JsonUtil.encodeJson(PojoManufactureUtil.manufacture(User.class)));
+    }
+
+    @Test
+    public void testDateF() {
+        System.out.println(DateUtil.toString(LocalDateTime.now(), DateConstant.YYYY_MM_DD_T_HH_MM_SS_SSS_Z_FORMATTER));
+    }
+
+    @Test
+    public void getRandom() {
+        System.out.println(NumberUtil.getRandomNum(2));
     }
 }

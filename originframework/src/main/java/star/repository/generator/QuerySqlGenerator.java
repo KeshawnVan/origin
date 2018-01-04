@@ -1,7 +1,6 @@
 package star.repository.generator;
 
-import star.annotation.Query;
-import star.repository.RepositoryManager;
+import star.annotation.repository.Query;
 import star.repository.SqlGenerator;
 
 import java.lang.reflect.Method;

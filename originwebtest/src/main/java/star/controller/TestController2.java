@@ -1,7 +1,7 @@
 package star.controller;
 
-import star.annotation.Action;
-import star.annotation.Controller;
+import star.annotation.controller.Action;
+import star.annotation.bean.Controller;
 
 /**
  * @author keshawn

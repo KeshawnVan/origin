@@ -1,7 +1,7 @@
 package star.factory;
 
 import org.apache.commons.lang3.ArrayUtils;
-import star.annotation.Action;
+import star.annotation.controller.Action;
 import star.bean.Handler;
 import star.bean.Request;
 import star.constant.ConfigConstant;

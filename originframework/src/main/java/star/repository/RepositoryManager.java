@@ -1,9 +1,9 @@
 package star.repository;
 
 import com.google.common.collect.Lists;
-import star.annotation.Column;
-import star.annotation.Id;
-import star.annotation.Table;
+import star.annotation.repository.Column;
+import star.annotation.repository.Id;
+import star.annotation.repository.Table;
 import star.factory.ConfigFactory;
 import star.utils.ArrayUtil;
 import star.utils.CastUtil;
@@ -89,14 +89,15 @@ public final class RepositoryManager {
 
     /**
      * 通过方法名和每个参数的size生成方法名，用于缓存SQL
+     *
      * @param methodName
      * @param params
      * @return
      */
-    public static String generateArgsMethodName(String methodName, Object[] params){
-        if (ArrayUtil.isEmpty(params)){
+    public static String generateArgsMethodName(String methodName, Object[] params) {
+        if (ArrayUtil.isEmpty(params)) {
             return methodName;
-        }else {
+        } else {
             String argsName = Lists.newArrayList(params).stream()
                     .map(param -> Collection.class.isAssignableFrom(param.getClass()) ? CastUtil.castString(((Collection) param).size()) : DEFAULT_SIZE)
                     .collect(Collectors.joining());

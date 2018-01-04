@@ -1,4 +1,4 @@
-package star.annotation;
+package star.annotation.aop;
 
 import java.lang.annotation.*;
 

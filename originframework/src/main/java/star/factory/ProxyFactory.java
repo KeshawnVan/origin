@@ -1,8 +1,8 @@
 package star.factory;
 
 import com.google.common.collect.Lists;
-import star.annotation.Aspect;
-import star.annotation.Pure;
+import star.annotation.aop.Aspect;
+import star.annotation.aop.Pure;
 import star.constant.ConfigConstant;
 import star.proxy.AspectProxy;
 import star.proxy.Proxy;

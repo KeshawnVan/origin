@@ -1,13 +1,10 @@
 package star.bean;
 
-import star.annotation.Column;
-import star.annotation.Id;
-import star.annotation.Table;
+import star.annotation.repository.Column;
+import star.annotation.repository.Id;
+import star.annotation.repository.Table;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * @author keshawn

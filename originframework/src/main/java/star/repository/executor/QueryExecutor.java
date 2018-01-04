@@ -34,6 +34,7 @@ public class QueryExecutor implements SqlExecutor {
     @Override
     public Object execute(String sql, Method method, Object[] params, List<Field> fields, Class<?> beanClass, Field idField) throws SQLException {
         Connection connection = ConnectionFactory.getConnection();
+        //修改为按照返回值泛型处理
         Class<?> returnType = method.getReturnType();
         boolean isCollection = Collection.class.isAssignableFrom(returnType);
         PreparedStatement preparedStatement = connection.prepareStatement(sql);

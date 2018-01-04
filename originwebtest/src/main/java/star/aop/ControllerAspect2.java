@@ -1,7 +1,7 @@
 package star.aop;
 
-import star.annotation.Aspect;
-import star.annotation.Controller;
+import star.annotation.aop.Aspect;
+import star.annotation.bean.Controller;
 import star.proxy.AspectProxy;
 import star.proxy.ProxyChain;
 

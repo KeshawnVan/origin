@@ -2,7 +2,7 @@ package star.proxy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import star.annotation.Pure;
+import star.annotation.aop.Pure;
 
 import java.lang.reflect.Method;
 

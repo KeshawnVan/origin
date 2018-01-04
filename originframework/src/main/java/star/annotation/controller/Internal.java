@@ -1,4 +1,4 @@
-package star.annotation;
+package star.annotation.controller;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,10 +7,9 @@ import java.lang.annotation.Target;
 
 /**
  * @author keshawn
- * @date 2017/12/25
+ * @date 2017/11/9
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Query {
-    String value();
+public @interface Internal {
 }

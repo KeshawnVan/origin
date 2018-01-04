@@ -1,7 +1,13 @@
 package star.controller;
 
 import com.google.common.collect.Lists;
-import star.annotation.*;
+import star.annotation.aop.Pure;
+import star.annotation.bean.Controller;
+import star.annotation.bean.Inject;
+import star.annotation.controller.Action;
+import star.annotation.controller.Internal;
+import star.annotation.controller.QueryParam;
+import star.annotation.controller.Stream;
 import star.bean.User;
 import star.constant.RequestMethod;
 import star.service.TestService;
