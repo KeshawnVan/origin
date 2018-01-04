@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author keshawn
@@ -73,5 +74,10 @@ public final class DateUtil {
         return timestamp == null
                 ? null
                 : timestamp.toInstant();
+    }
+
+    public static String toString(LocalDateTime localDateTime, String pattern) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        return localDateTime.format(formatter);
     }
 }

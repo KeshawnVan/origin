@@ -1,7 +1,7 @@
 package star.service.impl;
 
-import star.annotation.Fresh;
-import star.annotation.Service;
+import star.annotation.bean.Fresh;
+import star.annotation.bean.Service;
 import star.bean.User;
 import star.service.TestService;
 

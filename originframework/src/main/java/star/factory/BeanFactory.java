@@ -2,9 +2,9 @@ package star.factory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import star.annotation.Controller;
-import star.annotation.Fresh;
-import star.annotation.Service;
+import star.annotation.bean.Controller;
+import star.annotation.bean.Fresh;
+import star.annotation.bean.Service;
 import star.constant.ConfigConstant;
 import star.core.IocCore;
 import star.exception.ImplementDuplicateException;

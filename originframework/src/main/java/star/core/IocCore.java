@@ -1,7 +1,7 @@
 package star.core;
 
 import org.apache.commons.lang3.ArrayUtils;
-import star.annotation.Inject;
+import star.annotation.bean.Inject;
 import star.exception.ImplementDuplicateException;
 import star.factory.BeanFactory;
 import star.factory.ConfigFactory;

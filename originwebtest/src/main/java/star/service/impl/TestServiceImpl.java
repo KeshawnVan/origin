@@ -1,8 +1,8 @@
 package star.service.impl;
 
 import com.google.common.collect.Lists;
-import star.annotation.Inject;
-import star.annotation.Service;
+import star.annotation.bean.Inject;
+import star.annotation.bean.Service;
 import star.bean.User;
 import star.dao.UserRepository;
 import star.service.TestService;

@@ -1,7 +1,7 @@
 package star.factory;
 
-import star.annotation.Controller;
-import star.annotation.Service;
+import star.annotation.bean.Controller;
+import star.annotation.bean.Service;
 import star.utils.ClassUtil;
 
 import java.lang.annotation.Annotation;

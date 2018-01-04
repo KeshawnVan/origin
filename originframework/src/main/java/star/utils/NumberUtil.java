@@ -2,6 +2,7 @@ package star.utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Random;
 
 /**
  * @author keshawn
@@ -11,6 +12,8 @@ import java.math.RoundingMode;
 public final class NumberUtil {
 
     private static final int SCALE = 2;
+
+    private static final Random RANDOM = new Random();
 
     private NumberUtil() {
 
@@ -25,4 +28,7 @@ public final class NumberUtil {
         return new BigDecimal(value).setScale(SCALE, RoundingMode.HALF_UP).doubleValue();
     }
 
+    public static Integer getRandomNum(Integer bound){
+        return RANDOM.nextInt(bound);
+    }
 }

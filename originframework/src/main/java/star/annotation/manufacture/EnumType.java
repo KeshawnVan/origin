@@ -1,4 +1,4 @@
-package star.annotation;
+package star.annotation.manufacture;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,10 +7,10 @@ import java.lang.annotation.Target;
 
 /**
  * @author keshawn
- * @date 2017/11/9
+ * @date 2018/1/4
  */
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Service {
-    String value() default "";
+public @interface EnumType {
+    String[] value();
 }

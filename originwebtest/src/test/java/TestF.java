@@ -1,9 +1,7 @@
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
-import star.annotation.Inject;
+import star.annotation.bean.Inject;
 import star.bean.Handler;
 import star.bean.PartnerLevel;
 import star.bean.User;
