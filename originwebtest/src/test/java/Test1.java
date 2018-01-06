@@ -2,6 +2,7 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.Reflection;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
+import star.bean.Status;
 import star.bean.User;
 import star.constant.DateConstant;
 import star.controller.TestController;
@@ -19,6 +20,8 @@ import star.service.TestService;
 import star.service.impl.TestServiceImpl;
 import star.service.impl.TestServiceImpl2;
 import star.utils.*;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -32,6 +35,10 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static star.utils.PojoManufactureUtil.manufacture;
 
 /**
  * @author keshawn
@@ -281,9 +288,9 @@ public class Test1 {
 ////        System.out.println(JsonUtil.encodeJson(pojo));
         Method findByNamesAndAge = TestServiceImpl.class.getMethod("findByNamesAndAge");
         Type type = findByNamesAndAge.getGenericReturnType();
-        Object manufacture = PojoManufactureUtil.manufacture(User.class);
-        System.out.println(JsonUtil.encodeJson(PojoManufactureUtil.manufacture(type)));
-        System.out.println(JsonUtil.encodeJson(PojoManufactureUtil.manufacture(User.class)));
+        Object manufacture = manufacture(User.class);
+        System.out.println(JsonUtil.encodeJson(manufacture(type)));
+        System.out.println(JsonUtil.encodeJson(manufacture(User.class)));
     }
 
     @Test
@@ -294,5 +301,43 @@ public class Test1 {
     @Test
     public void getRandom() {
         System.out.println(NumberUtil.getRandomNum(2));
+    }
+
+    @Test
+    public void testCastToString(){
+        Integer o = null;
+        String num = "110";
+        o = Integer.parseInt(num);
+        System.out.println(o);
+    }
+
+    @Test
+    public void testStream(){
+        PodamFactory podamFactory = new PodamFactoryImpl();
+        List<User> users = podamFactory.manufacturePojo(List.class, User.class);
+        User abc = podamFactory.manufacturePojo(User.class);
+        abc.setName("ABC");
+        users.add(abc);
+        System.out.println("raw:"+JsonUtil.encodeJson(users));
+//        List<User> valid = users.stream()
+//                .filter(user -> user.getStatus().equals(Status.VALID))
+//                .collect(Collectors.toList());
+//        System.out.printf("result : " + JsonUtil.encodeJson(valid));
+//        users.stream()
+//                .filter(user -> "a".equalsIgnoreCase(user.getName().charAt(0) + ""))
+//                .map(User::getId)
+//                .forEach(id -> System.out.println(id));
+        Map<Long, String> collect = Stream.generate(() -> JsonUtil.decodeArrayJson(JsonUtil.encodeJson(podamFactory.manufacturePojo(List.class,User.class)),User.class))
+                .limit(20)
+                .flatMap(userList -> userList.stream().map(u -> (User)u))
+                .filter(user -> "a".equalsIgnoreCase((user).getName().charAt(0) + ""))
+                .collect(Collectors.toMap(User::getId,User::getName));
+        System.out.println(collect);
+        String collect1 = JsonUtil.decodeArrayJson(JsonUtil.encodeJson(podamFactory.manufacturePojo(List.class, User.class)), User.class).stream()
+                .map(User::getName)
+                .collect(Collectors.joining(","));
+        System.out.println(collect1);
+
+
     }
 }

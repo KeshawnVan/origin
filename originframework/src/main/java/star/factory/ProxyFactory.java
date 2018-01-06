@@ -11,6 +11,7 @@ import star.utils.ReflectionUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
@@ -42,7 +43,7 @@ public final class ProxyFactory {
     private static Map<Class<?>, Set<Class<?>>> createProxyMap(){
         return ClassFactory.getClassSetBySuper(AspectProxy.class).stream()
                 .filter(proxyClass -> proxyClass.isAnnotationPresent(Aspect.class))
-                .collect(Collectors.toMap(cls -> cls,cls -> createTargetClassSet(cls.getAnnotation(Aspect.class))));
+                .collect(Collectors.toMap(Function.identity(), cls -> createTargetClassSet(cls.getAnnotation(Aspect.class))));
     }
 
     private static Map<Class<?>, List<Proxy>> createTargetMap(Map<Class<?>, Set<Class<?>>> proxyMap){
