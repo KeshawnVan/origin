@@ -291,6 +291,12 @@ public class Test1 {
         Object manufacture = manufacture(User.class);
         System.out.println(JsonUtil.encodeJson(manufacture(type)));
         System.out.println(JsonUtil.encodeJson(manufacture(User.class)));
+        User user = (User) PojoManufactureUtil.manufacture(User.class);
+        System.out.println(user);
+        List<User> users = (List<User>)PojoManufactureUtil.manufacture(type);
+        System.out.println(users);
+        System.out.println(JsonUtil.encodeJson(PojoManufactureUtil.manufacture(type)));
+        System.out.println(JsonUtil.encodeJson(PojoManufactureUtil.manufacture(User.class)));
     }
 
     @Test
@@ -339,5 +345,23 @@ public class Test1 {
         System.out.println(collect1);
 
 
+    }
+
+    @Test
+    public void testClass()throws Exception{
+        System.out.println(User.class instanceof  Class);
+        Field age = User.class.getDeclaredField("age");
+        Class<?> type = age.getType();
+        System.out.println(age.getType() instanceof  Class);
+        System.out.println(age.getType());
+        Method findByNamesAndAge = TestServiceImpl.class.getMethod("findByNamesAndAge");
+        Class<?> returnType = findByNamesAndAge.getReturnType();
+    }
+
+    @Test
+    public void testReturn(){
+        TestServiceImpl testService = new TestServiceImpl();
+        List<User> byNamesAndAge = testService.findByNamesAndAge();
+        System.out.println(byNamesAndAge);
     }
 }

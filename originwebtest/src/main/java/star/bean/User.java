@@ -35,6 +35,17 @@ public class User {
         this.status = status;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", birthday=" + birthday +
+                ", status=" + status +
+                '}';
+    }
+
     public Long getId() {
         return id;
     }

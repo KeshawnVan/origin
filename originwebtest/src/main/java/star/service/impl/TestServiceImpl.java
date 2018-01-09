@@ -7,7 +7,10 @@ import star.bean.User;
 import star.dao.UserRepository;
 import star.service.TestService;
 import star.utils.JsonUtil;
+import star.utils.PojoManufactureUtil;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -28,7 +31,15 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public List<User> findByNamesAndAge() {
+        Method findByNamesAndAge = null;
+        try {
+            findByNamesAndAge = TestServiceImpl.class.getMethod("findByNamesAndAge");
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+//        Type type = findByNamesAndAge.getGenericReturnType();
         return userRepository.findByNameInAndAge(Lists.newArrayList("liuna","na"),23);
+//        return (List<User>) PojoManufactureUtil.manufacture(type);
     }
 
     public String getS() {
