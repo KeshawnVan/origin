@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import star.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
@@ -52,21 +53,34 @@ public final class ResultSetParser {
      *
      * @param fields
      * @param resultSet
-     * @param originType
+     * @param genericType
      * @param returnType
      * @return
      * @throws SQLException
      */
-    public static Object buildCollectionResult(List<Field> fields, ResultSet resultSet, Class<?> originType, Class<?> returnType) throws SQLException {
+    public static Object buildCollectionResult(List<Field> fields, ResultSet resultSet, Type[] genericType, Class<?> returnType) throws SQLException {
+
+        Class<?> originType = parseGenericType(genericType);
 
         if (List.class.isAssignableFrom(returnType)) {
             return buildResults(fields, resultSet, originType, new ArrayList<>());
         }
+
         if (Set.class.isAssignableFrom(returnType)) {
             return buildResults(fields, resultSet, originType, new HashSet());
         }
+
         LOGGER.warn("buildCollectionResult cannot match suitable type : {}", returnType);
         return buildResults(fields, resultSet, originType, new ArrayList<>());
+    }
+
+    private static Class<?> parseGenericType(Type[] genericType) {
+        //目前只处理List和Set，genericType应为一位
+        if (genericType != null && genericType.length == 1){
+            return (Class<?>)genericType[0];
+        }else {
+            throw new RuntimeException("genericType invalid :" + genericType);
+        }
     }
 
     /**

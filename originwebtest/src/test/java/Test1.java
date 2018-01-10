@@ -3,6 +3,7 @@ import com.google.common.reflect.Reflection;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import star.bean.Status;
+import star.bean.TypeWrapper;
 import star.bean.User;
 import star.constant.DateConstant;
 import star.controller.TestController;
@@ -355,7 +356,11 @@ public class Test1 {
         System.out.println(age.getType() instanceof  Class);
         System.out.println(age.getType());
         Method findByNamesAndAge = TestServiceImpl.class.getMethod("findByNamesAndAge");
-        Class<?> returnType = findByNamesAndAge.getReturnType();
+        Type genericReturnType = findByNamesAndAge.getGenericReturnType();
+        TypeWrapper typeWrapper = ReflectionUtil.typeParse(genericReturnType);
+        Type[] genericType = typeWrapper.getGenericType();
+        Class aClass = (Class) genericType[0];
+        System.out.println(genericReturnType);
     }
 
     @Test
