@@ -1,8 +1,9 @@
 package star.bean;
 
-import star.annotation.repository.Column;
-import star.annotation.repository.Id;
+import star.annotation.bean.Component;
+import star.annotation.bean.Inject;
 import star.annotation.repository.Table;
+import star.service.TestService;
 
 import java.time.Instant;
 
@@ -11,23 +12,26 @@ import java.time.Instant;
  * @date 2017/11/22
  */
 @Table("USER")
-public class User {
-    @Id
+@Component
+public class UserDTO {
+
+    @Inject
+    private TestService testService;
+
     private Long id;
 
     private String name;
 
-    @Column("age")
     private Integer age;
 
     private Instant birthday;
 
     private Status status;
 
-    public User() {
+    public UserDTO() {
     }
 
-    public User(Long id, String name, Integer age, Instant birthday, Status status) {
+    public UserDTO(Long id, String name, int age, Instant birthday, Status status) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -69,7 +73,6 @@ public class User {
     public void setAge(Integer age) {
         this.age = age;
     }
-
 
     public Instant getBirthday() {
         return birthday;

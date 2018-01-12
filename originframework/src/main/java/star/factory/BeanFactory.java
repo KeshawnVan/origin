@@ -2,6 +2,7 @@ package star.factory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import star.annotation.bean.Component;
 import star.annotation.bean.Controller;
 import star.annotation.bean.Fresh;
 import star.annotation.bean.Service;
@@ -130,6 +131,10 @@ public final class BeanFactory {
         } else if (beanClass.isAnnotationPresent(Controller.class)) {
             Controller controller = beanClass.getAnnotation(Controller.class);
             String value = controller.value();
+            addBean(value, beanClass);
+        } else if (beanClass.isAnnotationPresent(Component.class)) {
+            Component component = beanClass.getAnnotation(Component.class);
+            String value = component.value();
             addBean(value, beanClass);
         }
         ClassFactory.getClassSetBySuper(CommonRepository.class).forEach(cls -> addBean(BLANK,cls));

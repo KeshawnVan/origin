@@ -196,7 +196,6 @@
             <artifactId>podam</artifactId>
             <version>7.1.0.RELEASE</version>
         </dependency>
-
     </dependencies>
 
     <build>

@@ -1,5 +1,6 @@
 package star.factory;
 
+import star.annotation.bean.Component;
 import star.annotation.bean.Controller;
 import star.annotation.bean.Service;
 import star.utils.ClassUtil;
@@ -38,7 +39,9 @@ public final class ClassFactory {
     }
 
     public static Set<Class<?>> getBeanClassSet() {
-        return CLASS_SET.stream().filter(cls -> cls.isAnnotationPresent(Controller.class) || cls.isAnnotationPresent(Service.class)).collect(toSet());
+        return CLASS_SET.stream()
+                .filter(cls -> cls.isAnnotationPresent(Controller.class) || cls.isAnnotationPresent(Service.class) || cls.isAnnotationPresent(Component.class))
+                .collect(toSet());
     }
 
     public static Set<Class<?>> getAnnotationClassSet(Class<? extends Annotation> annotation) {
