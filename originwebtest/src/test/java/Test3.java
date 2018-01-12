@@ -58,4 +58,13 @@ public class Test3 {
         connection.commit();
         ConnectionFactory.closeConnection();
     }
+
+    @Test
+    public  void testUpdate(){
+        LoadCore.init();
+        UserRepository userRepository = BeanFactory.getBean(UserRepository.class);
+        User u = userRepository.findById(14L);
+        u.setName("fffffff");
+        userRepository.update(u);
+    }
 }

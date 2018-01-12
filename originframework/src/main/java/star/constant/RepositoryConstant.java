@@ -46,10 +46,6 @@ public interface RepositoryConstant {
 
     String PLACEHOLDER = "?";
 
-    String FIND_BY_ID = "findById";
-
-    String FIND_BY_IDS = "findByIds";
-
     String FIND_ALL = "findAll";
 
     String SAVE = "save";
@@ -57,6 +53,8 @@ public interface RepositoryConstant {
     String UPDATE = "update";
 
     String QUERY = "query";
+
+    String SET = " set ";
 
     String BLANK = " ";
 

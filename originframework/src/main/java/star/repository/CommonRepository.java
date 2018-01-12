@@ -17,7 +17,7 @@ public interface CommonRepository<T, ID extends Serializable> {
 
     Integer save(T t);
 
-    T update(T t);
+    Integer update(T t);
 
     Integer deleteById(ID id);
 }
