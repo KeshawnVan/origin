@@ -11,6 +11,7 @@ import star.utils.CollectionUtil;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,11 +54,15 @@ public final class RepositoryManager {
      * @return
      */
     public static Map<String, String> buildFieldMap(List<Field> fields) {
-        return fields.stream()
-                .collect(Collectors.toMap(field -> field.getName(),
-                        field -> field.isAnnotationPresent(Column.class)
-                                ? field.getAnnotation(Column.class).value()
-                                : AUTO_CAST ? camelToUnderlineUpperCase(field.getName()) : field.getName()));
+        Map<String, String> fieldMap = new LinkedHashMap<>();
+        fields.forEach(field -> {
+            String fieldName = field.getName();
+            String columnName = field.isAnnotationPresent(Column.class)
+                    ? field.getAnnotation(Column.class).value()
+                    : AUTO_CAST ? camelToUnderlineUpperCase(field.getName()) : field.getName();
+            fieldMap.put(fieldName, columnName);
+        });
+        return fieldMap;
     }
 
     /**

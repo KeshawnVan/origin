@@ -15,7 +15,7 @@ public interface CommonRepository<T, ID extends Serializable> {
 
     List<T> findByIdIn(Collection<ID> ids);
 
-    T save(T t);
+    Integer save(T t);
 
     T update(T t);
 

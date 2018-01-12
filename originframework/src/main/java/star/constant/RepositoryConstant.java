@@ -8,6 +8,8 @@ public interface RepositoryConstant {
 
     String SELECT = "select ";
 
+    String INSERT_INTO = "insert into ";
+
     String FROM = " from ";
 
     String WHERE = " where ";
@@ -35,6 +37,8 @@ public interface RepositoryConstant {
     String EQUALS = " = ";
 
     String IN = " in ";
+
+    String VALUES = " values";
 
     String LEFT_BRACKET = "(";
 

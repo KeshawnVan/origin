@@ -17,7 +17,6 @@ public class User {
 
     private String name;
 
-    @Column("age")
     private Integer age;
 
     private Instant birthday;

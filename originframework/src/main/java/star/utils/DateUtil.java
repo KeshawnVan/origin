@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -79,5 +80,11 @@ public final class DateUtil {
     public static String toString(LocalDateTime localDateTime, String pattern) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         return localDateTime.format(formatter);
+    }
+
+    public static Timestamp toTimestamp(Instant instant){
+        return instant == null
+                ? null
+                : Timestamp.from(instant);
     }
 }

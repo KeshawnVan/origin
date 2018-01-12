@@ -1,11 +1,14 @@
 package star.repository;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import star.utils.DateUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
 
@@ -32,13 +35,17 @@ public final class PreparedStatementLoader {
         int paramLength = params.length;
         for (int i = 0; i < paramLength; i++) {
             Object param = params[i];
-            //param为方法参数，方法参数也有可能是集合
-            if (Collection.class.isAssignableFrom(param.getClass())) {
-                for (Object value : (Collection) param) {
-                    num = setSingleObject(value, num, preparedStatement);
+            if (param == null){
+                num = setSingleObject(param,num,preparedStatement);
+            }else {
+                //param为方法参数，方法参数也有可能是集合
+                if (Collection.class.isAssignableFrom(param.getClass())) {
+                    for (Object value : (Collection) param) {
+                        num = setSingleObject(value, num, preparedStatement);
+                    }
+                } else {
+                    num = setSingleObject(param, num, preparedStatement);
                 }
-            } else {
-                setSingleObject(param, num, preparedStatement);
             }
         }
     }
@@ -55,6 +62,9 @@ public final class PreparedStatementLoader {
         }
         if (paramClass == Date.class) {
             param = DateUtil.toSqlDate((Date) param);
+        }
+        if (paramClass == Instant.class){
+            param = DateUtil.toTimestamp((Instant) param);
         }
         preparedStatement.setObject(num, param);
         return num;

@@ -55,6 +55,16 @@ public final class ReflectionUtil {
         }
     }
 
+    public static Object getField(Field field, Object object){
+        field.setAccessible(true);
+        try {
+            return field.get(object);
+        } catch (IllegalAccessException e) {
+            LOGGER.error("get field failure", e);
+            throw new RuntimeException(e);
+        }
+    }
+
     public static TypeWrapper typeParse(Type type) {
         Class<?> cls = type instanceof ParameterizedType ? ((ParameterizedTypeImpl) type).getRawType() : (Class) type;
         return Collection.class.isAssignableFrom(cls)
