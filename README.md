@@ -15,3 +15,5 @@ This is a Java Web Framework , it's consult Smart Framework. And it will be more
 * Support JDK Proxy AOP
 * Support Transaction
 * Support Mock with AOP
+* Support Security
+* Support File Upload
