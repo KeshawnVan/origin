@@ -18,8 +18,6 @@ public class SaveSqlGenerator implements SqlGenerator {
 
     private static final SaveSqlGenerator instance = new SaveSqlGenerator();
 
-    private String saveSql;
-
     private SaveSqlGenerator() {
     }
 
@@ -29,12 +27,8 @@ public class SaveSqlGenerator implements SqlGenerator {
 
     @Override
     public String generate(Method method, ConcurrentHashMap<String, String> sqlMap, String tableName, String selectAllColumns, Object[] params, Map<String, String> fieldMap) {
-        if (saveSql == null){
             String columns = fieldMap.values().stream().collect(Collectors.joining(DELIMITER));
             String bracketPlaceHolder = StringUtil.generateBracketPlaceHolder(fieldMap.size());
-            saveSql = INSERT_INTO + tableName + LEFT_BRACKET + columns + RIGHT_BRACKET + VALUES + bracketPlaceHolder;
-        }
-        System.out.println(saveSql);
-        return saveSql;
+        return INSERT_INTO + tableName + LEFT_BRACKET + columns + RIGHT_BRACKET + VALUES + bracketPlaceHolder;
     }
 }

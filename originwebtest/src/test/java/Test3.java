@@ -60,11 +60,15 @@ public class Test3 {
     }
 
     @Test
-    public  void testUpdate(){
+    public  void testUpdate()throws Exception{
         LoadCore.init();
         UserRepository userRepository = BeanFactory.getBean(UserRepository.class);
         User u = userRepository.findById(14L);
         u.setName("fffffff");
-        userRepository.update(u);
+        Integer update = userRepository.update(u);
+        System.out.println(update);
+        Connection connection = ConnectionFactory.getConnection();
+        connection.commit();
+        ConnectionFactory.closeConnection();
     }
 }

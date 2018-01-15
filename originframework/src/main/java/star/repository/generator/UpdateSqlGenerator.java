@@ -1,6 +1,5 @@
 package star.repository.generator;
 
-import star.constant.RepositoryConstant;
 import star.repository.SqlGenerator;
 
 import java.lang.reflect.Method;
@@ -18,8 +17,6 @@ public class UpdateSqlGenerator implements SqlGenerator {
 
     private static final UpdateSqlGenerator instance = new UpdateSqlGenerator();
 
-    private String updateSql;
-
     private UpdateSqlGenerator() {
     }
 
@@ -29,11 +26,7 @@ public class UpdateSqlGenerator implements SqlGenerator {
 
     @Override
     public String generate(Method method, ConcurrentHashMap<String, String> sqlMap, String tableName, String selectAllColumns, Object[] params, Map<String, String> fieldMap) {
-        if (updateSql == null){
-            String columnAndPlaceHolders = fieldMap.values().stream().map(column -> column + EQUALS + PLACEHOLDER).collect(Collectors.joining(DELIMITER));
-            updateSql = UPDATE + BLANK + tableName + SET + columnAndPlaceHolders + WHERE + ID + EQUALS + PLACEHOLDER;
-        }
-        System.out.println(updateSql);
-        return updateSql;
+        String columnAndPlaceHolders = fieldMap.values().stream().map(column -> column + EQUALS + PLACEHOLDER).collect(Collectors.joining(DELIMITER));
+        return UPDATE + BLANK + tableName + SET + columnAndPlaceHolders + WHERE + ID + EQUALS + PLACEHOLDER;
     }
 }
