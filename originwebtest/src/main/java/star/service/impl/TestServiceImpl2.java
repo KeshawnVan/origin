@@ -22,4 +22,9 @@ public class TestServiceImpl2 implements TestService {
     public List<User> findByNamesAndAge() {
         return null;
     }
+
+    @Override
+    public Integer updateUser(User user) {
+        return null;
+    }
 }

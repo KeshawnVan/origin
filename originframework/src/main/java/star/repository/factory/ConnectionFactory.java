@@ -1,8 +1,9 @@
-package star.factory;
+package star.repository.factory;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import star.factory.ConfigFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -23,7 +24,7 @@ public class ConnectionFactory {
 
     private static final DruidDataSource druidDataSource = new DruidDataSource();
 
-    private static ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal<>();
+    private final static ThreadLocal<Connection> CONNECTION_THREAD_LOCAL = new ThreadLocal<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionFactory.class);
 
@@ -37,7 +38,6 @@ public class ConnectionFactory {
             druidDataSource.setMaxActive(MAX_ACTIVE);
             druidDataSource.setMinIdle(MIN_IDLE);
             druidDataSource.setInitialSize(INITIAL_SIZE);
-            druidDataSource.setDefaultAutoCommit(Boolean.FALSE);
             druidDataSource.setDefaultReadOnly(Boolean.FALSE);
         } catch (ClassNotFoundException e) {
             LOGGER.error("JDBC Driver error", e);
@@ -48,7 +48,7 @@ public class ConnectionFactory {
     }
 
     public static Connection getConnection() {
-        Connection connection = connectionThreadLocal.get();
+        Connection connection = CONNECTION_THREAD_LOCAL.get();
         synchronized (ConnectionFactory.class) {
             if (connection == null) {
                 try {
@@ -56,7 +56,7 @@ public class ConnectionFactory {
                 } catch (SQLException e) {
                     LOGGER.error("get jdbc connection error", e);
                 } finally {
-                    connectionThreadLocal.set(connection);
+                    CONNECTION_THREAD_LOCAL.set(connection);
                 }
             }
             return connection;
@@ -64,15 +64,19 @@ public class ConnectionFactory {
     }
 
     public static void closeConnection() {
-        Connection connection = connectionThreadLocal.get();
+        Connection connection = CONNECTION_THREAD_LOCAL.get();
         if (connection != null) {
             try {
                 connection.close();
             } catch (SQLException e) {
                 LOGGER.error("jdbc connection close error", e);
             } finally {
-                connectionThreadLocal.remove();
+                CONNECTION_THREAD_LOCAL.remove();
             }
         }
+    }
+
+    public static ThreadLocal<Connection> getConnectionThreadLocal() {
+        return CONNECTION_THREAD_LOCAL;
     }
 }

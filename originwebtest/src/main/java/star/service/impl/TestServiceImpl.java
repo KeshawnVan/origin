@@ -3,6 +3,7 @@ package star.service.impl;
 import com.google.common.collect.Lists;
 import star.annotation.bean.Inject;
 import star.annotation.bean.Service;
+import star.annotation.repository.Transaction;
 import star.bean.User;
 import star.dao.UserRepository;
 import star.service.TestService;
@@ -18,6 +19,7 @@ import java.util.List;
  * @date 2017/11/10
  */
 @Service
+@Transaction
 public class TestServiceImpl implements TestService {
 
     @Inject
@@ -38,7 +40,7 @@ public class TestServiceImpl implements TestService {
             e.printStackTrace();
         }
 //        Type type = findByNamesAndAge.getGenericReturnType();
-        return userRepository.findByNameInAndAge(Lists.newArrayList("liuna","na"),23);
+        return userRepository.findByNameInAndAge(Lists.newArrayList("fkx","na"),22);
 //        return (List<User>) PojoManufactureUtil.manufacture(type);
     }
 
@@ -48,5 +50,11 @@ public class TestServiceImpl implements TestService {
 
     public void setS(String s) {
         this.s = s;
+    }
+
+    @Override
+    public Integer updateUser(User user) {
+        user.setName("fkx");
+        return userRepository.update(user);
     }
 }

@@ -1,7 +1,7 @@
 package star.repository.executor;
 
 import star.bean.TypeWrapper;
-import star.factory.ConnectionFactory;
+import star.repository.factory.ConnectionFactory;
 import star.repository.SqlExecutor;
 import star.utils.ReflectionUtil;
 
@@ -53,8 +53,8 @@ public class QueryExecutor implements SqlExecutor {
     }
 
     private TypeWrapper buildTypeVariableWrapper(Class<?> beanClass) {
-        if (beanClassWrapper == null){
-            beanClassWrapper = new TypeWrapper(beanClass,null,false);
+        if (beanClassWrapper == null) {
+            beanClassWrapper = new TypeWrapper(beanClass, null, false);
         }
         return beanClassWrapper;
     }

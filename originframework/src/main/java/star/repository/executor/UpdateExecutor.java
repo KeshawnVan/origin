@@ -1,6 +1,6 @@
 package star.repository.executor;
 
-import star.factory.ConnectionFactory;
+import star.repository.factory.ConnectionFactory;
 import star.repository.SqlExecutor;
 import star.utils.ReflectionUtil;
 
@@ -35,7 +35,7 @@ public class UpdateExecutor implements SqlExecutor {
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         Object param = params[0];
         Class<?> paramClass = param.getClass();
-        if (!beanClass.equals(paramClass)){
+        if (!beanClass.equals(paramClass)) {
             throw new RuntimeException("param type invalid");
         }
         List<Object> paramList = fields.stream().map(field -> ReflectionUtil.getField(field, param)).collect(Collectors.toList());

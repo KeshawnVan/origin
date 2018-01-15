@@ -1,6 +1,6 @@
 package star.repository.executor;
 
-import star.factory.ConnectionFactory;
+import star.repository.factory.ConnectionFactory;
 import star.repository.SqlExecutor;
 import star.utils.ReflectionUtil;
 
@@ -18,7 +18,7 @@ import static star.repository.PreparedStatementLoader.setPreparedStatement;
  * @author keshawn
  * @date 2017/12/29
  */
-public final class SaveExecutor implements SqlExecutor{
+public final class SaveExecutor implements SqlExecutor {
 
     private static final SaveExecutor instance = new SaveExecutor();
 
@@ -33,7 +33,7 @@ public final class SaveExecutor implements SqlExecutor{
     public Object execute(String sql, Method method, Object[] params, List<Field> fields, Class<?> beanClass, Field idField) throws SQLException {
         Object param = params[0];
         Class<?> paramClass = param.getClass();
-        if (!beanClass.equals(paramClass)){
+        if (!beanClass.equals(paramClass)) {
             throw new RuntimeException("param type invalid");
         }
         Connection connection = ConnectionFactory.getConnection();

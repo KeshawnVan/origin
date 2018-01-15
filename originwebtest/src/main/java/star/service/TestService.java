@@ -11,4 +11,5 @@ import java.util.List;
 public interface TestService {
     void hello();
     List<User> findByNamesAndAge();
+    Integer updateUser(User user);
 }

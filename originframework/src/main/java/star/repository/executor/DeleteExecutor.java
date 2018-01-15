@@ -1,6 +1,6 @@
 package star.repository.executor;
 
-import star.factory.ConnectionFactory;
+import star.repository.factory.ConnectionFactory;
 import star.repository.SqlExecutor;
 
 import java.lang.reflect.Field;
@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 
 import static star.repository.PreparedStatementLoader.setPreparedStatement;

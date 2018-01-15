@@ -68,15 +68,15 @@ public final class ConfigFactory {
         return YAML_BEAN.getBasePackage();
     }
 
-    static Integer getMaxActive() {
+    public static Integer getMaxActive() {
         return CastUtil.castInt(DATA_SOURCE.getOrDefault(MAX_ACTIVE, DEFAULT_MAX_ACTIVE));
     }
 
-    static Integer getMinIdle() {
+    public static Integer getMinIdle() {
         return CastUtil.castInt(DATA_SOURCE.getOrDefault(MIN_IDLE, DEFAULT_MIN_IDLE));
     }
 
-    static Integer getInitialSize() {
+    public static Integer getInitialSize() {
         return CastUtil.castInt(DATA_SOURCE.getOrDefault(INITIAL_SIZE, DEFAULT_INITIAL_SIZE));
     }
 

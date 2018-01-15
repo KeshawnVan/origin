@@ -15,6 +15,7 @@ import star.utils.JsonUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -78,5 +79,14 @@ public class TestController {
     @Stream
     public List<User> h(){
         return testService.findByNamesAndAge();
+    }
+
+    @Action("updateUser")
+    @Stream
+    public Integer updateUser(){
+        List<User> byNamesAndAge = testService.findByNamesAndAge();
+        User user = byNamesAndAge.get(0);
+        user.setBirthday(Instant.now());
+        return testService.updateUser(user);
     }
 }
