@@ -1,3 +1,4 @@
+import com.google.common.collect.Lists;
 import org.junit.Test;
 import star.bean.User;
 import star.bean.UserDTO;
@@ -10,7 +11,9 @@ import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author keshawn
@@ -57,7 +60,7 @@ public class Test3 {
     }
 
     @Test
-    public  void testUpdate()throws Exception{
+    public void testUpdate()throws Exception{
         LoadCore.init();
         UserRepository userRepository = BeanFactory.getBean(UserRepository.class);
         User u = userRepository.findById(14L);
@@ -67,5 +70,34 @@ public class Test3 {
         Connection connection = ConnectionFactory.getConnection();
         connection.commit();
         ConnectionFactory.closeConnection();
+    }
+
+    @Test
+    public void testLambda(){
+        Supplier supplier = new Supplier(){
+            @Override
+            public Object get() {
+                return new User();
+            }
+        };
+        Supplier supplierLambda = () -> {
+            return new User();
+        };
+        Supplier supplierFinally = () -> new User();
+    }
+
+    @Test
+    public void testRetain(){
+        ArrayList<Long> con = Lists.newArrayList(2L);
+        ArrayList<Long> longs = Lists.newArrayList(1L, 3L);
+        con.retainAll(longs);
+        System.out.println(con);
+    }
+
+    @Test
+    public void testList(){
+        List<String> strings = new ArrayList<>();
+        int size = strings.size();
+        System.out.println(size);
     }
 }

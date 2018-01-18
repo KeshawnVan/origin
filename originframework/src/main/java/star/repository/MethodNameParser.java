@@ -20,7 +20,6 @@ public final class MethodNameParser {
     private MethodNameParser() {
     }
 
-
     public static String generateConditionSqlByMethodName(String sqlPrefix, Object[] params, Map<String, String> fieldMap, String methodName) {
         StringBuilder stringBuilder = new StringBuilder(sqlPrefix);
         String querySentence = StringUtils.substringAfter(methodName, BY);

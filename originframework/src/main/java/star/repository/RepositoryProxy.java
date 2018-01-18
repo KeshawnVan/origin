@@ -51,7 +51,6 @@ public class RepositoryProxy implements InvocationHandler {
         String argsMethodName = RepositoryManager.generateArgsMethodName(methodName, params);
         String sql = buildSql(method, params, methodName, argsMethodName);
         SqlExecutor sqlExecutor = SqlExecutorFactory.getExecutor(methodName);
-
         return sqlExecutor.execute(sql, method, params, fields, beanClass, idField);
     }
 
@@ -62,7 +61,6 @@ public class RepositoryProxy implements InvocationHandler {
         } else {
             SqlGenerator sqlGenerator = SqlGeneratorFactory.getGenerator(methodName);
             sql = sqlGenerator.generate(method, SQL_MAP, tableName, selectAllColumns, params, fieldMap);
-
         }
         return sql;
     }
@@ -80,7 +78,6 @@ public class RepositoryProxy implements InvocationHandler {
         fieldMap = buildFieldMap(fields);
         selectAllColumns = buildSelectColumns(fieldMap);
         idField = getId(beanClassName, fields);
-
     }
 
     /**
