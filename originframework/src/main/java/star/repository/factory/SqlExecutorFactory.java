@@ -1,11 +1,9 @@
 package star.repository.factory;
 
-import star.repository.SqlExecutor;
 import star.repository.executor.*;
+import star.repository.interfaces.SqlExecutor;
 
 import static star.constant.RepositoryConstant.*;
-import static star.constant.RepositoryConstant.DELETE;
-import static star.constant.RepositoryConstant.UPDATE;
 
 /**
  * @author keshawn
@@ -16,7 +14,7 @@ public final class SqlExecutorFactory {
     private SqlExecutorFactory() {
     }
 
-    public static SqlExecutor getExecutor(String methodName){
+    public static SqlExecutor getExecutor(String methodName) {
         if (methodName.startsWith(FIND) || methodName.startsWith(SELECT) || methodName.startsWith(QUERY)) {
             return QueryExecutor.getInstance();
         }

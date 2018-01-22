@@ -1,7 +1,7 @@
 package star.repository.factory;
 
-import star.repository.SqlGenerator;
 import star.repository.generator.*;
+import star.repository.interfaces.SqlGenerator;
 
 import static star.constant.RepositoryConstant.*;
 

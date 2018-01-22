@@ -3,6 +3,8 @@ package star.repository;
 import com.google.common.collect.Lists;
 import star.repository.factory.SqlExecutorFactory;
 import star.repository.factory.SqlGeneratorFactory;
+import star.repository.interfaces.SqlExecutor;
+import star.repository.interfaces.SqlGenerator;
 import star.utils.ArrayUtil;
 import star.utils.ClassUtil;
 import star.utils.ReflectionUtil;

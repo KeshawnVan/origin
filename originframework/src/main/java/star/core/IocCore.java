@@ -5,7 +5,7 @@ import star.annotation.bean.Inject;
 import star.exception.ImplementDuplicateException;
 import star.factory.BeanFactory;
 import star.factory.ConfigFactory;
-import star.repository.CommonRepository;
+import star.repository.interfaces.CommonRepository;
 import star.utils.CollectionUtil;
 import star.utils.ReflectionUtil;
 import star.utils.StringUtil;
@@ -99,7 +99,7 @@ public final class IocCore {
                 }
             }
         } else {
-            //@Inject注解未指定实现类 bean id
+            //@Inject注解指定实现类的bean id
             Object beanFieldInstance = BeanFactory.getBean(injectValue);
             if (beanFieldInstance != null) {
                 //通过反射初始化BeanField的值

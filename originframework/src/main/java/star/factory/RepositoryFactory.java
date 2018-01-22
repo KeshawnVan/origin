@@ -1,6 +1,6 @@
 package star.factory;
 
-import star.repository.CommonRepository;
+import star.repository.interfaces.CommonRepository;
 import star.repository.RepositoryProxy;
 
 import java.util.Map;

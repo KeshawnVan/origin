@@ -67,9 +67,6 @@ public class Test3 {
         u.setName("fffffff");
         Integer update = userRepository.update(u);
         System.out.println(update);
-        Connection connection = ConnectionFactory.getConnection();
-        connection.commit();
-        ConnectionFactory.closeConnection();
     }
 
     @Test

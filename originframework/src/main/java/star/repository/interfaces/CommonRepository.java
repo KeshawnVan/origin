@@ -1,4 +1,4 @@
-package star.repository;
+package star.repository.interfaces;
 
 import java.io.Serializable;
 import java.util.Collection;

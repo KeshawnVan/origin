@@ -1,14 +1,14 @@
 package star.repository.generator;
 
 import star.annotation.repository.Query;
-import star.repository.SqlGenerator;
+import star.repository.interfaces.SqlGenerator;
 
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static star.constant.RepositoryConstant.*;
-import static star.repository.MethodNameParser.generateConditionSqlByMethodName;
+import static star.repository.parser.MethodNameParser.generateConditionSqlByMethodName;
 
 /**
  * @author keshawn

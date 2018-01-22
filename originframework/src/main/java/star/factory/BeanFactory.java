@@ -11,7 +11,7 @@ import star.core.IocCore;
 import star.exception.ImplementDuplicateException;
 import star.proxy.Proxy;
 import star.proxy.ProxyManager;
-import star.repository.CommonRepository;
+import star.repository.interfaces.CommonRepository;
 import star.utils.CollectionUtil;
 import star.utils.ReflectionUtil;
 import star.utils.StringUtil;
@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import static star.constant.RepositoryConstant.BLANK;
 
@@ -43,7 +44,7 @@ public final class BeanFactory {
 
     private static final Map<Class<?>, Object> CLASS_PROXY_MAP = ProxyFactory.getClassProxyMap();
 
-    private static final Map<Class<?>,CommonRepository> REPOSITORY_MAP = RepositoryFactory.getRepositoryMap();
+    private static final Map<Class<?>, CommonRepository> REPOSITORY_MAP = RepositoryFactory.getRepositoryMap();
 
     static {
         Set<Class<?>> beanClassSet = ClassFactory.getBeanClassSet();
@@ -64,9 +65,9 @@ public final class BeanFactory {
     private static Object getSingletonInstance(Class<?> beanClass) {
         //如果该类存在代理，则使用代理对象
         Object object;
-        if (CLASS_PROXY_MAP.containsKey(beanClass)){
+        if (CLASS_PROXY_MAP.containsKey(beanClass)) {
             object = CLASS_PROXY_MAP.get(beanClass);
-        }else {
+        } else {
             object = ReflectionUtil.newInstance(beanClass);
         }
         return object;
@@ -79,22 +80,24 @@ public final class BeanFactory {
     public static Map<Class<?>, Class<?>> getServiceMappingMap() {
         Map<Class<?>, Class<?>> serviceMap = new HashMap<>(ConfigConstant.INITIAL_CAPACITY);
         if (CollectionUtil.isNotEmpty(BEAN_CONTEXT)) {
-            for (Class<?> beanClass : BEAN_CONTEXT.values()) {
-                //目前只有带Service注解的需要做接口与实现类的映射关系
-                if (beanClass.isAnnotationPresent(Service.class)) {
-                    Class<?>[] interfaces = beanClass.getInterfaces();
-                    for (Class<?> interFace : interfaces) {
-                        if (serviceMap.containsKey(interFace)) {
-                            //说明一个接口有多个实现类,在Map中存放ImplementDuplicateException作为接口多实现的标记
-                            serviceMap.put(interFace, ImplementDuplicateException.class);
-                        } else {
-                            serviceMap.put(interFace, beanClass);
-                        }
-                    }
-                }
-            }
+            //目前只有带Service注解的需要做接口与实现类的映射关系
+            BEAN_CONTEXT.values().stream().filter(beanClass -> beanClass.isAnnotationPresent(Service.class)).forEach(buildServiceMap(serviceMap));
         }
         return serviceMap;
+    }
+
+    private static Consumer<Class<?>> buildServiceMap(Map<Class<?>, Class<?>> serviceMap) {
+        return beanClass -> {
+            Class<?>[] interfaces = beanClass.getInterfaces();
+            for (Class<?> interFace : interfaces) {
+                if (serviceMap.containsKey(interFace)) {
+                    //说明一个接口有多个实现类,在Map中存放ImplementDuplicateException作为接口多实现的标记
+                    serviceMap.put(interFace, ImplementDuplicateException.class);
+                } else {
+                    serviceMap.put(interFace, beanClass);
+                }
+            }
+        };
     }
 
     public static <T> T getBean(Class<T> cls) {
@@ -137,7 +140,7 @@ public final class BeanFactory {
             String value = component.value();
             addBean(value, beanClass);
         }
-        ClassFactory.getClassSetBySuper(CommonRepository.class).forEach(cls -> addBean(BLANK,cls));
+        ClassFactory.getClassSetBySuper(CommonRepository.class).forEach(cls -> addBean(BLANK, cls));
     }
 
     private static void checkBeanIdDuplicated(String beanName) {
@@ -161,9 +164,9 @@ public final class BeanFactory {
         }
     }
 
-    public static void setSingletonBean(Class<?> cls, Object object){
+    public static void setSingletonBean(Class<?> cls, Object object) {
         //BEAN_MAP中只存储单例的对象
-        if (!cls.isAnnotationPresent(Fresh.class)){
+        if (!cls.isAnnotationPresent(Fresh.class)) {
             BEAN_MAP.put(cls, object);
         }
     }

@@ -1,4 +1,4 @@
-package star.repository;
+package star.repository.interfaces;
 
 import java.lang.reflect.Method;
 import java.util.Map;

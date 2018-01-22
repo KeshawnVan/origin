@@ -1,7 +1,7 @@
 package star.repository.executor;
 
 import star.repository.factory.ConnectionFactory;
-import star.repository.SqlExecutor;
+import star.repository.interfaces.SqlExecutor;
 import star.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;

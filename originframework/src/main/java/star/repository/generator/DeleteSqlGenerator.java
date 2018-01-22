@@ -1,6 +1,6 @@
 package star.repository.generator;
 
-import star.repository.SqlGenerator;
+import star.repository.interfaces.SqlGenerator;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static star.constant.RepositoryConstant.DELETE;
 import static star.constant.RepositoryConstant.FROM;
 import static star.constant.RepositoryConstant.WHERE;
-import static star.repository.MethodNameParser.generateConditionSqlByMethodName;
+import static star.repository.parser.MethodNameParser.generateConditionSqlByMethodName;
 
 /**
  * @author keshawn

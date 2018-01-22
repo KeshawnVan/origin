@@ -2,7 +2,7 @@ package star.repository.executor;
 
 import star.bean.TypeWrapper;
 import star.repository.factory.ConnectionFactory;
-import star.repository.SqlExecutor;
+import star.repository.interfaces.SqlExecutor;
 import star.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
@@ -16,8 +16,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static star.repository.PreparedStatementLoader.setPreparedStatement;
-import static star.repository.ResultSetParser.buildCollectionResult;
-import static star.repository.ResultSetParser.buildResult;
+import static star.repository.parser.ResultSetParser.buildCollectionResult;
+import static star.repository.parser.ResultSetParser.buildResult;
 
 /**
  * @author keshawn

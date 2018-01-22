@@ -1,7 +1,8 @@
-package star.repository;
+package star.repository.parser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import star.repository.interfaces.ResultSetGetFunction;
 import star.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
@@ -76,9 +77,9 @@ public final class ResultSetParser {
 
     private static Class<?> parseGenericType(Type[] genericType) {
         //目前只处理List和Set，genericType应为一位
-        if (genericType != null && genericType.length == 1){
-            return (Class<?>)genericType[0];
-        }else {
+        if (genericType != null && genericType.length == 1) {
+            return (Class<?>) genericType[0];
+        } else {
             throw new RuntimeException("genericType invalid :" + genericType);
         }
     }

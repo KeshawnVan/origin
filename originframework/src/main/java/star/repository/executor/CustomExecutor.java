@@ -1,6 +1,6 @@
 package star.repository.executor;
 
-import star.repository.SqlExecutor;
+import star.repository.interfaces.SqlExecutor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

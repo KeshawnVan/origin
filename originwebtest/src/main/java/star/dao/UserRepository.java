@@ -1,7 +1,7 @@
 package star.dao;
 
 import star.bean.User;
-import star.repository.CommonRepository;
+import star.repository.interfaces.CommonRepository;
 
 import java.util.List;
 

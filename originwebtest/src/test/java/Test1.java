@@ -14,7 +14,7 @@ import star.repository.factory.ConnectionFactory;
 import star.factory.RepositoryFactory;
 import star.proxy.CGLibProxy;
 import star.proxy.DynamicProxy;
-import star.repository.CommonRepository;
+import star.repository.interfaces.CommonRepository;
 import star.repository.RepositoryProxy;
 import star.service.TestService;
 import star.service.impl.TestServiceImpl;

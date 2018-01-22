@@ -1,6 +1,6 @@
 package star.repository.generator;
 
-import star.repository.SqlGenerator;
+import star.repository.interfaces.SqlGenerator;
 
 import java.lang.reflect.Method;
 import java.util.Map;
