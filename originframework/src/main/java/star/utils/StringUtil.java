@@ -2,8 +2,6 @@ package star.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -27,39 +25,42 @@ public final class StringUtil {
 
     private static final String GET = "get";
 
+    private static final int TWO = 2;
+
+    private static final int RADIX = 16;
+
+    private static final String ZERO = "0";
+
+    private static final int UNDERLINE = 95;
+
+    private static final String LEFT_SQUARE_BRACKET = "[";
+
+    private static final String LEFT_BRACE = "{";
+
+    private static final String SLASH = "\"";
+
     private static final Pattern TIME_PATTERN = Pattern.compile("^(((20[0-9][0-9]-(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|(20[0-3][0-9]-(0[2469]|11)-(0[1-9]|[12][0-9]|30))) (20|21|22|23|[0-1][0-9]):[0-5][0-9]:[0-5][0-9])$");
 
     private StringUtil() {
     }
 
     public static boolean isEmpty(String string) {
-        if (string != null) {
-            string = string.trim();
-        }
-        return StringUtils.isEmpty(string);
+        return string == null || StringUtils.isEmpty(string.trim());
     }
 
     public static boolean isNotEmpty(String string) {
         return !isEmpty(string);
     }
 
-    public static String getStackTrace(Throwable t) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw, true);
-        pw.flush();
-        pw.close();
-        return sw.toString();
-    }
-
     public static String toHex(byte[] hash) {
-        StringBuilder buf = new StringBuilder(hash.length * 2);
+        StringBuilder buf = new StringBuilder(hash.length * TWO);
         int i;
 
         for (i = 0; i < hash.length; i++) {
             if (((int) hash[i] & 0xff) < 0x10) {
-                buf.append("0");
+                buf.append(ZERO);
             }
-            buf.append(Long.toString((int) hash[i] & 0xff, 16));
+            buf.append(Long.toString((int) hash[i] & 0xff, RADIX));
         }
         return buf.toString();
     }
@@ -101,10 +102,10 @@ public final class StringUtil {
         if (isEmpty(string)) {
             return BLANK;
         }
-        if (string.startsWith("{") || string.startsWith("[")) {
+        if (string.startsWith(LEFT_BRACE) || string.startsWith(LEFT_SQUARE_BRACKET)) {
             return string;
         }
-        return "\"" + string + "\"";
+        return SLASH + string + SLASH;
     }
 
     public static String getSetMethodName(String fieldName) {
@@ -152,14 +153,12 @@ public final class StringUtil {
     private static StringBuilder camelToUnderline(String camel) {
         char[] chars = camel.toCharArray();
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0, j = 0; i < chars.length; i++, j++) {
+        for (int i = 0; i < chars.length; i++) {
             char s = chars[i];
             if (s + 1 > 65 && s + 1 < 91) {
                 // _ = 95
-                char underline = 95;
-                stringBuilder.append(underline);
-                j++;
-                stringBuilder.append(s);
+                char underline = UNDERLINE;
+                stringBuilder.append(underline).append(s);
                 continue;
             }
             stringBuilder.append(s);
