@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  */
 public final class ConfigFactory {
 
-    private static final YamlBean YAML_BEAN = YamlUtil.getYamlBean(ConfigConstant.CONFIG_FILE, YamlBean.class);
+    private static final YamlBean YAML_BEAN = YamlUtil.getYamlBeanWithRelativePath(ConfigConstant.CONFIG_FILE, YamlBean.class);
 
     private static final Map<String, Object> DATA_SOURCE = YAML_BEAN.getDatasource();
 

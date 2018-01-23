@@ -117,7 +117,7 @@ public class TestF {
 
     @Test
     public void testYaml() {
-        YamlBean yamlBean = YamlUtil.getYamlBean("origin.yml", YamlBean.class);
+        YamlBean yamlBean = YamlUtil.getYamlBeanWithRelativePath("origin.yml", YamlBean.class);
         System.out.println(yamlBean);
     }
 
@@ -129,7 +129,7 @@ public class TestF {
 
     @Test
     public void testJsonUtil() {
-        YamlBean yamlBean = YamlUtil.getYamlBean("origin.yml", YamlBean.class);
+        YamlBean yamlBean = YamlUtil.getYamlBeanWithRelativePath("origin.yml", YamlBean.class);
         String json = JsonUtil.encodeJson(yamlBean);
         System.out.println(json);
         YamlBean bean = JsonUtil.decodeJson(json, YamlBean.class);
