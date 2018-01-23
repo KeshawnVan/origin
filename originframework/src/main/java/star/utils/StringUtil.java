@@ -33,6 +33,10 @@ public final class StringUtil {
 
     private static final int UNDERLINE = 95;
 
+    private static final int A = 65;
+
+    private static final int Z = 91;
+
     private static final String LEFT_SQUARE_BRACKET = "[";
 
     private static final String LEFT_BRACE = "{";
@@ -155,7 +159,7 @@ public final class StringUtil {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < chars.length; i++) {
             char s = chars[i];
-            if (s + 1 > 65 && s + 1 < 91) {
+            if (s >= A && s <= Z) {
                 // _ = 95
                 char underline = UNDERLINE;
                 stringBuilder.append(underline).append(s);
