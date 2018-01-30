@@ -24,8 +24,10 @@ public final class ClassUtil {
     private static final String JAR = "jar";
     private static final String FILE = "file";
     private static final String REGEX = "%20";
-    public static final String SUFFIX = ".class";
-    public static final String DEL = ".";
+    private static final String SUFFIX = ".class";
+    private static final String DEL = ".";
+    private static final String BACKLASH = "/";
+    private static final String BLANK = " ";
 
     private ClassUtil() {
     }
@@ -58,14 +60,14 @@ public final class ClassUtil {
         Set<Class<?>> classSet = new HashSet<>();
         try {
             // 得到指定包名下面的资源
-            Enumeration<URL> urls = getClassLoader().getResources(packageName.replace(".", "/"));
+            Enumeration<URL> urls = getClassLoader().getResources(packageName.replace(DEL, BACKLASH));
             while (urls.hasMoreElements()) {
                 URL url = urls.nextElement();
                 if (url != null) {
                     String protocol = url.getProtocol();
                     if (FILE.equals(protocol)) {
                         // 20%是URL的空格，将其代替，SUN公司也说明了这是一个BUG
-                        String packagePath = url.getPath().replaceAll(REGEX, " ");
+                        String packagePath = url.getPath().replaceAll(REGEX, BLANK);
                         addFileClass(classSet, packagePath, packageName);
                     } else if (JAR.equals(protocol)) {
                         addJarClass(classSet, url);
@@ -89,8 +91,8 @@ public final class ClassUtil {
                 while (jarEntries.hasMoreElements()) {
                     JarEntry jarEntry = jarEntries.nextElement();
                     String jarEntryName = jarEntry.getName();
-                    if (jarEntryName.endsWith(".class")) {
-                        String className = jarEntryName.substring(0, jarEntryName.lastIndexOf(".")).replaceAll("/", ".");
+                    if (jarEntryName.endsWith(SUFFIX)) {
+                        String className = jarEntryName.substring(0, jarEntryName.lastIndexOf(DEL)).replaceAll(BACKLASH, DEL);
                         doAddClass(classSet, className);
                     }
                 }
@@ -101,7 +103,7 @@ public final class ClassUtil {
     private static void addFileClass(Set<Class<?>> classSet, String packagePath, String packageName) {
         File[] files = new File(packagePath).listFiles(file -> file.isFile() && file.getName().endsWith(SUFFIX) || file.isDirectory());
         StringBuilder stringBuilder = new StringBuilder();
-        if (ArrayUtil.isEmpty(files)){
+        if (ArrayUtil.isEmpty(files)) {
             return;
         }
         for (File file : files) {
@@ -116,7 +118,7 @@ public final class ClassUtil {
             } else {
                 String subPackagePath = fileName;
                 if (StringUtil.isNotEmpty(subPackagePath)) {
-                    subPackagePath = stringBuilder.append(packagePath).append("/").append(subPackagePath).toString();
+                    subPackagePath = stringBuilder.append(packagePath).append(BACKLASH).append(subPackagePath).toString();
                     stringBuilder.setLength(0);
                     String subPackageName = fileName;
                     if (StringUtil.isNotEmpty(packageName)) {

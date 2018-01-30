@@ -54,7 +54,7 @@ public class QueryExecutor implements SqlExecutor {
 
     private TypeWrapper buildTypeVariableWrapper(Class<?> beanClass) {
         if (beanClassWrapper == null) {
-            beanClassWrapper = new TypeWrapper(beanClass, new Type[]{}, false);
+            beanClassWrapper = new TypeWrapper(beanClass, new Type[0], false);
         }
         return beanClassWrapper;
     }

@@ -69,7 +69,7 @@ public final class ReflectionUtil {
         Class<?> cls = type instanceof ParameterizedType ? ((ParameterizedTypeImpl) type).getRawType() : (Class) type;
         return Collection.class.isAssignableFrom(cls)
                 ? new TypeWrapper(getRawClass(type), getActualTypeArguments(type), Boolean.TRUE)
-                : new TypeWrapper(cls, new Type[]{}, Boolean.FALSE);
+                : new TypeWrapper(cls, new Type[0], Boolean.FALSE);
     }
 
     public static Type[] getActualTypeArguments(Type type) {
