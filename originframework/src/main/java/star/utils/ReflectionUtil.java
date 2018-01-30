@@ -55,7 +55,7 @@ public final class ReflectionUtil {
         }
     }
 
-    public static Object getField(Field field, Object object){
+    public static Object getField(Field field, Object object) {
         field.setAccessible(true);
         try {
             return field.get(object);
@@ -69,7 +69,7 @@ public final class ReflectionUtil {
         Class<?> cls = type instanceof ParameterizedType ? ((ParameterizedTypeImpl) type).getRawType() : (Class) type;
         return Collection.class.isAssignableFrom(cls)
                 ? new TypeWrapper(getRawClass(type), getActualTypeArguments(type), Boolean.TRUE)
-                : new TypeWrapper(cls, null, Boolean.FALSE);
+                : new TypeWrapper(cls, new Type[]{}, Boolean.FALSE);
     }
 
     public static Type[] getActualTypeArguments(Type type) {
@@ -79,10 +79,11 @@ public final class ReflectionUtil {
     /**
      * ParameterizedType类型的Type获取外层类型
      * 如：传入List<User>，返回List
+     *
      * @param type
      * @return
      */
-    public static Class<?> getRawClass(Type type){
+    public static Class<?> getRawClass(Type type) {
         return ((ParameterizedTypeImpl) type).getRawType();
     }
 }

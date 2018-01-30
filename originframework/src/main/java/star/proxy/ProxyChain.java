@@ -3,7 +3,6 @@ package star.proxy;
 import net.sf.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ public final class ProxyChain {
     private final MethodProxy methodProxy;
     private final Object[] methodParams;
 
-    private List<Proxy> proxyList = new ArrayList<>();
+    private List<Proxy> proxyList;
     private int proxyIndex = 0;
 
     public ProxyChain(Class<?> targetClass, Object targetObject, Method targetMethod, MethodProxy methodProxy, Object[] methodParams, List<Proxy> proxyList) {
@@ -26,7 +25,7 @@ public final class ProxyChain {
         this.targetObject = targetObject;
         this.targetMethod = targetMethod;
         this.methodProxy = methodProxy;
-        this.methodParams = methodParams;
+        this.methodParams = methodParams.clone();
         this.proxyList = proxyList;
     }
 
@@ -39,7 +38,7 @@ public final class ProxyChain {
     }
 
     public Object[] getMethodParams() {
-        return methodParams;
+        return methodParams.clone();
     }
 
     public Object doProxyChain() throws Throwable {

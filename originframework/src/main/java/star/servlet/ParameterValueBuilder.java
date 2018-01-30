@@ -57,7 +57,7 @@ public final class ParameterValueBuilder {
         }
         //如果parameterValue没找到匹配的参数，则可能是一个接收对象,也可能是容器内置对象
         if (parameterValue == null) {
-            parameterValue = beanParameterInject(paramMap, parameterType, parameterValue);
+            parameterValue = beanParameterInject(paramMap, parameterType);
         }
         //如果parameterValue不为空且为String类型，则认为需要进行转型
         if (parameterValue != null && parameterValue instanceof String) {
@@ -68,7 +68,7 @@ public final class ParameterValueBuilder {
         }
     }
 
-    private static Object beanParameterInject(Map<String, Object> paramMap, Class<?> parameterType, Object parameterValue) {
+    private static Object beanParameterInject(Map<String, Object> paramMap, Class<?> parameterType) {
         //如果parameterType是基本类型，基本类型的包装类，或者Request等，不对该对象注入值
         if (!(parameterType.isPrimitive()
                 || parameterType.equals(Integer.class)
@@ -86,17 +86,17 @@ public final class ParameterValueBuilder {
                 || parameterType.equals(Map.class)
                 || parameterType.equals(List.class)
         )) {
-            parameterValue = MapToBeanUtil.buildBean(paramMap, parameterType);
+            return MapToBeanUtil.buildBean(paramMap, parameterType);
         } else if (parameterType.equals(HttpServletRequest.class)) {
-            parameterValue = paramMap.get(HTTP_SERVLET_REQUEST);
+            return paramMap.get(HTTP_SERVLET_REQUEST);
         } else if (parameterType.equals(HttpServletResponse.class)) {
-            parameterValue = paramMap.get(HTTP_SERVLET_RESPONSE);
+            return paramMap.get(HTTP_SERVLET_RESPONSE);
         } else if (parameterType.equals(HttpSession.class)) {
-            parameterValue = paramMap.get(HTTP_SESSION);
+            return paramMap.get(HTTP_SESSION);
         } else if (parameterType.equals(ServletContext.class)) {
-            parameterValue = paramMap.get(SERVLET_CONTEXT);
+            return paramMap.get(SERVLET_CONTEXT);
         }
-        return parameterValue;
+        return null;
     }
 
     private static Object getByParamMap(Map<String, Object> paramMap, String parameterName) {

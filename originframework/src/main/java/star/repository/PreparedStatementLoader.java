@@ -35,7 +35,8 @@ public final class PreparedStatementLoader {
         for (int i = 0; i < paramLength; i++) {
             Object param = params[i];
             if (param == null) {
-                num = setSingleObject(param, num, preparedStatement);
+                num++;
+                preparedStatement.setObject(num, null);
             } else {
                 //param为方法参数，方法参数也有可能是集合
                 if (Collection.class.isAssignableFrom(param.getClass())) {
@@ -51,10 +52,6 @@ public final class PreparedStatementLoader {
 
     public static int setSingleObject(Object param, int num, PreparedStatement preparedStatement) throws SQLException {
         num++;
-        if (param == null) {
-            preparedStatement.setObject(num, null);
-            return num;
-        }
         Class<?> paramClass = param.getClass();
         if (paramClass.isEnum()) {
             param = ((Enum) param).ordinal();

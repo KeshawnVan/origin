@@ -4,7 +4,6 @@ import star.repository.interfaces.SqlGenerator;
 
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static star.constant.RepositoryConstant.*;
@@ -25,7 +24,7 @@ public class UpdateSqlGenerator implements SqlGenerator {
     }
 
     @Override
-    public String generate(Method method, ConcurrentHashMap<String, String> sqlMap, String tableName, String selectAllColumns, Object[] params, Map<String, String> fieldMap) {
+    public String generate(Method method, String tableName, String selectAllColumns, Object[] params, Map<String, String> fieldMap) {
         String columnAndPlaceHolders = fieldMap.values().stream().map(column -> column + EQUALS + PLACEHOLDER).collect(Collectors.joining(DELIMITER));
         return UPDATE + BLANK + tableName + SET + columnAndPlaceHolders + WHERE + ID + EQUALS + PLACEHOLDER;
     }

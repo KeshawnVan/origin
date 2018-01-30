@@ -1,4 +1,7 @@
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.junit.Test;
 import star.bean.User;
 import star.bean.UserDTO;
@@ -10,9 +13,9 @@ import star.utils.JsonUtil;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
+import javax.annotation.Nullable;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -54,9 +57,6 @@ public class Test3 {
         });
         long e = System.currentTimeMillis();
         System.out.println(e - s);
-        Connection connection = ConnectionFactory.getConnection();
-        connection.commit();
-        ConnectionFactory.closeConnection();
     }
 
     @Test
@@ -96,5 +96,26 @@ public class Test3 {
         List<String> strings = new ArrayList<>();
         int size = strings.size();
         System.out.println(size);
+    }
+
+    @Test
+    public void testStream(){
+        OptionalInt min = Lists.newArrayList(1, 2, 3, 4, 5, 1).stream().mapToInt(Integer::intValue).min();
+        min.ifPresent(m -> System.out.println(m));
+        Optional<Integer> reduce = Lists.newArrayList(1, 2, 3, 4, 5, 1).stream().reduce(Integer::min);
+        reduce.ifPresent(System.out::println);
+        User user1 = new User();
+        User user2 = new User();
+        User user3 = new User();
+        User user4 = new User();
+        user1.setAge(1);
+        user2.setAge(1);
+        user3.setAge(2);
+        user4.setAge(3);
+        ArrayList<User> users = Lists.newArrayList(user1, user2, user3, user4);
+        Optional<User> max = users.stream().min(Comparator.comparing(User::getAge));
+        max.ifPresent(System.out::println);
+        System.out.println("=====================================");
+        Lists.newArrayList(1, 2, 3, 4, 5, 1).stream();
     }
 }

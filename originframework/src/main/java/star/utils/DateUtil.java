@@ -9,7 +9,6 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -29,7 +28,9 @@ public final class DateUtil {
     public static java.util.Date toUtilDate(String string) {
 
         try {
-            return SIMPLE_DATE_FORMAT.parse(string);
+            synchronized (SIMPLE_DATE_FORMAT) {
+                return SIMPLE_DATE_FORMAT.parse(string);
+            }
         } catch (ParseException e) {
             LOGGER.error("String cast to date error", e);
         }
@@ -55,8 +56,9 @@ public final class DateUtil {
     }
 
     public static String toString(java.util.Date utilDate) {
-        return SIMPLE_DATE_FORMAT.format(utilDate);
-
+        synchronized (SIMPLE_DATE_FORMAT) {
+            return SIMPLE_DATE_FORMAT.format(utilDate);
+        }
     }
 
     public static LocalDate toLocalDate(java.sql.Date sqlDate) {
@@ -82,7 +84,7 @@ public final class DateUtil {
         return localDateTime.format(formatter);
     }
 
-    public static Timestamp toTimestamp(Instant instant){
+    public static Timestamp toTimestamp(Instant instant) {
         return instant == null
                 ? null
                 : Timestamp.from(instant);

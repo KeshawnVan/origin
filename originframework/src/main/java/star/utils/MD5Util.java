@@ -10,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 public final class MD5Util {
 
     private static final String MD5 = "MD5";
+    private static final String UTF_8 = "UTF-8";
 
     private MD5Util() {
     }
@@ -22,8 +23,8 @@ public final class MD5Util {
      */
     public static String md5Digest(String src) {
         try {
-            return StringUtil.toHex(md5Digest(src.getBytes()));
-        } catch (NoSuchAlgorithmException ex) {
+            return StringUtil.toHex(md5Digest(src.getBytes(UTF_8)));
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }

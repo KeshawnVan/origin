@@ -24,6 +24,8 @@ public final class ClassUtil {
     private static final String JAR = "jar";
     private static final String FILE = "file";
     private static final String REGEX = "%20";
+    public static final String SUFFIX = ".class";
+    public static final String DEL = ".";
 
     private ClassUtil() {
     }
@@ -97,14 +99,17 @@ public final class ClassUtil {
     }
 
     private static void addFileClass(Set<Class<?>> classSet, String packagePath, String packageName) {
-        File[] files = new File(packagePath).listFiles(file -> file.isFile() && file.getName().endsWith(".class") || file.isDirectory());
+        File[] files = new File(packagePath).listFiles(file -> file.isFile() && file.getName().endsWith(SUFFIX) || file.isDirectory());
         StringBuilder stringBuilder = new StringBuilder();
+        if (ArrayUtil.isEmpty(files)){
+            return;
+        }
         for (File file : files) {
             String fileName = file.getName();
             if (file.isFile()) {
-                String className = fileName.substring(0, fileName.lastIndexOf("."));
+                String className = fileName.substring(0, fileName.lastIndexOf(DEL));
                 if (StringUtil.isNotEmpty(className)) {
-                    className = stringBuilder.append(packageName).append(".").append(className).toString();
+                    className = stringBuilder.append(packageName).append(DEL).append(className).toString();
                     stringBuilder.setLength(0);
                     doAddClass(classSet, className);
                 }
@@ -115,7 +120,7 @@ public final class ClassUtil {
                     stringBuilder.setLength(0);
                     String subPackageName = fileName;
                     if (StringUtil.isNotEmpty(packageName)) {
-                        subPackageName = stringBuilder.append(packageName).append(".").append(subPackageName).toString();
+                        subPackageName = stringBuilder.append(packageName).append(DEL).append(subPackageName).toString();
                         stringBuilder.setLength(0);
                     }
                     addFileClass(classSet, subPackagePath, subPackageName);

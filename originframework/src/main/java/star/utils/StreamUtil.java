@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 public final class StreamUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StreamUtil.class);
+    private static final String UTF_8 = "UTF-8";
 
     private StreamUtil() {
     }
@@ -22,7 +23,7 @@ public final class StreamUtil {
     public static String getString(InputStream inputStream) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, UTF_8));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 stringBuilder.append(line);

@@ -14,5 +14,5 @@ public interface SqlGenerator {
      *
      * @return 生成的带占位符的SQL
      */
-    String generate(Method method, ConcurrentHashMap<String, String> sqlMap, String tableName, String selectAllColumns, Object[] params, Map<String, String> fieldMap);
+    String generate(Method method, String tableName, String selectAllColumns, Object[] params, Map<String, String> fieldMap);
 }

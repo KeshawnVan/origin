@@ -4,7 +4,6 @@ import star.repository.interfaces.SqlGenerator;
 
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author keshawn
@@ -22,7 +21,7 @@ public class CustomSqlGenerator implements SqlGenerator {
     }
 
     @Override
-    public String generate(Method method, ConcurrentHashMap<String, String> sqlMap, String tableName, String selectAllColumns, Object[] params, Map<String, String> fieldMap) {
+    public String generate(Method method, String tableName, String selectAllColumns, Object[] params, Map<String, String> fieldMap) {
         return null;
     }
 }

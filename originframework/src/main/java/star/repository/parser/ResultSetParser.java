@@ -80,7 +80,7 @@ public final class ResultSetParser {
         if (genericType != null && genericType.length == 1) {
             return (Class<?>) genericType[0];
         } else {
-            throw new RuntimeException("genericType invalid :" + genericType);
+            throw new RuntimeException("genericType invalid :" + Arrays.toString(genericType));
         }
     }
 

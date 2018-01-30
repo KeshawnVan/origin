@@ -3,7 +3,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
 import star.annotation.bean.Inject;
 import star.bean.Handler;
-import star.bean.PartnerLevel;
 import star.bean.User;
 import star.bean.YamlBean;
 import star.constant.RequestMethod;
@@ -216,21 +215,6 @@ public class TestF {
         String s = "{\"receiveInstantDate\":\"2017-12-06 13:17:22\",\"sender\":\"+111\",\"transId\":\"3\",\"type\":0,\"messageEquipmentId\":\"10000\",\"content\":\"test\",\"shortCode\":\"test\"}";
         Map<String, Object> map = JsonUtil.decodeJson(s, Map.class);
         System.out.println(map);
-    }
-
-    @Test
-    public void testEm() {
-        System.out.println(PartnerLevel.SUP_DEALER.toString());
-        System.out.println(PartnerLevel.values());
-        String level = "DEALER";
-        int num = 0;
-        PartnerLevel[] values = PartnerLevel.values();
-        for (PartnerLevel value : values) {
-            if (value.toString().equals(level)) {
-                num = value.getCode();
-            }
-        }
-        System.out.println(num);
     }
 
     @Test

@@ -14,7 +14,7 @@ public final class TypeWrapper {
 
     public TypeWrapper(Class<?> cls, Type[] genericType, Boolean isCollection) {
         this.cls = cls;
-        this.genericType = genericType;
+        this.genericType = genericType.clone();
         this.isCollection = isCollection;
     }
 
@@ -23,7 +23,7 @@ public final class TypeWrapper {
     }
 
     public Type[] getGenericType() {
-        return genericType;
+        return genericType.clone();
     }
 
     public Boolean isCollection() {

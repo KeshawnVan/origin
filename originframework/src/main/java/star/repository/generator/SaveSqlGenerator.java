@@ -5,7 +5,6 @@ import star.utils.StringUtil;
 
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static star.constant.RepositoryConstant.*;
@@ -26,9 +25,9 @@ public class SaveSqlGenerator implements SqlGenerator {
     }
 
     @Override
-    public String generate(Method method, ConcurrentHashMap<String, String> sqlMap, String tableName, String selectAllColumns, Object[] params, Map<String, String> fieldMap) {
-            String columns = fieldMap.values().stream().collect(Collectors.joining(DELIMITER));
-            String bracketPlaceHolder = StringUtil.generateBracketPlaceHolder(fieldMap.size());
+    public String generate(Method method, String tableName, String selectAllColumns, Object[] params, Map<String, String> fieldMap) {
+        String columns = fieldMap.values().stream().collect(Collectors.joining(DELIMITER));
+        String bracketPlaceHolder = StringUtil.generateBracketPlaceHolder(fieldMap.size());
         return INSERT_INTO + tableName + LEFT_BRACKET + columns + RIGHT_BRACKET + VALUES + bracketPlaceHolder;
     }
 }

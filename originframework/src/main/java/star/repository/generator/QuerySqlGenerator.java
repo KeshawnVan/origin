@@ -5,7 +5,6 @@ import star.repository.interfaces.SqlGenerator;
 
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static star.constant.RepositoryConstant.*;
 import static star.repository.parser.MethodNameParser.generateConditionSqlByMethodName;
@@ -26,7 +25,7 @@ public final class QuerySqlGenerator implements SqlGenerator {
     }
 
     @Override
-    public String generate(Method method, ConcurrentHashMap<String, String> sqlMap, String tableName, String selectAllColumns, Object[] params, Map<String, String> fieldMap) {
+    public String generate(Method method, String tableName, String selectAllColumns, Object[] params, Map<String, String> fieldMap) {
 
         //先判断是否是默认方法
         if (method.getName().equals(FIND_ALL)) {
@@ -34,7 +33,7 @@ public final class QuerySqlGenerator implements SqlGenerator {
         }
         //如果带有Query注解，使用自定义SQL生成器
         if (method.isAnnotationPresent(Query.class)) {
-            return CustomSqlGenerator.getInstance().generate(method, sqlMap, tableName, selectAllColumns, params, fieldMap);
+            return CustomSqlGenerator.getInstance().generate(method, tableName, selectAllColumns, params, fieldMap);
         } else {
             String sqlPrefix = SELECT + selectAllColumns + FROM + tableName + WHERE;
             return generateConditionSqlByMethodName(sqlPrefix, params, fieldMap, method.getName());

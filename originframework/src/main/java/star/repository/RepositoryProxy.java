@@ -57,14 +57,14 @@ public class RepositoryProxy implements InvocationHandler {
     }
 
     private String buildSql(Method method, Object[] params, String methodName, String argsMethodName) {
-        String sql = null;
         if (SQL_MAP.containsKey(argsMethodName)) {
-            SQL_MAP.get(argsMethodName);
+            return SQL_MAP.get(argsMethodName);
         } else {
             SqlGenerator sqlGenerator = SqlGeneratorFactory.getGenerator(methodName);
-            sql = sqlGenerator.generate(method, SQL_MAP, tableName, selectAllColumns, params, fieldMap);
+            String sql = sqlGenerator.generate(method, tableName, selectAllColumns, params, fieldMap);
+            SQL_MAP.put(argsMethodName, sql);
+            return sql;
         }
-        return sql;
     }
 
     public void init() {
