@@ -39,7 +39,6 @@ public class QueryExecutor implements SqlExecutor {
     @Override
     public Object execute(String sql, Method method, Object[] params, List<Field> fields, Class<?> beanClass, Field idField) throws SQLException {
         Connection connection = ConnectionFactory.getConnection();
-        //修改为按照返回值泛型处理
         Type genericReturnType = method.getGenericReturnType();
         TypeWrapper typeWrapper = genericReturnType instanceof TypeVariable
                 ? buildTypeVariableWrapper(beanClass)

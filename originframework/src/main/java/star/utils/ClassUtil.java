@@ -24,7 +24,7 @@ public final class ClassUtil {
     private static final String JAR = "jar";
     private static final String FILE = "file";
     private static final String REGEX = "%20";
-    private static final String SUFFIX = ".class";
+    private static final String CLASS = ".class";
     private static final String DEL = ".";
     private static final String BACKLASH = "/";
     private static final String BLANK = " ";
@@ -91,7 +91,7 @@ public final class ClassUtil {
                 while (jarEntries.hasMoreElements()) {
                     JarEntry jarEntry = jarEntries.nextElement();
                     String jarEntryName = jarEntry.getName();
-                    if (jarEntryName.endsWith(SUFFIX)) {
+                    if (jarEntryName.endsWith(CLASS)) {
                         String className = jarEntryName.substring(0, jarEntryName.lastIndexOf(DEL)).replaceAll(BACKLASH, DEL);
                         doAddClass(classSet, className);
                     }
@@ -101,7 +101,7 @@ public final class ClassUtil {
     }
 
     private static void addFileClass(Set<Class<?>> classSet, String packagePath, String packageName) {
-        File[] files = new File(packagePath).listFiles(file -> file.isFile() && file.getName().endsWith(SUFFIX) || file.isDirectory());
+        File[] files = new File(packagePath).listFiles(file -> file.isFile() && file.getName().endsWith(CLASS) || file.isDirectory());
         StringBuilder stringBuilder = new StringBuilder();
         if (ArrayUtil.isEmpty(files)) {
             return;
