@@ -1,7 +1,4 @@
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.junit.Test;
 import star.bean.User;
 import star.bean.UserDTO;
@@ -13,8 +10,10 @@ import star.utils.JsonUtil;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
-import javax.annotation.Nullable;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -24,7 +23,7 @@ import java.util.function.Supplier;
  */
 public class Test3 {
     @Test
-    public void test()throws Exception{
+    public void test() throws Exception {
 //        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
 //        User user = (User)PojoManufactureUtil.manufacture(User.class);
 //        mapperFactory.classMap(User.class, UserDTO.class).byDefault().register();
@@ -37,14 +36,14 @@ public class Test3 {
     }
 
     @Test
-    public void testComponent(){
+    public void testComponent() {
         LoadCore.init();
         UserDTO userDTO = BeanFactory.getBean(UserDTO.class);
         System.out.println(JsonUtil.encodeJson(userDTO));
     }
 
     @Test
-    public void testSave()throws Exception{
+    public void testSave() throws Exception {
         PodamFactory podamFactory = new PodamFactoryImpl();
         LoadCore.init();
         UserRepository userRepository = BeanFactory.getBean(UserRepository.class);
@@ -60,7 +59,7 @@ public class Test3 {
     }
 
     @Test
-    public void testUpdate()throws Exception{
+    public void testUpdate() throws Exception {
         LoadCore.init();
         UserRepository userRepository = BeanFactory.getBean(UserRepository.class);
         User u = userRepository.findById(14L);
@@ -70,8 +69,8 @@ public class Test3 {
     }
 
     @Test
-    public void testLambda(){
-        Supplier supplier = new Supplier(){
+    public void testLambda() {
+        Supplier supplier = new Supplier() {
             @Override
             public Object get() {
                 return new User();
@@ -84,7 +83,7 @@ public class Test3 {
     }
 
     @Test
-    public void testRetain(){
+    public void testRetain() {
         ArrayList<Long> con = Lists.newArrayList(2L);
         ArrayList<Long> longs = Lists.newArrayList(1L, 3L);
         con.retainAll(longs);
@@ -92,14 +91,14 @@ public class Test3 {
     }
 
     @Test
-    public void testList(){
+    public void testList() {
         List<String> strings = new ArrayList<>();
         int size = strings.size();
         System.out.println(size);
     }
 
     @Test
-    public void testStream(){
+    public void testStream() {
         OptionalInt min = Lists.newArrayList(1, 2, 3, 4, 5, 1).stream().mapToInt(Integer::intValue).min();
         min.ifPresent(m -> System.out.println(m));
         Optional<Integer> reduce = Lists.newArrayList(1, 2, 3, 4, 5, 1).stream().reduce(Integer::min);
@@ -117,5 +116,37 @@ public class Test3 {
         max.ifPresent(System.out::println);
         System.out.println("=====================================");
         Lists.newArrayList(1, 2, 3, 4, 5, 1).stream();
+    }
+
+    @Test
+    public void testFun() {
+
+    }
+
+    @Test
+    public void testReturnMap() throws Exception {
+        String sql = "select * from user";
+        Connection connection = ConnectionFactory.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        int rowCount = 0;
+        List<Map<String, Object>> results = new LinkedList<>();
+        while (resultSet.next()) {
+            rowCount++;
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            Map<String, Object> result = new HashMap<>(columnCount);
+            for (int i = 1; i <= columnCount; i++) {
+                String columnName = metaData.getColumnName(i);
+                String columnClassName = metaData.getColumnClassName(i);
+                Object columnValue = resultSet.getObject(i);
+                System.out.println(columnClassName);
+                result.put(columnName, columnValue);
+            }
+            results.add(result);
+            if (rowCount > 5000) break;
+        }
+        ConnectionFactory.closeConnection();
+        results.forEach(System.out::println);
     }
 }
