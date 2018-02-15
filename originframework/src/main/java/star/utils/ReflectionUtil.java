@@ -86,4 +86,22 @@ public final class ReflectionUtil {
     public static Class<?> getRawClass(Type type) {
         return ((ParameterizedTypeImpl) type).getRawType();
     }
+
+
+    /**
+     * 检查是否是基本类型或其包装类型
+     * @param type
+     * @return
+     */
+    public static boolean isPrimitive(Class<?> type) {
+        return type.isPrimitive()
+                || type.equals(Integer.class)
+                || type.equals(String.class)
+                || type.equals(Long.class)
+                || type.equals(Double.class)
+                || type.equals(Byte.class)
+                || type.equals(Short.class)
+                || type.equals(Float.class)
+                || type.equals(Character.class);
+    }
 }

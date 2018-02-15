@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import static star.constant.ServletConstant.*;
+import static star.utils.ReflectionUtil.isPrimitive;
 
 /**
  * @author keshawn
@@ -70,15 +71,7 @@ public final class ParameterValueBuilder {
 
     private static Object beanParameterInject(Map<String, Object> paramMap, Class<?> parameterType) {
         //如果parameterType是基本类型，基本类型的包装类，或者Request等，不对该对象注入值
-        if (!(parameterType.isPrimitive()
-                || parameterType.equals(Integer.class)
-                || parameterType.equals(String.class)
-                || parameterType.equals(Long.class)
-                || parameterType.equals(Double.class)
-                || parameterType.equals(Byte.class)
-                || parameterType.equals(Short.class)
-                || parameterType.equals(Float.class)
-                || parameterType.equals(Character.class)
+        if (!(isPrimitive(parameterType)
                 || parameterType.equals(HttpServletRequest.class)
                 || parameterType.equals(HttpServletResponse.class)
                 || parameterType.equals(HttpSession.class)
@@ -98,6 +91,7 @@ public final class ParameterValueBuilder {
         }
         return null;
     }
+
 
     private static Object getByParamMap(Map<String, Object> paramMap, String parameterName) {
         Object parameterValue = paramMap.get(parameterName);

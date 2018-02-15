@@ -10,6 +10,9 @@ import star.utils.JsonUtil;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -148,5 +151,13 @@ public class Test3 {
         }
         ConnectionFactory.closeConnection();
         results.forEach(System.out::println);
+    }
+
+    @Test
+    public void testTry() throws IOException {
+        try (BufferedReader bufferedReader = new BufferedReader(new StringReader("sss"))) {
+            String line = bufferedReader.readLine();
+            System.out.println(line);
+        }
     }
 }

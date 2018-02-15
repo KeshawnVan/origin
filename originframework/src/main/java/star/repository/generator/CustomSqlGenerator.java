@@ -1,5 +1,7 @@
 package star.repository.generator;
 
+import org.apache.commons.lang3.StringUtils;
+import star.annotation.repository.Query;
 import star.repository.interfaces.SqlGenerator;
 
 import java.lang.reflect.Method;
@@ -22,6 +24,14 @@ public class CustomSqlGenerator implements SqlGenerator {
 
     @Override
     public String generate(Method method, String tableName, String selectAllColumns, Object[] params, Map<String, String> fieldMap) {
-        return null;
+        checkQuery(method);
+        Query query = method.getAnnotation(Query.class);
+        return query.value();
+    }
+
+    private void checkQuery(Method method) {
+        if (!method.isAnnotationPresent(Query.class)) {
+            throw new RuntimeException("cannot get query sql");
+        }
     }
 }
