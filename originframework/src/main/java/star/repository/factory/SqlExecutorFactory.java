@@ -1,7 +1,10 @@
 package star.repository.factory;
 
+import star.annotation.repository.Query;
 import star.repository.executor.*;
 import star.repository.interfaces.SqlExecutor;
+
+import java.lang.reflect.Method;
 
 import static star.constant.RepositoryConstant.*;
 
@@ -14,7 +17,11 @@ public final class SqlExecutorFactory {
     private SqlExecutorFactory() {
     }
 
-    public static SqlExecutor getExecutor(String methodName) {
+    public static SqlExecutor getExecutor(Method method) {
+        if (method.isAnnotationPresent(Query.class)) {
+            return CustomExecutor.getInstance();
+        }
+        String methodName = method.getName();
         if (methodName.startsWith(FIND) || methodName.startsWith(SELECT) || methodName.startsWith(QUERY)) {
             return QueryExecutor.getInstance();
         }

@@ -1,4 +1,5 @@
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.junit.Test;
 import star.bean.User;
 import star.bean.UserDTO;
@@ -159,5 +160,16 @@ public class Test3 {
             String line = bufferedReader.readLine();
             System.out.println(line);
         }
+    }
+
+    @Test
+    public void debugParams(){
+        LoadCore.init();
+        UserRepository userRepository = BeanFactory.getBean(UserRepository.class);
+        Map<String,Object> params = new HashMap<>();
+        params.put("name","fkx");
+        params.put("age",22);
+        List<User> users = userRepository.findBySql(params);
+        System.out.println(JsonUtil.encodeJson(users));
     }
 }

@@ -1,7 +1,10 @@
 package star.repository.factory;
 
+import star.annotation.repository.Query;
 import star.repository.generator.*;
 import star.repository.interfaces.SqlGenerator;
+
+import java.lang.reflect.Method;
 
 import static star.constant.RepositoryConstant.*;
 
@@ -14,7 +17,11 @@ public final class SqlGeneratorFactory {
     private SqlGeneratorFactory() {
     }
 
-    public static SqlGenerator getGenerator(String methodName) {
+    public static SqlGenerator getGenerator(Method method) {
+        if (method.isAnnotationPresent(Query.class)) {
+            return CustomSqlGenerator.getInstance();
+        }
+        String methodName = method.getName();
         if (methodName.startsWith(FIND) || methodName.startsWith(SELECT) || methodName.startsWith(QUERY)) {
             return QuerySqlGenerator.getInstance();
         }

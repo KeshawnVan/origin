@@ -2,17 +2,21 @@ package star.repository.parser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import star.bean.TypeWrapper;
 import star.repository.interfaces.ResultSetGetFunction;
 import star.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static star.utils.DateUtil.*;
 
@@ -23,6 +27,36 @@ import static star.utils.DateUtil.*;
 public final class ResultSetParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ResultSetParser.class);
+
+    private static final Map<Class<?>, TypeWrapper> CLASS_TYPE_WRAPPER_MAP = new ConcurrentHashMap<>();
+
+    /**
+     * @param method
+     * @param fields
+     * @param beanClass
+     * @param resultSet
+     * @return
+     * @throws SQLException
+     */
+    public static Object parseResultSet(Method method, List<Field> fields, Class<?> beanClass, ResultSet resultSet) throws SQLException {
+        Type genericReturnType = method.getGenericReturnType();
+        TypeWrapper typeWrapper = genericReturnType instanceof TypeVariable
+                ? buildTypeVariableWrapper(beanClass)
+                : ReflectionUtil.typeParse(genericReturnType);
+        return typeWrapper.isCollection()
+                ? buildCollectionResult(fields, resultSet, typeWrapper.getGenericType(), typeWrapper.getCls())
+                : buildResult(fields, resultSet, typeWrapper.getCls());
+    }
+
+    private static TypeWrapper buildTypeVariableWrapper(Class<?> beanClass) {
+        if (CLASS_TYPE_WRAPPER_MAP.containsKey(beanClass)) {
+            return CLASS_TYPE_WRAPPER_MAP.get(beanClass);
+        } else {
+            TypeWrapper typeWrapper = new TypeWrapper(beanClass, new Type[0], false);
+            CLASS_TYPE_WRAPPER_MAP.put(beanClass, typeWrapper);
+            return typeWrapper;
+        }
+    }
 
     /**
      * 某些数据类型在resultSet.getXXX()，即使数据库中为null，取出来也会被初始化

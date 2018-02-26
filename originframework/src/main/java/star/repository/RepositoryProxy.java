@@ -51,16 +51,16 @@ public class RepositoryProxy implements InvocationHandler {
         init();
         String methodName = method.getName();
         String argsMethodName = RepositoryManager.generateArgsMethodName(methodName, params);
-        String sql = buildSql(method, params, methodName, argsMethodName);
-        SqlExecutor sqlExecutor = SqlExecutorFactory.getExecutor(methodName);
+        String sql = buildSql(method, params, argsMethodName);
+        SqlExecutor sqlExecutor = SqlExecutorFactory.getExecutor(method);
         return sqlExecutor.execute(sql, method, params, fields, beanClass, idField);
     }
 
-    private String buildSql(Method method, Object[] params, String methodName, String argsMethodName) {
+    private String buildSql(Method method, Object[] params, String argsMethodName) {
         if (SQL_MAP.containsKey(argsMethodName)) {
             return SQL_MAP.get(argsMethodName);
         } else {
-            SqlGenerator sqlGenerator = SqlGeneratorFactory.getGenerator(methodName);
+            SqlGenerator sqlGenerator = SqlGeneratorFactory.getGenerator(method);
             String sql = sqlGenerator.generate(method, tableName, selectAllColumns, params, fieldMap);
             SQL_MAP.put(argsMethodName, sql);
             return sql;

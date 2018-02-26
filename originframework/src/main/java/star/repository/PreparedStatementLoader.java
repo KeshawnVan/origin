@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author keshawn
@@ -64,5 +65,11 @@ public final class PreparedStatementLoader {
         }
         preparedStatement.setObject(num, param);
         return num;
+    }
+
+    public static void setPreparedStatement(Map<Integer, Object> indexValueMap, PreparedStatement preparedStatement) throws SQLException {
+        for (Map.Entry<Integer, Object> entry : indexValueMap.entrySet()) {
+            setSingleObject(entry.getValue(), entry.getKey() - 1, preparedStatement);
+        }
     }
 }
