@@ -49,7 +49,13 @@ public final class BeanUtil {
                         ReflectionUtil.setField(target, targetField, sourceFieldValue);
                     }else {
                         //否则看sourceField是否为String，使用JsonUtil直接反序列化
-                        parseStringValue(target, sourceField, sourceFieldValue, targetField);
+                        if (sourceField.getType().equals(String.class)){
+                            String sourceStringValue = CastUtil.castString(sourceFieldValue);
+                            parseStringValue(target, targetField, sourceStringValue);
+                        }else {
+                            String sourceStringValue = JsonUtil.encodeJson(sourceFieldValue);
+                            parseStringValue(target, targetField, sourceStringValue);
+                        }
                     }
                 }
             } catch (NoSuchFieldException e) {
@@ -58,18 +64,16 @@ public final class BeanUtil {
         }
     }
 
-    private static void parseStringValue(Object target, Field sourceField, Object sourceFieldValue, Field targetField) {
-        if (sourceField.getType().equals(String.class)){
-            String sourceStringValue = CastUtil.castString(sourceFieldValue);
-            //判断targetField的类型，如果是不是集合直接赋值，否则序列化成List
-            Type targetFieldGenericType = targetField.getGenericType();
-            TypeWrapper targetFieldTypeWrapper = ReflectionUtil.typeParse(targetFieldGenericType);
-            Object targetFieldValue = targetFieldTypeWrapper.isCollection()
-                    ? JsonUtil.decodeArrayJson(sourceStringValue, (Class<? extends Object>) targetFieldTypeWrapper.getGenericType()[0])
-                    : JsonUtil.decodeJson(sourceStringValue, targetFieldTypeWrapper.getCls());
-            ReflectionUtil.setField(target, targetField, targetFieldValue);
-        }
+    private static void parseStringValue(Object target, Field targetField, String sourceStringValue) {
+        //判断targetField的类型，如果是不是集合直接赋值，否则序列化成List
+        Type targetFieldGenericType = targetField.getGenericType();
+        TypeWrapper targetFieldTypeWrapper = ReflectionUtil.typeParse(targetFieldGenericType);
+        Object targetFieldValue = targetFieldTypeWrapper.isCollection()
+                ? JsonUtil.decodeArrayJson(sourceStringValue, (Class<? extends Object>) targetFieldTypeWrapper.getGenericType()[0])
+                : JsonUtil.decodeJson(sourceStringValue, targetFieldTypeWrapper.getCls());
+        ReflectionUtil.setField(target, targetField, targetFieldValue);
     }
+
 
     private static String getTargetFieldName(Field sourceField) {
         //如果字段上使用了@Transfer则取出value看是否为空字符串，如果不为空则取value，否则取字段名

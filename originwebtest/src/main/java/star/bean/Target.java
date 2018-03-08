@@ -1,7 +1,5 @@
 package star.bean;
 
-import star.annotation.bean.Transfer;
-
 import java.util.List;
 
 /**
@@ -15,7 +13,7 @@ public class Target {
 
     private List<Integer> lists;
 
-    private Integer dd;
+    private Double dd;
 
     public Long getId() {
         return id;
@@ -41,11 +39,11 @@ public class Target {
         this.lists = lists;
     }
 
-    public Integer getDd() {
+    public Double getDd() {
         return dd;
     }
 
-    public void setDd(Integer dd) {
+    public void setDd(Double dd) {
         this.dd = dd;
     }
 }
