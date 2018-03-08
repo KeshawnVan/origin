@@ -17,6 +17,8 @@ public class Source {
     @Transfer("dd")
     private Integer ss;
 
+    private String time;
+
     public Long getId() {
         return id;
     }
@@ -31,6 +33,14 @@ public class Source {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getLists() {

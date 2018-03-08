@@ -11,6 +11,7 @@ import star.factory.BeanFactory;
 import star.repository.factory.ConnectionFactory;
 import star.utils.BeanUtil;
 import star.utils.JsonUtil;
+import star.utils.StringUtil;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
@@ -174,6 +175,11 @@ public class Test3 {
         params.put("age",22);
         List<User> users = userRepository.findBySql(params);
         System.out.println(JsonUtil.encodeJson(users));
+        System.out.println(JsonUtil.encodeJson(new Date()));
+        String json = JsonUtil.encodeJson(new Date());
+        System.out.println(json);
+        System.out.println("2018-01-15T09:19:40Z");
+        System.out.println(JsonUtil.decodeJson(JsonUtil.encodeJson(new Date()),Date.class));
     }
 
     @Test
@@ -183,6 +189,7 @@ public class Test3 {
         source.setName("nana");
         source.setLists("[1,2,3]");
         source.setSs(2);
+        source.setTime("2018-03-08");
         Target target = BeanUtil.copyProperties(source, Target.class);
         System.out.println(JsonUtil.encodeJson(target));
     }

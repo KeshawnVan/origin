@@ -1,5 +1,6 @@
 package star.bean;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,6 +16,8 @@ public class Target {
 
     private Double dd;
 
+    private Date time;
+
     public Long getId() {
         return id;
     }
@@ -29,6 +32,14 @@ public class Target {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 
     public List<Integer> getLists() {

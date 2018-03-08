@@ -50,10 +50,10 @@ public final class BeanUtil {
                     }else {
                         //否则看sourceField是否为String，使用JsonUtil直接反序列化
                         if (sourceField.getType().equals(String.class)){
-                            String sourceStringValue = CastUtil.castString(sourceFieldValue);
+                            String sourceStringValue = StringUtil.castJsonString(sourceFieldValue);
                             parseStringValue(target, targetField, sourceStringValue);
                         }else {
-                            String sourceStringValue = JsonUtil.encodeJson(sourceFieldValue);
+                            String sourceStringValue = StringUtil.castJsonString(JsonUtil.encodeJson(sourceFieldValue));
                             parseStringValue(target, targetField, sourceStringValue);
                         }
                     }
