@@ -1,12 +1,15 @@
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.junit.Test;
+import star.bean.Source;
+import star.bean.Target;
 import star.bean.User;
 import star.bean.UserDTO;
 import star.core.LoadCore;
 import star.dao.UserRepository;
 import star.factory.BeanFactory;
 import star.repository.factory.ConnectionFactory;
+import star.utils.BeanUtil;
 import star.utils.JsonUtil;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
@@ -171,5 +174,16 @@ public class Test3 {
         params.put("age",22);
         List<User> users = userRepository.findBySql(params);
         System.out.println(JsonUtil.encodeJson(users));
+    }
+
+    @Test
+    public void testCl(){
+        Source source = new Source();
+        source.setId(1L);
+        source.setName("nana");
+        source.setLists("[1,2,3]");
+        source.setSs(2);
+        Target target = BeanUtil.copyProperties(source, Target.class);
+        System.out.println(JsonUtil.encodeJson(target));
     }
 }
