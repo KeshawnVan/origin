@@ -9,7 +9,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author keshawn
@@ -65,6 +67,18 @@ public final class ReflectionUtil {
         }
     }
 
+    public static List<Field> getFields(Class clazz) {
+        List<Field> result = new ArrayList<>();
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            result.add(field);
+        }
+        if (clazz.getSuperclass() != null) {
+            result.addAll(getFields(clazz.getSuperclass()));
+        }
+        return result;
+    }
+
     public static TypeWrapper typeParse(Type type) {
         Class<?> cls = type instanceof ParameterizedType ? ((ParameterizedTypeImpl) type).getRawType() : (Class) type;
         return Collection.class.isAssignableFrom(cls)
@@ -90,6 +104,7 @@ public final class ReflectionUtil {
 
     /**
      * 检查是否是基本类型或其包装类型
+     *
      * @param type
      * @return
      */

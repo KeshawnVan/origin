@@ -7,6 +7,16 @@ import star.bean.TypeWrapper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+
+import static star.constant.ConfigConstant.INITIAL_CAPACITY;
+import static star.utils.JsonUtil.encodeJson;
+import static star.utils.ReflectionUtil.getFields;
+import static star.utils.StringUtil.castJsonString;
+import static star.utils.StringUtil.isNotEmpty;
 
 /**
  * @author keshawn
@@ -28,37 +38,34 @@ public final class BeanUtil {
     public static void copyProperties(Object source, Object target) {
         Class<?> sourceClass = source.getClass();
         Class<?> targetClass = target.getClass();
-        Field[] sourceClassDeclaredFields = sourceClass.getDeclaredFields();
+        List<Field> sourceClassDeclaredFields = ReflectionUtil.getFields(sourceClass);
 
-        doCopy(source, target, targetClass, sourceClassDeclaredFields);
+        sourceClassDeclaredFields.forEach(fieldTransfer(source, target, targetClass));
     }
 
-    private static void doCopy(Object source, Object target, Class<?> targetClass, Field[] sourceClassDeclaredFields) {
-        for (int i = 0; i < sourceClassDeclaredFields.length; i++) {
+    private static Consumer<Field> fieldTransfer(Object source, Object target, Class<?> targetClass) {
+        return sourceField -> {
             try {
-                Field sourceField = sourceClassDeclaredFields[i];
                 Object sourceFieldValue = ReflectionUtil.getField(sourceField, source);
                 //sourceFieldValue为空的不需要复制
                 if (sourceFieldValue != null) {
                     String targetFieldName = getTargetFieldName(sourceField);
-
                     Field targetField = targetClass.getDeclaredField(targetFieldName);
-                    //如果目标字段类型是源字段类型或其接口，直接赋值
-                    //Determines if the class or interface represented by this
+                    //Determines if the class or interface represented by this, inject value
                     if (targetField.getType().isAssignableFrom(sourceField.getType())) {
                         ReflectionUtil.setField(target, targetField, sourceFieldValue);
                     } else {
                         //否则看sourceField是否为String，使用JsonUtil直接反序列化
                         String sourceStringValue = sourceField.getType().equals(String.class)
-                                ? StringUtil.castJsonString(sourceFieldValue)
-                                : StringUtil.castJsonString(JsonUtil.encodeJson(sourceFieldValue));
+                                ? castJsonString(sourceFieldValue)
+                                : castJsonString(encodeJson(sourceFieldValue));
                         parseStringValue(target, targetField, sourceStringValue);
                     }
                 }
             } catch (NoSuchFieldException e) {
                 LOGGER.error("BeanUtil copyProperties cannot find field", e);
             }
-        }
+        };
     }
 
     private static void parseStringValue(Object target, Field targetField, String sourceStringValue) {
@@ -75,7 +82,20 @@ public final class BeanUtil {
     private static String getTargetFieldName(Field sourceField) {
         //如果字段上使用了@Transfer则取出value看是否为空字符串，如果不为空则取value，否则取字段名
         return sourceField.isAnnotationPresent(Transfer.class)
-                ? StringUtil.isNotEmpty(sourceField.getAnnotation(Transfer.class).value()) ? sourceField.getAnnotation(Transfer.class).value() : sourceField.getName()
+                ? isNotEmpty(sourceField.getAnnotation(Transfer.class).value()) ? sourceField.getAnnotation(Transfer.class).value() : sourceField.getName()
                 : sourceField.getName();
+    }
+
+    public static Map<String, Object> toMap(Object obj) {
+        Map<String, Object> result = new HashMap<>(INITIAL_CAPACITY);
+        List<Field> fields = getFields(obj.getClass());
+        for (Field field : fields) {
+            try {
+                result.put(field.getName(), ReflectionUtil.getField(field, obj));
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        }
+        return result;
     }
 }

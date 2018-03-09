@@ -1,6 +1,6 @@
 package star.repository;
 
-import star.utils.BeanConvertUtil;
+import star.utils.BeanUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +25,7 @@ public final class IndexValueBuilder {
         if (param instanceof Map) {
             mapParamParse(indexValueMap, fieldIndexMap, (Map<String, Object>) param);
         } else {
-            mapParamParse(indexValueMap, fieldIndexMap, BeanConvertUtil.toMap(param));
+            mapParamParse(indexValueMap, fieldIndexMap, BeanUtil.toMap(param));
         }
         return indexValueMap;
     }
