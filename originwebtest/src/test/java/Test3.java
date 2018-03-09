@@ -193,4 +193,10 @@ public class Test3 {
         Target target = BeanUtil.copyProperties(source, Target.class);
         System.out.println(JsonUtil.encodeJson(target));
     }
+
+    @Test
+    public void testJsonParse(){
+        String json = "[1, 2, 3]";
+        System.out.println(JsonUtil.decodeArrayJson(json, Integer.class));
+    }
 }

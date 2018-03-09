@@ -19,13 +19,13 @@ public final class BeanUtil {
     private BeanUtil() {
     }
 
-    public static <T> T copyProperties(Object source, Class<T> targetClass){
+    public static <T> T copyProperties(Object source, Class<T> targetClass) {
         T target = ReflectionUtil.newInstance(targetClass);
         copyProperties(source, target);
         return target;
     }
 
-    public static void copyProperties(Object source, Object target){
+    public static void copyProperties(Object source, Object target) {
         Class<?> sourceClass = source.getClass();
         Class<?> targetClass = target.getClass();
         Field[] sourceClassDeclaredFields = sourceClass.getDeclaredFields();
@@ -39,23 +39,20 @@ public final class BeanUtil {
                 Field sourceField = sourceClassDeclaredFields[i];
                 Object sourceFieldValue = ReflectionUtil.getField(sourceField, source);
                 //sourceFieldValue为空的不需要复制
-                if (sourceFieldValue != null){
+                if (sourceFieldValue != null) {
                     String targetFieldName = getTargetFieldName(sourceField);
 
                     Field targetField = targetClass.getDeclaredField(targetFieldName);
                     //如果目标字段类型是源字段类型或其接口，直接赋值
                     //Determines if the class or interface represented by this
-                    if (targetField.getType().isAssignableFrom(sourceField.getType())){
+                    if (targetField.getType().isAssignableFrom(sourceField.getType())) {
                         ReflectionUtil.setField(target, targetField, sourceFieldValue);
-                    }else {
+                    } else {
                         //否则看sourceField是否为String，使用JsonUtil直接反序列化
-                        if (sourceField.getType().equals(String.class)){
-                            String sourceStringValue = StringUtil.castJsonString(sourceFieldValue);
-                            parseStringValue(target, targetField, sourceStringValue);
-                        }else {
-                            String sourceStringValue = StringUtil.castJsonString(JsonUtil.encodeJson(sourceFieldValue));
-                            parseStringValue(target, targetField, sourceStringValue);
-                        }
+                        String sourceStringValue = sourceField.getType().equals(String.class)
+                                ? StringUtil.castJsonString(sourceFieldValue)
+                                : StringUtil.castJsonString(JsonUtil.encodeJson(sourceFieldValue));
+                        parseStringValue(target, targetField, sourceStringValue);
                     }
                 }
             } catch (NoSuchFieldException e) {
