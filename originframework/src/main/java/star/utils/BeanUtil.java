@@ -7,12 +7,11 @@ import star.bean.TypeWrapper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
-import static star.constant.ConfigConstant.INITIAL_CAPACITY;
 import static star.utils.JsonUtil.encodeJson;
 import static star.utils.ReflectionUtil.getFields;
 import static star.utils.StringUtil.castJsonString;
@@ -87,15 +86,6 @@ public final class BeanUtil {
     }
 
     public static Map<String, Object> toMap(Object obj) {
-        Map<String, Object> result = new HashMap<>(INITIAL_CAPACITY);
-        List<Field> fields = getFields(obj.getClass());
-        for (Field field : fields) {
-            try {
-                result.put(field.getName(), ReflectionUtil.getField(field, obj));
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage(), e);
-            }
-        }
-        return result;
+        return getFields(obj.getClass()).stream().collect(Collectors.toMap(Field::getName, field -> ReflectionUtil.getField(field, obj)));
     }
 }
