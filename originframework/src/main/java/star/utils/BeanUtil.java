@@ -44,27 +44,36 @@ public final class BeanUtil {
 
     private static Consumer<Field> fieldTransfer(Object source, Object target, Class<?> targetClass) {
         return sourceField -> {
-            try {
                 Object sourceFieldValue = ReflectionUtil.getField(sourceField, source);
                 //sourceFieldValue为空的不需要复制
                 if (sourceFieldValue != null) {
                     String targetFieldName = getTargetFieldName(sourceField);
-                    Field targetField = targetClass.getDeclaredField(targetFieldName);
-                    //Determines if the class or interface represented by this, inject value
-                    if (targetField.getType().isAssignableFrom(sourceField.getType())) {
-                        ReflectionUtil.setField(target, targetField, sourceFieldValue);
-                    } else {
-                        //否则看sourceField是否为String，使用JsonUtil直接反序列化
-                        String sourceStringValue = sourceField.getType().equals(String.class)
-                                ? castJsonString(sourceFieldValue)
-                                : castJsonString(encodeJson(sourceFieldValue));
-                        parseStringValue(target, targetField, sourceStringValue);
+                    Field targetField = getTargetField(targetClass, targetFieldName);
+                    if (targetField != null){
+                        //Determines if the class or interface represented by this, inject value
+                        if (targetField.getType().isAssignableFrom(sourceField.getType())) {
+                            ReflectionUtil.setField(target, targetField, sourceFieldValue);
+                        } else {
+                            //否则看sourceField是否为String，使用JsonUtil直接反序列化
+                            String sourceStringValue = sourceField.getType().equals(String.class)
+                                    ? castJsonString(sourceFieldValue)
+                                    : encodeJson(sourceFieldValue);
+                            parseStringValue(target, targetField, sourceStringValue);
+                        }
                     }
+
                 }
-            } catch (NoSuchFieldException e) {
-                LOGGER.error("BeanUtil copyProperties cannot find field", e);
-            }
         };
+    }
+
+    private static Field getTargetField(Class<?> targetClass, String targetFieldName){
+        Field targetClassDeclaredField = null;
+        try {
+            targetClassDeclaredField = targetClass.getDeclaredField(targetFieldName);
+        } catch (NoSuchFieldException e) {
+            LOGGER.warn("cannot find targetField {} in {} ", targetFieldName, targetClass);
+        }
+        return targetClassDeclaredField;
     }
 
     private static void parseStringValue(Object target, Field targetField, String sourceStringValue) {

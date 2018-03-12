@@ -1,5 +1,4 @@
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.junit.Test;
 import star.bean.Source;
 import star.bean.Target;
@@ -198,5 +197,8 @@ public class Test3 {
     public void testJsonParse(){
         String json = "[1, 2, 3]";
         System.out.println(JsonUtil.decodeArrayJson(json, Integer.class));
+        String blank = "";
+        System.out.println(JsonUtil.decodeJson(StringUtil.castJsonString(blank),Integer.class));
+        System.out.println(JsonUtil.decodeArrayJson(StringUtil.castJsonString(blank), Integer.class));
     }
 }
