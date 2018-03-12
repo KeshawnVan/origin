@@ -50,20 +50,23 @@ public final class BeanUtil {
                     String targetFieldName = getTargetFieldName(sourceField);
                     Field targetField = getTargetField(targetClass, targetFieldName);
                     if (targetField != null){
-                        //Determines if the class or interface represented by this, inject value
-                        if (targetField.getType().isAssignableFrom(sourceField.getType())) {
-                            ReflectionUtil.setField(target, targetField, sourceFieldValue);
-                        } else {
-                            //否则看sourceField是否为String，使用JsonUtil直接反序列化
-                            String sourceStringValue = sourceField.getType().equals(String.class)
-                                    ? castJsonString(sourceFieldValue)
-                                    : encodeJson(sourceFieldValue);
-                            parseStringValue(target, targetField, sourceStringValue);
-                        }
+                        transfer(target, sourceField, sourceFieldValue, targetField);
                     }
-
                 }
         };
+    }
+
+    private static void transfer(Object target, Field sourceField, Object sourceFieldValue, Field targetField) {
+        //Determines if the class or interface represented by this, inject value
+        if (targetField.getType().isAssignableFrom(sourceField.getType())) {
+            ReflectionUtil.setField(target, targetField, sourceFieldValue);
+        } else {
+            //否则看sourceField是否为String，使用JsonUtil直接反序列化
+            String sourceStringValue = sourceField.getType().equals(String.class)
+                    ? castJsonString(sourceFieldValue)
+                    : encodeJson(sourceFieldValue);
+            parseStringValue(target, targetField, sourceStringValue);
+        }
     }
 
     private static Field getTargetField(Class<?> targetClass, String targetFieldName){
