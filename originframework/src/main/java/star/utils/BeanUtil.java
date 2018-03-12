@@ -38,19 +38,25 @@ public final class BeanUtil {
         Class<?> sourceClass = source.getClass();
         Class<?> targetClass = target.getClass();
         List<Field> sourceClassDeclaredFields = ReflectionUtil.getFields(sourceClass);
+        List<Field> targetClassDeclaredFields = ReflectionUtil.getFields(targetClass);
 
-        sourceClassDeclaredFields.forEach(fieldTransfer(source, target, targetClass));
+        sourceClassDeclaredFields.forEach(fieldTransfer(source, target, targetClass, targetClassDeclaredFields));
     }
 
-    private static Consumer<Field> fieldTransfer(Object source, Object target, Class<?> targetClass) {
+    private static Consumer<Field> fieldTransfer(Object source, Object target, Class<?> targetClass, List<Field> targetClassFields) {
         return sourceField -> {
                 Object sourceFieldValue = ReflectionUtil.getField(sourceField, source);
                 //sourceFieldValue为空的不需要复制
                 if (sourceFieldValue != null) {
                     String targetFieldName = getTargetFieldName(sourceField);
-                    Field targetField = getTargetField(targetClass, targetFieldName);
-                    if (targetField != null){
-                        transfer(target, sourceField, sourceFieldValue, targetField);
+                    List<Field> matchTargetFields = targetClassFields.stream()
+                            .filter(targetField -> targetFieldName.equals(targetField.getName()))
+                            .collect(Collectors.toList());
+
+                    if (CollectionUtil.isNotEmpty(matchTargetFields)){
+                        transfer(target, sourceField, sourceFieldValue, matchTargetFields.get(0));
+                    }else {
+                        LOGGER.warn("cannot find targetField {} in {} ", targetFieldName, targetClass);
                     }
                 }
         };
@@ -67,16 +73,6 @@ public final class BeanUtil {
                     : encodeJson(sourceFieldValue);
             parseStringValue(target, targetField, sourceStringValue);
         }
-    }
-
-    private static Field getTargetField(Class<?> targetClass, String targetFieldName){
-        Field targetClassDeclaredField = null;
-        try {
-            targetClassDeclaredField = targetClass.getDeclaredField(targetFieldName);
-        } catch (NoSuchFieldException e) {
-            LOGGER.warn("cannot find targetField {} in {} ", targetFieldName, targetClass);
-        }
-        return targetClassDeclaredField;
     }
 
     private static void parseStringValue(Object target, Field targetField, String sourceStringValue) {

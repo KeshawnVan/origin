@@ -1,6 +1,5 @@
 package star.bean;
 
-import star.annotation.repository.Column;
 import star.annotation.repository.Id;
 import star.annotation.repository.Table;
 
@@ -11,7 +10,7 @@ import java.time.Instant;
  * @date 2017/11/22
  */
 @Table("USER")
-public class User {
+public class User extends BaseDTO{
     @Id
     private Long id;
 

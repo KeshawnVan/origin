@@ -1,5 +1,6 @@
 import com.google.common.collect.Lists;
 import org.junit.Test;
+import org.springframework.beans.BeanUtils;
 import star.bean.Source;
 import star.bean.Target;
 import star.bean.User;
@@ -10,6 +11,7 @@ import star.factory.BeanFactory;
 import star.repository.factory.ConnectionFactory;
 import star.utils.BeanUtil;
 import star.utils.JsonUtil;
+import star.utils.PojoManufactureUtil;
 import star.utils.StringUtil;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
@@ -200,5 +202,23 @@ public class Test3 {
         String blank = "";
         System.out.println(JsonUtil.decodeJson(StringUtil.castJsonString(blank),Integer.class));
         System.out.println(JsonUtil.decodeArrayJson(StringUtil.castJsonString(blank), Integer.class));
+    }
+
+    @Test
+    public void testBeanCopy() throws Exception{
+        User user = (User)PojoManufactureUtil.manufacture(User.class);
+
+        long ss = System.currentTimeMillis();
+        for (int i = 0; i < 100; i++) {
+            UserDTO userDTO = new UserDTO();
+            BeanUtils.copyProperties(user, userDTO);
+        }
+        System.out.println("ss" + (System.currentTimeMillis() - ss));
+
+        long s = System.currentTimeMillis();
+        for (int i = 0; i < 100; i++) {
+            UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);
+        }
+        System.out.println("s" + (System.currentTimeMillis() - s));
     }
 }

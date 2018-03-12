@@ -13,10 +13,7 @@ import java.time.Instant;
  */
 @Table("USER")
 @Component
-public class UserDTO {
-
-    @Inject
-    private TestService testService;
+public class UserDTO extends BaseDTO{
 
     private Long id;
 
