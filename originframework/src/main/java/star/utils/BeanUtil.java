@@ -71,7 +71,9 @@ public final class BeanUtil {
             String sourceStringValue = sourceField.getType().equals(String.class)
                     ? castJsonString(sourceFieldValue)
                     : encodeJson(sourceFieldValue);
-            parseStringValue(target, targetField, sourceStringValue);
+            if (StringUtil.isNotEmpty(sourceStringValue)){
+                parseStringValue(target, targetField, sourceStringValue);
+            }
         }
     }
 

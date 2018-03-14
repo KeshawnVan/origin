@@ -31,6 +31,9 @@ import java.util.function.Supplier;
  * @date 2018/1/11
  */
 public class Test3 {
+
+    public static final String DOUHAO_JIAHAO = "douhao , jiahao + ";
+
     @Test
     public void test() throws Exception {
 //        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
@@ -168,23 +171,23 @@ public class Test3 {
     }
 
     @Test
-    public void debugParams(){
+    public void debugParams() {
         LoadCore.init();
         UserRepository userRepository = BeanFactory.getBean(UserRepository.class);
-        Map<String,Object> params = new HashMap<>();
-        params.put("name","fkx");
-        params.put("age",22);
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "fkx");
+        params.put("age", 22);
         List<User> users = userRepository.findBySql(params);
         System.out.println(JsonUtil.encodeJson(users));
         System.out.println(JsonUtil.encodeJson(new Date()));
         String json = JsonUtil.encodeJson(new Date());
         System.out.println(json);
         System.out.println("2018-01-15T09:19:40Z");
-        System.out.println(JsonUtil.decodeJson(JsonUtil.encodeJson(new Date()),Date.class));
+        System.out.println(JsonUtil.decodeJson(JsonUtil.encodeJson(new Date()), Date.class));
     }
 
     @Test
-    public void testCl(){
+    public void testCl() {
         Source source = new Source();
         source.setId(1L);
         source.setName("nana");
@@ -196,17 +199,21 @@ public class Test3 {
     }
 
     @Test
-    public void testJsonParse(){
+    public void testJsonParse() {
         String json = "[1, 2, 3]";
         System.out.println(JsonUtil.decodeArrayJson(json, Integer.class));
         String blank = "";
-        System.out.println(JsonUtil.decodeJson(StringUtil.castJsonString(blank),Integer.class));
+        System.out.println(JsonUtil.decodeJson(StringUtil.castJsonString(blank), Integer.class));
         System.out.println(JsonUtil.decodeArrayJson(StringUtil.castJsonString(blank), Integer.class));
+        Long id = 1L;
+        System.out.println(JsonUtil.encodeJson(JsonUtil.decodeJson(JsonUtil.encodeJson(id), UserDTO.class)));
     }
 
     @Test
-    public void testBeanCopy() throws Exception{
-        User user = (User)PojoManufactureUtil.manufacture(User.class);
+    public void testBeanCopy() throws Exception {
+        User user = (User) PojoManufactureUtil.manufacture(User.class);
+        UserDTO test = new UserDTO();
+        BeanUtils.copyProperties(user, test);
 
         long ss = System.currentTimeMillis();
         for (int i = 0; i < 100; i++) {
