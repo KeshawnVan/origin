@@ -25,7 +25,7 @@ public final class PropertiesUtil {
         Properties properties = null;
         InputStream inputStream = null;
         try {
-            inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
+            inputStream = ClassUtil.getClassLoader().getResourceAsStream(filePath);
             if (inputStream == null) {
                 throw new FileNotFoundException(filePath + "file not found");
             }

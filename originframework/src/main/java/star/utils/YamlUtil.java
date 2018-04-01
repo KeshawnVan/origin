@@ -20,7 +20,7 @@ public final class YamlUtil {
     }
 
     public static <T> T getYamlBeanWithRelativePath(String path, Class<T> yamlBeanClass) {
-        return getYamlBean(Thread.currentThread().getContextClassLoader().getResourceAsStream(path), yamlBeanClass);
+        return getYamlBean(ClassUtil.getClassLoader().getResourceAsStream(path), yamlBeanClass);
     }
 
     public static <T> T getYamlBeanWithAbsolutePath(String path, Class<T> yamlBeanClass) {

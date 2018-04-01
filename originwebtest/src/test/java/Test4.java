@@ -1,9 +1,19 @@
 import com.google.common.collect.Lists;
 import org.junit.Test;
+import star.bean.ClassInfo;
 import star.bean.Node;
+import star.bean.User;
+import star.bean.UserDTO;
+import star.core.LoadCore;
+import star.factory.BeanFactory;
+import star.factory.ClassFactory;
+import star.proxy.TransactionProxy;
 import star.utils.JsonUtil;
 import star.utils.NumberUtil;
+import star.utils.ReflectionUtil;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -85,5 +95,31 @@ public class Test4 {
             System.out.println(JsonUtil.encodeJson(entry));
         }
         System.out.println(parentIdNodeMap);
+    }
+
+    @Test
+    public void testGetMethod(){
+        LoadCore.init();
+        Object testController = BeanFactory.getBean("testController");
+        Class<?> aClass = testController.getClass();
+        System.out.println(aClass);
+        Arrays.asList(aClass.getDeclaredMethods()).stream().map(Method::getName).forEach(System.out::println);
+    }
+
+    @Test
+    public void testClassInfo(){
+        LoadCore.init();
+        ClassInfo classInfo = ClassFactory.getClassInfo(User.class);
+        System.out.println(JsonUtil.encodeJson(classInfo));
+    }
+
+    @Test
+    public void testGetFields() throws Exception{
+        List<Field> fields = ReflectionUtil.getFields(TransactionProxy.class);
+        System.out.println(fields);
+        List<Field> fields1 = ReflectionUtil.getFields(UserDTO.class);
+        System.out.println(fields1);
+        Field createId = UserDTO.class.getDeclaredField("createId");
+        System.out.println(createId);
     }
 }

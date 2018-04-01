@@ -9,9 +9,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author keshawn
@@ -68,14 +66,9 @@ public final class ReflectionUtil {
     }
 
     public static List<Field> getFields(Class clazz) {
-        List<Field> result = new ArrayList<>();
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            result.add(field);
-        }
-        if (clazz.getSuperclass() != null) {
-            result.addAll(getFields(clazz.getSuperclass()));
-        }
+        List<Field> result = new ArrayList<>(Arrays.asList(clazz.getDeclaredFields()));
+        //result.stream().noneMatch(resultField -> resultField.getName().equals(field.getName()));
+        Optional.ofNullable(clazz.getSuperclass()).ifPresent(superClass -> result.addAll(getFields(superClass)));
         return result;
     }
 

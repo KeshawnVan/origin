@@ -25,6 +25,8 @@ public class UserDTO extends BaseDTO{
 
     private Status status;
 
+    private Long createId;
+
     public UserDTO() {
     }
 
@@ -87,4 +89,13 @@ public class UserDTO extends BaseDTO{
         this.status = status;
     }
 
+    @Override
+    public Long getCreateId() {
+        return createId;
+    }
+
+    @Override
+    public void setCreateId(Long createId) {
+        this.createId = createId;
+    }
 }
