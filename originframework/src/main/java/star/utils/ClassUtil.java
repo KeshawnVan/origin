@@ -28,6 +28,7 @@ public final class ClassUtil {
     private static final String DEL = ".";
     private static final String BACKLASH = "/";
     private static final String BLANK = " ";
+    private static final String $ = "$";
 
     private ClassUtil() {
     }
@@ -91,7 +92,7 @@ public final class ClassUtil {
                 while (jarEntries.hasMoreElements()) {
                     JarEntry jarEntry = jarEntries.nextElement();
                     String jarEntryName = jarEntry.getName();
-                    if (jarEntryName.endsWith(CLASS)) {
+                    if (jarEntryName.endsWith(CLASS) && !jarEntryName.contains($)) {
                         String className = jarEntryName.substring(0, jarEntryName.lastIndexOf(DEL)).replaceAll(BACKLASH, DEL);
                         doAddClass(classSet, className);
                     }
@@ -101,7 +102,7 @@ public final class ClassUtil {
     }
 
     private static void addFileClass(Set<Class<?>> classSet, String packagePath, String packageName) {
-        File[] files = new File(packagePath).listFiles(file -> file.isFile() && file.getName().endsWith(CLASS) || file.isDirectory());
+        File[] files = new File(packagePath).listFiles(file -> file.isFile() && file.getName().endsWith(CLASS) && !file.getName().contains($)|| file.isDirectory());
         StringBuilder stringBuilder = new StringBuilder();
         if (ArrayUtil.isEmpty(files)) {
             return;

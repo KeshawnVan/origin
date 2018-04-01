@@ -64,13 +64,7 @@ public final class BeanFactory {
 
     private static Object getSingletonInstance(Class<?> beanClass) {
         //如果该类存在代理，则使用代理对象
-        Object object;
-        if (CLASS_PROXY_MAP.containsKey(beanClass)) {
-            object = CLASS_PROXY_MAP.get(beanClass);
-        } else {
-            object = ReflectionUtil.newInstance(beanClass);
-        }
-        return object;
+        return CLASS_PROXY_MAP.containsKey(beanClass) ? CLASS_PROXY_MAP.get(beanClass) : ReflectionUtil.newInstance(beanClass);
     }
 
     public static Map<Class<?>, Object> getBeanMap() {
