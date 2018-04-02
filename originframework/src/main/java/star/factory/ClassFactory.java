@@ -81,6 +81,7 @@ public final class ClassFactory {
         classInfo.setGetMethodNames(getMethods);
         classInfo.setSetMethodNames(setMethods);
         classInfo.setFieldMap(fields.stream().collect(toMap(Field::getName, Function.identity())));
+        CLASS_INFO_MAP.put(cls, classInfo);
         return classInfo;
     }
 }

@@ -3,7 +3,9 @@ package star.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import star.annotation.bean.Transfer;
+import star.bean.ClassInfo;
 import star.bean.TypeWrapper;
+import star.factory.ClassFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -37,41 +39,39 @@ public final class BeanUtil {
     public static void copyProperties(Object source, Object target) {
         Class<?> sourceClass = source.getClass();
         Class<?> targetClass = target.getClass();
-        List<Field> sourceClassDeclaredFields = ReflectionUtil.getFields(sourceClass);
-        List<Field> targetClassDeclaredFields = ReflectionUtil.getFields(targetClass);
+        ClassInfo sourceClassInfo = ClassFactory.getClassInfo(sourceClass);
+        ClassInfo targetClassInfo = ClassFactory.getClassInfo(targetClass);
+        List<Field> sourceClassDeclaredFields = sourceClassInfo.getFields();
+        Map<String, Field> targetClassInfoFieldMap = targetClassInfo.getFieldMap();
 
-        sourceClassDeclaredFields.forEach(fieldTransfer(source, target, targetClass, targetClassDeclaredFields));
+        sourceClassDeclaredFields.forEach(fieldTransfer(source, target, targetClass, targetClassInfoFieldMap));
     }
 
-    private static Consumer<Field> fieldTransfer(Object source, Object target, Class<?> targetClass, List<Field> targetClassFields) {
+    private static Consumer<Field> fieldTransfer(Object source, Object target, Class<?> targetClass, Map<String, Field> targetClassInfoFieldMap) {
         return sourceField -> {
-                Object sourceFieldValue = ReflectionUtil.getField(sourceField, source);
-                //sourceFieldValue为空的不需要复制
-                if (sourceFieldValue != null) {
-                    String targetFieldName = getTargetFieldName(sourceField);
-                    List<Field> matchTargetFields = targetClassFields.stream()
-                            .filter(targetField -> targetFieldName.equals(targetField.getName()))
-                            .collect(Collectors.toList());
-
-                    if (CollectionUtil.isNotEmpty(matchTargetFields)){
-                        transfer(target, sourceField, sourceFieldValue, matchTargetFields.get(0));
-                    }else {
-                        LOGGER.warn("cannot find targetField {} in {} ", targetFieldName, targetClass);
-                    }
+            Object sourceFieldValue = ReflectionUtil.getField(sourceField, source);
+            //sourceFieldValue为空的不需要复制
+            if (sourceFieldValue != null) {
+                String targetFieldName = getTargetFieldName(sourceField);
+                if (targetClassInfoFieldMap.containsKey(targetFieldName)) {
+                    transfer(target, sourceField, sourceFieldValue, targetClassInfoFieldMap.get(targetFieldName));
+                } else {
+                    LOGGER.warn("cannot find targetField {} in {} ", targetFieldName, targetClass);
                 }
+            }
         };
     }
 
     private static void transfer(Object target, Field sourceField, Object sourceFieldValue, Field targetField) {
         //Determines if the class or interface represented by this, inject value
-        if (targetField.getType().isAssignableFrom(sourceField.getType())) {
+        if (targetField.getType().equals(sourceField.getType()) || targetField.getType().isAssignableFrom(sourceField.getType())) {
             ReflectionUtil.setField(target, targetField, sourceFieldValue);
         } else {
             //否则看sourceField是否为String，使用JsonUtil直接反序列化
             String sourceStringValue = sourceField.getType().equals(String.class)
                     ? castJsonString(sourceFieldValue)
                     : encodeJson(sourceFieldValue);
-            if (StringUtil.isNotEmpty(sourceStringValue)){
+            if (StringUtil.isNotEmpty(sourceStringValue)) {
                 parseStringValue(target, targetField, sourceStringValue);
             }
         }

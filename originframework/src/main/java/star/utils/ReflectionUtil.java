@@ -10,6 +10,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * @author keshawn
@@ -67,9 +69,17 @@ public final class ReflectionUtil {
 
     public static List<Field> getFields(Class clazz) {
         List<Field> result = new ArrayList<>(Arrays.asList(clazz.getDeclaredFields()));
-        //result.stream().noneMatch(resultField -> resultField.getName().equals(field.getName()));
-        Optional.ofNullable(clazz.getSuperclass()).ifPresent(superClass -> result.addAll(getFields(superClass)));
+        Optional.ofNullable(clazz.getSuperclass()).ifPresent(addSuperclassFields(result));
         return result;
+    }
+
+    private static Consumer<Class> addSuperclassFields(List<Field> result) {
+        return superClass -> {
+            List<Field> superclassFields = getFields(superClass);
+            List<String> resultNames = result.stream().map(Field::getName).collect(Collectors.toList());
+            List<Field> validSuperclassFields = superclassFields.stream().filter(superclassField -> !resultNames.contains(superclassField.getName())).collect(Collectors.toList());
+            result.addAll(validSuperclassFields);
+        };
     }
 
     public static TypeWrapper typeParse(Type type) {

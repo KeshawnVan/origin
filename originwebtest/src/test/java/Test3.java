@@ -211,19 +211,20 @@ public class Test3 {
 
     @Test
     public void testBeanCopy() throws Exception {
+        LoadCore.init();
         User user = (User) PojoManufactureUtil.manufacture(User.class);
         UserDTO test = new UserDTO();
         BeanUtils.copyProperties(user, test);
 
         long ss = System.currentTimeMillis();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1; i++) {
             UserDTO userDTO = new UserDTO();
             BeanUtils.copyProperties(user, userDTO);
         }
         System.out.println("ss" + (System.currentTimeMillis() - ss));
 
         long s = System.currentTimeMillis();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1; i++) {
             UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);
         }
         System.out.println("s" + (System.currentTimeMillis() - s));
