@@ -57,6 +57,7 @@ public final class BeanFactory {
             }
         });
         BEAN_MAP.putAll(REPOSITORY_MAP);
+        ClassFactory.getClassSetBySuper(CommonRepository.class).forEach(cls -> addBean(BLANK, cls));
     }
 
     private BeanFactory() {
@@ -134,7 +135,6 @@ public final class BeanFactory {
             String value = component.value();
             addBean(value, beanClass);
         }
-        ClassFactory.getClassSetBySuper(CommonRepository.class).forEach(cls -> addBean(BLANK, cls));
     }
 
     private static void checkBeanIdDuplicated(String beanName) {

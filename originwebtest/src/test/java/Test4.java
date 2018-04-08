@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author keshawn
@@ -121,5 +122,11 @@ public class Test4 {
         System.out.println(fields1);
         Field createId = UserDTO.class.getDeclaredField("createId");
         System.out.println(createId);
+    }
+
+    @Test
+    public void notNull(){
+        List<Integer> collect = Lists.newArrayList(1, 2, 3, null).stream().filter(Objects::nonNull).collect(Collectors.toList());
+        System.out.println(collect);
     }
 }
