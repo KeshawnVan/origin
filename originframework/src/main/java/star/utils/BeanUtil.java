@@ -2,6 +2,7 @@ package star.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import star.annotation.bean.Ignore;
 import star.annotation.bean.Transfer;
 import star.bean.ClassInfo;
 import star.bean.TypeWrapper;
@@ -41,7 +42,8 @@ public final class BeanUtil {
         Class<?> targetClass = target.getClass();
         ClassInfo sourceClassInfo = ClassFactory.getClassInfo(sourceClass);
         ClassInfo targetClassInfo = ClassFactory.getClassInfo(targetClass);
-        List<Field> sourceClassDeclaredFields = sourceClassInfo.getFields();
+        List<Field> sourceClassDeclaredFields = sourceClassInfo.getFields().stream()
+                .filter(field -> !field.isAnnotationPresent(Ignore.class)).collect(Collectors.toList());
         Map<String, Field> targetClassInfoFieldMap = targetClassInfo.getFieldMap();
 
         sourceClassDeclaredFields.forEach(fieldTransfer(source, target, targetClass, targetClassInfoFieldMap));

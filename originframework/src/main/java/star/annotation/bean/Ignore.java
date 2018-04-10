@@ -11,7 +11,5 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Transfer {
-    String value() default "";
-    Class[] adapters() default {};
+public @interface Ignore {
 }
