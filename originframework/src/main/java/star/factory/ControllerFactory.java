@@ -54,10 +54,10 @@ public final class ControllerFactory {
             String requestPath = getRequestPath(classRequestMapping, requestMappingBuilder, methodAction);
             //获取请求方法
             String requestMethod = methodAction.method();
+            Handler handler = new Handler(controllerClass, method);
             //如果指定了请求方法，就按指定值保存
             if (StringUtil.isNotEmpty(requestMethod)) {
                 Request request = new Request(requestMethod, requestPath);
-                Handler handler = new Handler(controllerClass, method);
                 ACTION_MAP.put(request, handler);
             } else {
                 //否则就匹配所有的请求方法
@@ -65,7 +65,6 @@ public final class ControllerFactory {
                 Request postRequest = new Request(RequestMethod.POST, requestPath);
                 Request putRequest = new Request(RequestMethod.PUT, requestPath);
                 Request deleteRequest = new Request(RequestMethod.DELETE, requestPath);
-                Handler handler = new Handler(controllerClass, method);
                 ACTION_MAP.put(getRequest, handler);
                 ACTION_MAP.put(postRequest, handler);
                 ACTION_MAP.put(putRequest, handler);

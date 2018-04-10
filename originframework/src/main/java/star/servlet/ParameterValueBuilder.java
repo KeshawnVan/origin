@@ -46,11 +46,7 @@ public final class ParameterValueBuilder {
         Object parameterValue;
         QueryParam queryParam = parameter.getAnnotation(QueryParam.class);
         //如果使用QueryParam，则使用注解上的值去解析参数
-        if (queryParam == null) {
-            parameterValue = getByParamMap(paramMap, parameterName);
-        } else {
-            parameterValue = getByParamMap(paramMap, queryParam.value());
-        }
+        parameterValue = getByParamMap(paramMap, queryParam == null ? parameterName : queryParam.value());
         //如果请求体是JSON
         Object jsonString = paramMap.get(APPLICATION_JSON);
         if (jsonString != null) {
@@ -61,12 +57,9 @@ public final class ParameterValueBuilder {
             parameterValue = beanParameterInject(paramMap, parameterType);
         }
         //如果parameterValue不为空且为String类型，则认为需要进行转型
-        if (parameterValue != null && parameterValue instanceof String) {
-            String jsonParam = StringUtil.castJsonString(parameterValue);
-            parameterValues[i] = JsonUtil.decodeJson(jsonParam, parameterType);
-        } else {
-            parameterValues[i] = parameterValue;
-        }
+        parameterValues[i] = parameterValue != null && parameterValue instanceof String
+                ? JsonUtil.decodeJson(StringUtil.castJsonString(parameterValue), parameterType)
+                : parameterValue;
     }
 
     private static Object beanParameterInject(Map<String, Object> paramMap, Class<?> parameterType) {
