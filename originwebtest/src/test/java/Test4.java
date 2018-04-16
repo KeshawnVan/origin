@@ -1,9 +1,6 @@
 import com.google.common.collect.Lists;
 import org.junit.Test;
-import star.bean.ClassInfo;
-import star.bean.Node;
-import star.bean.User;
-import star.bean.UserDTO;
+import star.bean.*;
 import star.core.LoadCore;
 import star.factory.BeanFactory;
 import star.factory.ClassFactory;
@@ -14,6 +11,8 @@ import star.utils.ReflectionUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -129,4 +128,22 @@ public class Test4 {
         List<Integer> collect = Lists.newArrayList(1, 2, 3, null).stream().filter(Objects::nonNull).collect(Collectors.toList());
         System.out.println(collect);
     }
+
+    @Test
+    public void asset(){
+        String s = "";
+        assert s != null;
+        assert s == null;
+    }
+
+    @Test
+    public void testType()throws Exception{
+        Method gene = UserDTO.class.getDeclaredMethod("gene", List.class);
+        Parameter[] parameters = gene.getParameters();
+        Parameter parameter = parameters[0];
+        Type parameterizedType = parameter.getParameterizedType();
+        TypeWrapper typeWrapper1 = ReflectionUtil.typeParse(parameterizedType);
+        System.out.println(JsonUtil.encodeJson(typeWrapper1));
+    }
+
 }

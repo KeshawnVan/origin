@@ -6,6 +6,7 @@ import star.annotation.repository.Table;
 import star.service.TestService;
 
 import java.time.Instant;
+import java.util.List;
 
 /**
  * @author keshawn
@@ -97,5 +98,9 @@ public class UserDTO extends BaseDTO{
     @Override
     public void setCreateId(Long createId) {
         this.createId = createId;
+    }
+
+    public void gene(List<User> users){
+
     }
 }

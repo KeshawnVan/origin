@@ -4,6 +4,7 @@ import star.annotation.repository.Id;
 import star.annotation.repository.Table;
 
 import java.time.Instant;
+import java.util.List;
 
 /**
  * @author keshawn
@@ -85,4 +86,7 @@ public class User extends BaseDTO{
         this.status = status;
     }
 
+    public void gene(List<User> users){
+
+    }
 }
