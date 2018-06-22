@@ -1,6 +1,9 @@
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import star.annotation.bean.Inject;
 import star.bean.Handler;
 import star.bean.User;
@@ -27,6 +30,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static star.utils.StringUtil.checkTimeValid;
 
@@ -38,6 +42,8 @@ public class TestF {
 
     public static final String UTF_8 = "UTF-8";
     public static final String UNICODE = "UNICODE";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestF.class);
 
     @Test
     public void test() {
@@ -168,7 +174,7 @@ public class TestF {
 
     @Test
     public void testReg() {
-        System.out.println(checkTimeValid("2099-08-10 01:17:57"));
+        System.out.println(checkTimeValid("2099-12-10 01:17:57"));
     }
 
     @Test
@@ -233,21 +239,21 @@ public class TestF {
     }
 
     @Test
-    public void testBuilder(){
+    public void testBuilder() {
 //        User fkx = User.newBuilder().age(10).name("fkx").build();
 //        String json = JSON.toJSONStringWithDateFormat(fkx,"yyyy-MM-dd HH:mm:ss", SerializerFeature.DisableCircularReferenceDetect);
 //        System.out.println(json);
     }
 
     @Test
-    public void testProper(){
+    public void testProper() {
         Properties properties = PropertiesUtil.loadProperties("log4j.properties");
         Set<String> keys = PropertiesUtil.getAllKey(properties);
         System.out.println(keys);
     }
 
     @Test
-    public void testTimeZone(){
+    public void testTimeZone() {
         LocalDateTime localDateTime = LocalDateTime.now();
         Instant instant = localDateTime.atZone(ZoneOffset.ofHours(2).normalized()).toInstant();
         LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneOffset.ofHours(2));
@@ -255,7 +261,7 @@ public class TestF {
     }
 
     @Test
-    public void testProxy(){
+    public void testProxy() {
         TestServiceImpl testService = new TestServiceImpl();
         DynamicProxy proxy = new DynamicProxy(testService);
         TestService proxyService = proxy.getProxy();
@@ -268,26 +274,25 @@ public class TestF {
     }
 
     @Test
-    public void testCode()throws Exception{
+    public void testCode() throws Exception {
         String s = "E卡商品特殊标识";
         String code = convert(s);
         System.out.println(code);
         String ss = "\\u0045\\u5361\\u5546\\u54c1\\u7279\\u6b8a\\u6807\\u8bc6";
-        System.out.println(URLDecoder.decode(ss,UNICODE));
+        System.out.println(URLDecoder.decode(ss, UNICODE));
     }
-    public String convert(String str)
-    {
+
+    public String convert(String str) {
         str = (str == null ? "" : str);
         String tmp;
         StringBuffer sb = new StringBuffer(1000);
         char c;
         int i, j;
         sb.setLength(0);
-        for (i = 0; i < str.length(); i++)
-        {
+        for (i = 0; i < str.length(); i++) {
             c = str.charAt(i);
             sb.append("\\u");
-            j = (c >>>8); //取出高8位
+            j = (c >>> 8); //取出高8位
             tmp = Integer.toHexString(j);
             if (tmp.length() == 1)
                 sb.append("0");
@@ -303,10 +308,48 @@ public class TestF {
     }
 
     @Test
-    public void testAop(){
+    public void testAop() {
         Map<Class<?>, List<Proxy>> targetMap = ProxyFactory.getTargetMap();
         List<Proxy> proxyList = targetMap.get(TestController.class);
         TestController controller = ProxyManager.createProxy(TestController.class, proxyList);
         controller.blank();
+    }
+
+    @Test
+    public void test60() {
+        System.out.println(80 / 60);
+    }
+
+    @Test
+    public void testLog() {
+        try {
+            throw new ArrayIndexOutOfBoundsException("test");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            LOGGER.error("error:", e);
+        }
+    }
+
+    @Test
+    public void testLimit(){
+        Stream.generate(() -> 1).limit(5).forEach(System.out::println);
+    }
+
+    @Test
+    public void testRandom(){
+        Set<String> set = Sets.newConcurrentHashSet(Lists.newArrayList("a", "b", "c", "d", "e"));
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < 100; i++){
+            Integer randomNum = NumberUtil.getRandomNum(set.size());
+        }
+        System.out.println(System.currentTimeMillis() - start);
+        if (false) System.out.println(true);
+        else System.out.println(false);
+    }
+
+    @Test
+    public void testState(){
+        String json = "{\"state\":\"state\",\"id\":1}";
+        Map map = JsonUtil.decodeJson(json, Map.class);
+        System.out.println(map);
     }
 }

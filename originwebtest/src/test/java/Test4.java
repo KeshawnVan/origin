@@ -1,20 +1,22 @@
 import com.google.common.collect.Lists;
 import org.junit.Test;
+import org.springframework.util.StringUtils;
 import star.bean.*;
 import star.core.LoadCore;
 import star.factory.BeanFactory;
 import star.factory.ClassFactory;
 import star.proxy.TransactionProxy;
-import star.utils.JsonUtil;
-import star.utils.NumberUtil;
-import star.utils.ReflectionUtil;
+import star.utils.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,7 +54,7 @@ public class Test4 {
     }
 
     @Test
-    public void testDate(){
+    public void testDate() {
         LocalDate start = LocalDate.of(2018, 3, 16);
         LocalDate end = LocalDate.of(2018, 6, 30);
         Long unAccountDays = ChronoUnit.DAYS.between(start, end) + 1L;
@@ -71,7 +73,7 @@ public class Test4 {
     }
 
     @Test
-    public void buildTree(){
+    public void buildTree() {
         Node 河南 = new Node(1L, "河南", null);
         Node 河北 = new Node(2L, "河北", null);
         Node 郑州 = new Node(11L, "郑州", 1L);
@@ -83,7 +85,7 @@ public class Test4 {
         for (Node node : nodes) {
             //省没有parent id
             Long parentId = node.getParentId() == null ? 0L : node.getParentId();
-            if (parentIdNodeMap.containsKey(parentId)){
+            if (parentIdNodeMap.containsKey(parentId)) {
                 parentIdNodeMap.get(parentId).add(node);
             } else {
                 parentIdNodeMap.put(parentId, Lists.newArrayList(node));
@@ -98,7 +100,7 @@ public class Test4 {
     }
 
     @Test
-    public void testGetMethod(){
+    public void testGetMethod() {
         LoadCore.init();
         Object testController = BeanFactory.getBean("testController");
         Class<?> aClass = testController.getClass();
@@ -107,14 +109,14 @@ public class Test4 {
     }
 
     @Test
-    public void testClassInfo(){
+    public void testClassInfo() {
         LoadCore.init();
-        ClassInfo classInfo = ClassFactory.getClassInfo(User.class);
+        ClassInfo classInfo = ClassUtil.getClassInfo(User.class);
         System.out.println(JsonUtil.encodeJson(classInfo));
     }
 
     @Test
-    public void testGetFields() throws Exception{
+    public void testGetFields() throws Exception {
         List<Field> fields = ReflectionUtil.getFields(TransactionProxy.class);
         System.out.println(fields);
         List<Field> fields1 = ReflectionUtil.getFields(UserDTO.class);
@@ -124,20 +126,20 @@ public class Test4 {
     }
 
     @Test
-    public void notNull(){
+    public void notNull() {
         List<Integer> collect = Lists.newArrayList(1, 2, 3, null).stream().filter(Objects::nonNull).collect(Collectors.toList());
         System.out.println(collect);
     }
 
     @Test
-    public void asset(){
+    public void asset() {
         String s = "";
         assert s != null;
         assert s == null;
     }
 
     @Test
-    public void testType()throws Exception{
+    public void testType() throws Exception {
         Method gene = UserDTO.class.getDeclaredMethod("gene", List.class);
         Parameter[] parameters = gene.getParameters();
         Parameter parameter = parameters[0];
@@ -146,4 +148,120 @@ public class Test4 {
         System.out.println(JsonUtil.encodeJson(typeWrapper1));
     }
 
+    @Test
+    public void sum() {
+        String content = " cda.url=http://localhost/CDAEngineUI-1.0/CDAEngineUI.html\n" +
+                " \n" +
+                " #Xds服务器地址\n" +
+                "-xds.iti18=xds-iti18://localhost/democam/xds-iti18\n" +
+                "-xds.iti41=xds-iti41://localhost/democam/xds-iti41\n" +
+                "-xds.iti42=xds-iti42://localhost/democam/xds-iti42\n" +
+                "-xds.iti43=xds-iti43://localhost/democam/xds-iti43\n" +
+                "+xds.iti18=xds-iti18://10.4.54.13:8082/hip_ipf/xds-iti18\n" +
+                "+xds.iti41=xds-iti41://10.4.54.13:8082/hip_ipf/xds-iti41\n" +
+                "+xds.iti42=xds-iti42://10.4.54.13:8082/hip_ipf/xds-iti42\n" +
+                "+xds.iti43=xds-iti43://10.4.54.13:8082/hip_ipf/xds-iti43";
+        if (!StringUtils.isEmpty(content)) {
+            String[] strings = content.split("\\n");
+            System.out.println(Arrays.toString(strings));
+            long sum = Arrays.asList(strings).stream().filter(s -> s.startsWith("+")).count();
+            System.out.println(sum);
+        }
+    }
+
+    @Test
+    public void testFormat() {
+        String s = "delay.%s.mins.queue";
+        System.out.println(String.format(s, 1));
+    }
+
+    @Test
+    public void testBetween() {
+        Instant now = Instant.now();
+        long between = ChronoUnit.MINUTES.between(now, now.plusSeconds(601));
+        System.out.println(between);
+        System.out.println(ChronoUnit.DAYS.between(LocalDate.of(2018, 5, 15), LocalDate.of(2018, 5, 20)));
+    }
+
+    @Test
+    public void testData() {
+        User user = (User) PojoManufactureUtil.manufacture(User.class);
+        String userString = user.toString();
+        System.out.println(userString);
+        User jsonUser = JsonUtil.decodeJson(userString, User.class);
+        System.out.println(jsonUser);
+    }
+
+    @Test
+    public void testClassType() {
+        List<Field> fields = ReflectionUtil.getFields(User.class);
+        fields.forEach(field -> {
+            Class<?> fieldType = field.getType();
+            System.out.println(fieldType);
+        });
+    }
+
+    @Test
+    public void testCast() {
+        String s = "1.0";
+        Double integer = JsonUtil.decodeJson(s, Double.class);
+        System.out.println(integer);
+    }
+
+    @Test
+    public void testLocalDateToString() {
+        LocalDate localDate = LocalDate.now();
+        System.out.println(localDate.toString());
+        System.out.println(LocalTime.now().toString());
+        System.out.println(LocalTime.now().format(DateTimeFormatter.ofPattern("HH-mm-ss")));
+        System.out.println(String.format("mkdir {%s} error", null));
+    }
+
+    @Test
+    public void testGroup() {
+        List<User> users = new ArrayList<>(10000);
+        for (int i = 0; i < 10000; i++) {
+            User user = (User) PojoManufactureUtil.manufacture(User.class);
+            users.add(user);
+        }
+
+        long start = System.currentTimeMillis();
+        Map<Status, List<User>> statusListMap = users.stream().collect(Collectors.groupingBy(User::getStatus));
+        System.out.println(System.currentTimeMillis() - start);
+
+        long begin = System.currentTimeMillis();
+        Map<Status, List<User>> listMap = users.parallelStream().collect(Collectors.groupingBy(User::getStatus));
+        System.out.println(System.currentTimeMillis() - begin);
+    }
+
+    @Test
+    public void testGetClassInfo() {
+        System.out.println(JsonUtil.encodeJson(ClassUtil.getClassInfo(User.class)));
+    }
+
+    @Test
+    public void testBeanIsNull() throws Exception{
+        User user = new User();
+        System.out.println(BeanUtil.checkAllFieldIsNull(user));
+        long l = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            BeanUtil.checkAllFieldIsNull(user);
+        }
+        System.out.println(System.currentTimeMillis() - l);
+    }
+
+    public static boolean isAllFieldNull(Object obj) throws Exception{
+        Class stuCla = (Class) obj.getClass();// 得到类对象
+        Field[] fs = stuCla.getDeclaredFields();//得到属性集合
+        boolean flag = true;
+        for (Field f : fs) {//遍历属性
+            f.setAccessible(true); // 设置属性是可以访问的(私有的也可以)
+            Object val = f.get(obj);// 得到此属性的值
+            if(val!=null) {//只要有1个属性不为空,那么就不是所有的属性值都为空
+                flag = false;
+                break;
+            }
+        }
+        return flag;
+    }
 }

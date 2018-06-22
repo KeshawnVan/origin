@@ -2,16 +2,22 @@ package star.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import star.bean.ClassInfo;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * @author keshawn
@@ -20,6 +26,8 @@ import java.util.jar.JarFile;
 public final class ClassUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClassUtil.class);
+
+    private static final ConcurrentHashMap<Class<?>, ClassInfo> CLASS_INFO_MAP = new ConcurrentHashMap<>();
 
     private static final String JAR = "jar";
     private static final String FILE = "file";
@@ -102,7 +110,7 @@ public final class ClassUtil {
     }
 
     private static void addFileClass(Set<Class<?>> classSet, String packagePath, String packageName) {
-        File[] files = new File(packagePath).listFiles(file -> file.isFile() && file.getName().endsWith(CLASS) && !file.getName().contains($)|| file.isDirectory());
+        File[] files = new File(packagePath).listFiles(file -> file.isFile() && file.getName().endsWith(CLASS) && !file.getName().contains($) || file.isDirectory());
         StringBuilder stringBuilder = new StringBuilder();
         if (ArrayUtil.isEmpty(files)) {
             return;
@@ -135,5 +143,24 @@ public final class ClassUtil {
     private static void doAddClass(Set<Class<?>> classSet, String className) {
         Class<?> cls = loadClass(className, false);
         classSet.add(cls);
+    }
+
+    public static ClassInfo getClassInfo(Class<?> cls) {
+        return CLASS_INFO_MAP.containsKey(cls) ? CLASS_INFO_MAP.get(cls) : generateClassInfo(cls);
+    }
+
+    private static ClassInfo generateClassInfo(Class<?> cls) {
+        ClassInfo classInfo = new ClassInfo();
+        List<Field> fields = ReflectionUtil.getFields(cls);
+        List<Method> methods = Arrays.asList(cls.getDeclaredMethods());
+        List<String> getMethods = fields.stream().map(field -> StringUtil.getGetMethodName(field.getName())).collect(Collectors.toList());
+        List<String> setMethods = fields.stream().map(field -> StringUtil.getSetMethodName(field.getName())).collect(Collectors.toList());
+        classInfo.setFields(fields);
+        classInfo.setMethods(methods);
+        classInfo.setGetMethodNames(getMethods);
+        classInfo.setSetMethodNames(setMethods);
+        classInfo.setFieldMap(fields.stream().collect(toMap(Field::getName, Function.identity())));
+        CLASS_INFO_MAP.put(cls, classInfo);
+        return classInfo;
     }
 }

@@ -6,12 +6,12 @@ import star.annotation.bean.Ignore;
 import star.annotation.bean.Transfer;
 import star.bean.ClassInfo;
 import star.bean.TypeWrapper;
-import star.factory.ClassFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -40,8 +40,8 @@ public final class BeanUtil {
     public static void copyProperties(Object source, Object target) {
         Class<?> sourceClass = source.getClass();
         Class<?> targetClass = target.getClass();
-        ClassInfo sourceClassInfo = ClassFactory.getClassInfo(sourceClass);
-        ClassInfo targetClassInfo = ClassFactory.getClassInfo(targetClass);
+        ClassInfo sourceClassInfo = ClassUtil.getClassInfo(sourceClass);
+        ClassInfo targetClassInfo = ClassUtil.getClassInfo(targetClass);
         List<Field> sourceClassDeclaredFields = sourceClassInfo.getFields().stream()
                 .filter(field -> !field.isAnnotationPresent(Ignore.class)).collect(Collectors.toList());
         Map<String, Field> targetClassInfoFieldMap = targetClassInfo.getFieldMap();
@@ -99,5 +99,13 @@ public final class BeanUtil {
 
     public static Map<String, Object> toMap(Object obj) {
         return getFields(obj.getClass()).stream().collect(Collectors.toMap(Field::getName, field -> ReflectionUtil.getField(field, obj)));
+    }
+
+    public static Boolean checkAllFieldIsNull(Object bean) {
+        return Objects.isNull(bean)
+                ? Boolean.TRUE
+                : ClassUtil.getClassInfo(bean.getClass()).getFieldMap().values().stream()
+                .map(field -> ReflectionUtil.getField(field, bean))
+                .noneMatch(Objects::nonNull);
     }
 }
