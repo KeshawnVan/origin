@@ -104,7 +104,7 @@ public final class BeanUtil {
     public static Boolean checkAllFieldIsNull(Object bean) {
         return Objects.isNull(bean)
                 ? Boolean.TRUE
-                : ClassUtil.getClassInfo(bean.getClass()).getFieldMap().values().stream()
+                : ClassUtil.getClassInfo(bean.getClass()).getFields().stream()
                 .map(field -> ReflectionUtil.getField(field, bean))
                 .noneMatch(Objects::nonNull);
     }

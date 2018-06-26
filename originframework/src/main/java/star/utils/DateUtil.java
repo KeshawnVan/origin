@@ -9,7 +9,9 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  * @author keshawn
@@ -35,6 +37,23 @@ public final class DateUtil {
             LOGGER.error("String cast to date error", e);
         }
         return null;
+    }
+
+    public static java.util.Date toUtilDate(Instant instant) {
+        return java.util.Date.from(instant);
+    }
+
+    public static java.util.Date toUtilDate(LocalDateTime localDateTime) {
+        Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+        return toUtilDate(instant);
+    }
+
+    public static LocalDateTime toLocalDateTime(Instant instant) {
+        return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+    }
+
+    public static LocalDateTime toLocalDateTime(Date date) {
+        return toLocalDateTime(date.toInstant());
     }
 
     public static java.util.Date toUtilDate(java.sql.Date sqlDate) {

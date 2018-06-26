@@ -4,8 +4,8 @@ import org.springframework.util.StringUtils;
 import star.bean.*;
 import star.core.LoadCore;
 import star.factory.BeanFactory;
-import star.factory.ClassFactory;
 import star.proxy.TransactionProxy;
+import star.thread.RandomList;
 import star.utils.*;
 
 import java.lang.reflect.Field;
@@ -225,6 +225,8 @@ public class Test4 {
             users.add(user);
         }
 
+        users.parallelStream().forEach(user -> user.setId(1L));
+        System.out.println(users.get(0));
         long start = System.currentTimeMillis();
         Map<Status, List<User>> statusListMap = users.stream().collect(Collectors.groupingBy(User::getStatus));
         System.out.println(System.currentTimeMillis() - start);
@@ -240,7 +242,7 @@ public class Test4 {
     }
 
     @Test
-    public void testBeanIsNull() throws Exception{
+    public void testBeanIsNull() throws Exception {
         User user = new User();
         System.out.println(BeanUtil.checkAllFieldIsNull(user));
         long l = System.currentTimeMillis();
@@ -250,18 +252,62 @@ public class Test4 {
         System.out.println(System.currentTimeMillis() - l);
     }
 
-    public static boolean isAllFieldNull(Object obj) throws Exception{
+    @Test
+    public void testCon() {
+        List<User> users = new ArrayList<>(10000);
+        for (int i = 0; i < 10000; i++) {
+            User user = (User) PojoManufactureUtil.manufacture(User.class);
+            users.add(user);
+        }
+
+        long start = System.currentTimeMillis();
+        users.stream().map(JsonUtil::encodeJson).collect(Collectors.toList());
+        System.out.println(System.currentTimeMillis() - start);
+
+        long begin = System.currentTimeMillis();
+        users.parallelStream().map(JsonUtil::encodeJson).collect(Collectors.toList());
+        System.out.println(System.currentTimeMillis() - begin);
+    }
+
+    public static boolean isAllFieldNull(Object obj) throws Exception {
         Class stuCla = (Class) obj.getClass();// 得到类对象
         Field[] fs = stuCla.getDeclaredFields();//得到属性集合
         boolean flag = true;
         for (Field f : fs) {//遍历属性
             f.setAccessible(true); // 设置属性是可以访问的(私有的也可以)
             Object val = f.get(obj);// 得到此属性的值
-            if(val!=null) {//只要有1个属性不为空,那么就不是所有的属性值都为空
+            if (val != null) {//只要有1个属性不为空,那么就不是所有的属性值都为空
                 flag = false;
                 break;
             }
         }
         return flag;
+    }
+
+    @Test
+    public void testLock() {
+        ArrayList<String> strings = Lists.newArrayList("a", "b", "c");
+        RandomList<String> randomList = new RandomList<>(strings);
+        Thread thread = new Thread(() -> get(randomList));
+        Thread a = new Thread(() -> {
+            randomList.remove("a");
+        });
+        thread.start();
+        a.start();
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(randomList);
+    }
+
+    public static void get(RandomList<String> randomList) {
+        System.out.println(randomList.randomGet().get());
+    }
+
+    @Test
+    public void testPeek() {
+        List<String> collect = Lists.newArrayList("a", "b", "c").stream().peek(System.out::println).collect(Collectors.toList());
     }
 }
