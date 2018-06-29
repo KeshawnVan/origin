@@ -13,12 +13,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
@@ -254,19 +253,20 @@ public class Test4 {
 
     @Test
     public void testCon() {
-        List<User> users = new ArrayList<>(10000);
-        for (int i = 0; i < 10000; i++) {
+        List<User> users = new ArrayList<>(100);
+        for (int i = 0; i < 100; i++) {
             User user = (User) PojoManufactureUtil.manufacture(User.class);
             users.add(user);
         }
 
         long start = System.currentTimeMillis();
-        users.stream().map(JsonUtil::encodeJson).collect(Collectors.toList());
+        users.forEach(user -> JsonUtil.encodeJson(user));
         System.out.println(System.currentTimeMillis() - start);
 
         long begin = System.currentTimeMillis();
-        users.parallelStream().map(JsonUtil::encodeJson).collect(Collectors.toList());
+        users.parallelStream().forEach(user -> JsonUtil.encodeJson(user));
         System.out.println(System.currentTimeMillis() - begin);
+
     }
 
     public static boolean isAllFieldNull(Object obj) throws Exception {
@@ -309,5 +309,35 @@ public class Test4 {
     @Test
     public void testPeek() {
         List<String> collect = Lists.newArrayList("a", "b", "c").stream().peek(System.out::println).collect(Collectors.toList());
+    }
+
+    @Test
+    public void testLocalDateTime() {
+        System.out.println(DateUtil.toUtilDate(LocalDateTime.now()));
+        System.out.println(Instant.now().toEpochMilli());
+        System.out.println(System.currentTimeMillis());
+
+        System.out.println(Instant.now());
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(DateUtil.toLocalDateTime(new Date()), ZoneId.systemDefault());
+        String format = zonedDateTime.format(dateTimeFormatter);
+        System.out.println(format);
+
+        LocalDateTime localDateTime = LocalDateTime.parse(format, dateTimeFormatter);
+        Date date = DateUtil.toUtilDate(localDateTime);
+        System.out.println(date);
+    }
+
+    @Test
+    public void testStringFormat() {
+        String s = "#%paycontrol%#*&" + "" + "01" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "&*";
+        System.out.println(s);
+        System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
+    }
+
+    @Test
+    public void testRandom() {
+        System.out.println(ThreadLocalRandom.current().nextInt(10));
     }
 }

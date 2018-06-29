@@ -74,6 +74,12 @@ public final class DateUtil {
                 : new java.sql.Date(utilDate.getTime());
     }
 
+    public static java.sql.Date toSqlDate(LocalDateTime localDateTime) {
+        return localDateTime == null
+                ? null
+                : new java.sql.Date(localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+    }
+
     public static String toString(java.util.Date utilDate) {
         synchronized (SIMPLE_DATE_FORMAT) {
             return SIMPLE_DATE_FORMAT.format(utilDate);
