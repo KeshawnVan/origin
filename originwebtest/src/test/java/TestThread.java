@@ -2,13 +2,20 @@ import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import star.thread.Holder;
+import star.thread.NamedThreadFactory;
+import star.utils.CastUtil;
 
-import java.time.Instant;
-import java.util.LinkedList;
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 public class TestThread {
 //    public static void main(String[] args) throws Exception {
@@ -48,11 +55,9 @@ public class TestThread {
 
     @Test
     public void testRenameThreadName() {
-        Runnable fkx = () -> {
-            Thread.currentThread().setName("fkx123");
-            System.out.println("thread name is : " + Thread.currentThread().getName());
-        };
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        ThreadFactory threadFactory = new NamedThreadFactory("listener");
+        Runnable fkx = () -> System.out.println("thread name is : " + Thread.currentThread().getName());
+        ExecutorService executorService = Executors.newSingleThreadExecutor(threadFactory);
         executorService.execute(fkx);
         try {
             Thread.sleep(10000L);
@@ -74,6 +79,107 @@ public class TestThread {
     }
 
     public static void main(String[] args) {
-        Lists.newArrayList(1,2,3,4,5,6,7,8,98,0).parallelStream().forEach(i -> System.out.println(Holder.getString()));
+
+        Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 98, 0).parallelStream().forEach(i -> System.out.println(Holder.getString()));
+        System.out.println("autote130-pmsPartition-subscriberEquipmentInstructionGenerate-C1011000.fifo".length());
+    }
+
+    @Test
+    public void testShutDown() {
+        Runnable runnable = () -> {
+            System.out.println("thread start");
+            while (true) {
+                System.out.println("======11111======");
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+        Runnable runnable2 = () -> {
+            System.out.println("thread start");
+            while (true) {
+                System.out.println("======22222======");
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(runnable);
+        try {
+            Thread.sleep(10000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        executorService.shutdownNow();
+
+        System.out.println("thread 1 shut down");
+
+        ExecutorService executorService2 = Executors.newSingleThreadExecutor();
+        executorService2.execute(runnable2);
+        try {
+            Thread.sleep(10000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        executorService2.shutdownNow();
+
+        System.out.println("thread 2 shut down");
+
+
+        try {
+            Thread.sleep(1000000000000000000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    public void testJStack() {
+        Runnable runnable = () -> {
+            System.out.println("thread start");
+            while (true) {
+                System.out.println("======11111======");
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(runnable);
+        long l = System.currentTimeMillis();
+        Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
+        for (Map.Entry<Thread, StackTraceElement[]> threadEntry : allStackTraces.entrySet()) {
+            Thread thread = threadEntry.getKey();
+            StackTraceElement[] stackTraceElements = threadEntry.getValue();
+            System.out.println(thread + "stack is : ");
+            for (StackTraceElement stackTraceElement : stackTraceElements) {
+                System.out.println("\t" + stackTraceElement + "\n");
+            }
+        }
+        System.out.println(System.currentTimeMillis() - l);
+        OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
+        System.out.println(operatingSystemMXBean.getSystemLoadAverage());
+    }
+
+    @Test
+    public void test() {
+        LocalDate now = LocalDate.now();
+        int year = now.getYear();
+        int day = now.getDayOfMonth();
+        System.out.println(CastUtil.castString(year * day));
+    }
+
+    @Test
+    public void testLists() {
+        List<String> heroList = Lists.newArrayList("疾风剑豪", "放逐之刃", "无双剑姬");
+        List<String> strings = Arrays.asList("疾风剑豪", "放逐之刃", "无双剑姬");
     }
 }

@@ -425,4 +425,12 @@ public class Test4 {
         users.stream().collect(Collectors.toMap(user -> user.getId(), Function.identity()));
     }
 
+    @Test
+    public void testDateOp() {
+        LocalDate now = LocalDate.now();
+        LocalDate localDate = LocalDate.of(2018, 7, 20);
+        long between = ChronoUnit.DAYS.between(localDate, now);
+        System.out.println(between);
+        System.out.println(20 / 2 * 1000L);
+    }
 }

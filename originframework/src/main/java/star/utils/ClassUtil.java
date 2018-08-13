@@ -10,6 +10,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -42,7 +44,16 @@ public final class ClassUtil {
     }
 
     public static ClassLoader getClassLoader() {
-        return Thread.currentThread().getContextClassLoader();
+        ClassLoader classLoader = System.getSecurityManager() == null
+                ? Thread.currentThread().getContextClassLoader()
+                : AccessController.doPrivileged((PrivilegedAction<ClassLoader>) () -> Thread.currentThread().getContextClassLoader());
+
+        if (classLoader == null) {
+            LOGGER.error("get class loader error, class loader is null , current thread is {}", Thread.currentThread());
+            classLoader = ClassUtil.class.getClassLoader();
+        }
+
+        return classLoader;
     }
 
     /**

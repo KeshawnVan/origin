@@ -41,6 +41,8 @@
           <element id="library" level="project" name="Maven: net.jcip:jcip-annotations:1.0" />
           <element id="library" level="project" name="Maven: javax.annotation:jsr250-api:1.0" />
           <element id="library" level="project" name="Maven: javax.validation:validation-api:1.1.0.Final" />
+          <element id="library" level="project" name="Maven: org.eclipse.collections:eclipse-collections:9.1.0" />
+          <element id="library" level="project" name="Maven: org.eclipse.collections:eclipse-collections-api:9.1.0" />
           <element id="library" level="project" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.21" />
           <element id="library" level="project" name="Maven: org.jetbrains.kotlin:kotlin-stdlib:1.2.21" />
           <element id="library" level="project" name="Maven: org.jetbrains:annotations:13.0" />

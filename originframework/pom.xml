@@ -198,6 +198,13 @@
             <artifactId>podam</artifactId>
             <version>7.1.0.RELEASE</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.collections</groupId>
+            <artifactId>eclipse-collections</artifactId>
+            <version>9.1.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
