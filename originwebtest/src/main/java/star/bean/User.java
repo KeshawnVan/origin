@@ -3,6 +3,7 @@ package star.bean;
 import star.annotation.repository.Id;
 import star.annotation.repository.Table;
 
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class User extends BaseDTO{
     @Id
     private Long id;
 
+    @NotNull
     private String name;
 
     private Integer age;

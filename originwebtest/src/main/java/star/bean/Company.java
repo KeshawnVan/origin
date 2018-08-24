@@ -1,9 +1,12 @@
 package star.bean;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class Company extends BaseDTO {
 
     private Long id;
 
+    @JSONField(name = "cName")
     private String name;
 
     public Long getId() {
