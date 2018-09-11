@@ -5,7 +5,10 @@ import star.bean.Company;
 import star.bean.User;
 import star.utils.*;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,6 +79,22 @@ public class Test5 {
     public void testValidate() {
         User user = new User();
         ValidateUtil.validate(user);
+    }
+
+    @Test
+    public void testDateUtil() {
+        Instant now = Instant.now();
+        LocalDateTime localDateTime = DateUtil.toLocalDateTime(now);
+        String s = DateUtil.toString(localDateTime, "yyyy-MM-dd HH:mm:ss");
+        System.out.println(s);
+    }
+
+    @Test
+    public void date() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime localDateTime = LocalDateTime.of(2018, 9, 2, 0, 0);
+        System.out.println(Duration.between(now, localDateTime).toDays());
+        System.out.println(Duration.between(LocalDate.now().atStartOfDay(), localDateTime).toDays());
     }
     public static void main(String[] args) {
         get("/hello", (request, response) -> "Hello World!");
