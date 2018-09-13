@@ -1,12 +1,15 @@
 import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
+import star.bean.User;
 import star.thread.Holder;
 import star.thread.NamedThreadFactory;
 import star.utils.CastUtil;
+import star.utils.ClassUtil;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -181,5 +184,26 @@ public class TestThread {
     public void testLists() {
         List<String> heroList = Lists.newArrayList("疾风剑豪", "放逐之刃", "无双剑姬");
         List<String> strings = Arrays.asList("疾风剑豪", "放逐之刃", "无双剑姬");
+    }
+
+    @Test
+    public void testThreadSaveAndLoad() {
+        User user = new User();
+        new Thread(() -> user.setId(1000L)).start();
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        user.setId(10001L);
+        System.out.println(user.getId());
+        new Thread(() -> System.out.println(user.getId())).start();
+    }
+
+    @Test
+    public void testFieldEqui() {
+        Field field = ClassUtil.getClassInfo(User.class).getFieldMap().get("id");
+        Long l = 100L;
+        System.out.println(field.getType().equals(l.getClass()));
     }
 }
