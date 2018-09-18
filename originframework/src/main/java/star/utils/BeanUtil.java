@@ -8,6 +8,7 @@ import star.bean.ClassInfo;
 import star.bean.TypeWrapper;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
@@ -55,10 +56,11 @@ public final class BeanUtil {
             //sourceFieldValue为空的不需要复制
             if (sourceFieldValue != null) {
                 String targetFieldName = getTargetFieldName(sourceField);
-                if (targetClassInfoFieldMap.containsKey(targetFieldName)) {
-                    transfer(target, sourceField, sourceFieldValue, targetClassInfoFieldMap.get(targetFieldName));
+                Field targetField = targetClassInfoFieldMap.get(targetFieldName);
+                if (targetField != null && !Modifier.isFinal(targetField.getModifiers())) {
+                    transfer(target, sourceField, sourceFieldValue, targetField);
                 } else {
-                    LOGGER.warn("cannot find targetField {} in {} ", targetFieldName, targetClass);
+                    LOGGER.warn("cannot find can modify targetField {} in {} ", targetFieldName, targetClass);
                 }
             }
         };
