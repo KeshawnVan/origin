@@ -4,7 +4,8 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
-import org.dom4j.tree.DefaultElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import star.annotation.parser.ModelElement;
 import star.annotation.parser.XPath;
 import star.bean.ClassInfo;
@@ -12,12 +13,14 @@ import star.bean.TypeWrapper;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public final class XmlUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(XmlUtil.class);
+
     public static <T> T decode(InputStream inputStream, Class<T> type) {
         T instance = ReflectionUtil.newInstance(type);
         SAXReader saxReader = new SAXReader();
@@ -26,7 +29,7 @@ public final class XmlUtil {
             Document document = saxReader.read(inputStream);
             ClassInfo classInfo = ClassUtil.getClassInfo(type);
             for (Field field : classInfo.getFields()) {
-                setFieldValue(instance, document, field);
+                setFieldValue(instance, document, field, null);
             }
         } catch (DocumentException e) {
             throw new RuntimeException(e);
@@ -34,34 +37,58 @@ public final class XmlUtil {
         return instance;
     }
 
-    private static <T> void setFieldValue(T instance, Node node, Field field) {
-        Optional.ofNullable(field.getAnnotation(XPath.class)).map(XPath::value)
-                .ifPresent(xPath -> ReflectionUtil.setField(instance, field, getValue(node, field, xPath))
-        );
+    private static <T> void setFieldValue(T instance, Node node, Field field, TypeWrapper parentType) {
+        String xPath = Optional.ofNullable(field.getAnnotation(XPath.class)).map(XPath::value).orElseGet(() -> instance.getClass().getName() + "." + field.getName());
+        ReflectionUtil.setField(instance, field, getValue(node, field, xPath, parentType));
     }
 
-    private static Object getValue(Node nodeElement, Field field, String xPath) {
+    private static Object getValue(Node nodeElement, Field field, String xPath, TypeWrapper parentType) {
         TypeWrapper typeWrapper = ReflectionUtil.typeParse(field.getGenericType());
         if (typeWrapper.isCollection()) {
-            List<Node> selectNodes = nodeElement.selectNodes(xPath);
-            return selectNodes.stream().map(node -> buildFieldValue(node, typeWrapper.getGenericType()[0])).collect(Collectors.toList());
+            return selectNodes(nodeElement, xPath).stream().map(node -> buildFieldValue(node, typeWrapper, xPath)).collect(Collectors.toList());
         } else {
-            Node node = nodeElement.selectSingleNode(xPath);
-            return buildFieldValue(node, typeWrapper.getCls());
+            Node node = getSingleNode(nodeElement, xPath, parentType);
+            return buildFieldValue(node, typeWrapper, xPath);
         }
     }
 
-    private static Object buildFieldValue(Node node, Type type) {
-        Class<?> classType = (Class) type;
+    private static List<Node> selectNodes(Node nodeElement, String xPath) {
+        return (List<Node>) nodeElement.selectNodes(xPath);
+    }
+
+    private static Node getSingleNode(Node nodeElement, String xPath, TypeWrapper parentType) {
+        return parentType != null && parentType.isCollection()
+                ? selectNodes(nodeElement, xPath).stream().filter(it -> isTrace(nodeElement, it)).findFirst().orElse(null)
+                : nodeElement.selectSingleNode(xPath);
+    }
+
+    private static Object buildFieldValue(Node node, TypeWrapper typeWrapper, String xPath) {
+        if (node == null) {
+            LOGGER.warn("cannot find node by xPath : [{}]", xPath);
+            return null;
+        }
+        Class<?> classType = typeWrapper.isCollection() ? (Class<?>) typeWrapper.getGenericType()[0] : typeWrapper.getCls();
         if (classType.isAnnotationPresent(ModelElement.class)) {
             Object instance = ReflectionUtil.newInstance(classType);
             ClassInfo classInfo = ClassUtil.getClassInfo(classType);
             for (Field field : classInfo.getFields()) {
-                setFieldValue(instance, node, field);
+                setFieldValue(instance, node, field, typeWrapper);
             }
             return instance;
         } else {
             return JsonUtil.decodeJson(StringUtil.castJsonString(node.getText()), classType);
         }
+    }
+
+    private static boolean isTrace(Node parent, Node it) {
+        Node up = it.getParent();
+        while (up != null) {
+            if (up.equals(parent)) {
+                return true;
+            } else {
+                up = up.getParent();
+            }
+        }
+        return false;
     }
 }

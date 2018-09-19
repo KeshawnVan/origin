@@ -41,6 +41,6 @@ public class TestDom4j {
     @Test
     public void testXpath() throws Exception{
         Students students = XmlUtil.decode(ClassUtil.getClassLoader().getResourceAsStream("students.xml"), Students.class);
-
+        System.out.println(students);
     }
 }
