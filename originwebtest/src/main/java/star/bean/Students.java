@@ -8,7 +8,7 @@ import java.util.List;
 @ModelElement
 public class Students {
 
-    @XPath("//students/student")
+    @XPath("//students/class/student")
     List<Student> students;
 
     @XPath("//students/text")
