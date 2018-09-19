@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="students.xsl"?>
-<students>
-    <!--An Student Catalog-->
+<students klass="class">
     <student sn="001">
         <name>jeff</name>
         <age>18</age>
@@ -10,4 +9,8 @@
         <name>lin</name>
         <age>20</age>
     </student>
+    <text>test</text>
+    <flag>1</flag>
+    <flag>2</flag>
+    <flag>3</flag>
 </students>

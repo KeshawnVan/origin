@@ -3,9 +3,12 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.junit.Test;
+import star.bean.Students;
 import star.utils.ClassUtil;
+import star.utils.XmlUtil;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class TestDom4j {
@@ -33,5 +36,11 @@ public class TestDom4j {
         }
         System.out.printf(" element %s end >", element.getName());
         System.out.println("");
+    }
+
+    @Test
+    public void testXpath() throws Exception{
+        Students students = XmlUtil.decode(ClassUtil.getClassLoader().getResourceAsStream("students.xml"), Students.class);
+
     }
 }

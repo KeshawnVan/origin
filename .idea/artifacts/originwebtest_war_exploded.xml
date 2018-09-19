@@ -48,6 +48,7 @@
           <element id="library" level="project" name="Maven: org.glassfish:javax.el:3.0.0" />
           <element id="library" level="project" name="Maven: dom4j:dom4j:1.6.1" />
           <element id="library" level="project" name="Maven: xml-apis:xml-apis:1.0.b2" />
+          <element id="library" level="project" name="Maven: jaxen:jaxen:1.1.6" />
           <element id="library" level="project" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.21" />
           <element id="library" level="project" name="Maven: org.jetbrains.kotlin:kotlin-stdlib:1.2.21" />
           <element id="library" level="project" name="Maven: org.jetbrains:annotations:13.0" />
