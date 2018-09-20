@@ -8,7 +8,9 @@ import star.utils.ClassUtil;
 import star.utils.JsonUtil;
 import star.utils.XmlUtil;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class TestDom4j {
 
@@ -41,5 +43,10 @@ public class TestDom4j {
     public void testXpath() throws Exception {
         Students students = XmlUtil.decode(ClassUtil.getClassLoader().getResourceAsStream("students.xml"), Students.class);
         System.out.println(JsonUtil.encodeJson(students));
+
+        Map<String, String> xpathMap = new HashMap<>();
+        xpathMap.put("star.bean.Students.text", "//students/text");
+        Students students2 = XmlUtil.decode(ClassUtil.getClassLoader().getResourceAsStream("students.xml"), Students.class, xpathMap);
+        System.out.println(JsonUtil.encodeJson(students2));
     }
 }

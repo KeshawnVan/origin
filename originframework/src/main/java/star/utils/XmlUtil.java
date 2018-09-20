@@ -14,7 +14,7 @@ import star.bean.TypeWrapper;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class XmlUtil {
@@ -22,13 +22,18 @@ public final class XmlUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(XmlUtil.class);
 
     public static <T> T decode(InputStream inputStream, Class<T> type) {
+        return decode(inputStream, type, null);
+    }
+
+
+    public static <T> T decode(InputStream inputStream, Class<T> type, Map<String, String> xPathMap) {
         T instance = ReflectionUtil.newInstance(type);
         SAXReader saxReader = new SAXReader();
         try {
             Document document = saxReader.read(inputStream);
             ClassInfo classInfo = ClassUtil.getClassInfo(type);
             for (Field field : classInfo.getFields()) {
-                setFieldValue(instance, document, field, null);
+                setFieldValue(instance, document, field, null, xPathMap);
             }
         } catch (DocumentException e) {
             throw new RuntimeException(e);
@@ -36,18 +41,20 @@ public final class XmlUtil {
         return instance;
     }
 
-    private static <T> void setFieldValue(T instance, Node node, Field field, TypeWrapper parentType) {
-        String xPath = Optional.ofNullable(field.getAnnotation(XPath.class)).map(XPath::value).orElseGet(() -> instance.getClass().getName() + "." + field.getName());
-        ReflectionUtil.setField(instance, field, getValue(node, field, xPath, parentType));
+    private static <T> void setFieldValue(T instance, Node node, Field field, TypeWrapper parentType, Map<String, String> xPathMap) {
+        String xPath = CollectionUtil.isEmpty(xPathMap)
+                ? Nullable.of(field.getAnnotation(XPath.class)).map(XPath::value).orElse(null)
+                : xPathMap.get(instance.getClass().getName() + "." + field.getName());
+        Nullable.of(xPath).ifPresent(path -> ReflectionUtil.setField(instance, field, getValue(node, field, path, parentType, xPathMap)));
     }
 
-    private static Object getValue(Node nodeElement, Field field, String xPath, TypeWrapper parentType) {
+    private static Object getValue(Node nodeElement, Field field, String xPath, TypeWrapper parentType, Map<String, String> xPathMap) {
         TypeWrapper typeWrapper = ReflectionUtil.typeParse(field.getGenericType());
         if (typeWrapper.isCollection()) {
-            return selectNodes(nodeElement, xPath).stream().map(node -> buildFieldValue(node, typeWrapper, xPath)).collect(Collectors.toList());
+            return selectNodes(nodeElement, xPath).stream().map(node -> buildFieldValue(node, typeWrapper, xPath, xPathMap)).collect(Collectors.toList());
         } else {
             Node node = getSingleNode(nodeElement, xPath, parentType);
-            return buildFieldValue(node, typeWrapper, xPath);
+            return buildFieldValue(node, typeWrapper, xPath, xPathMap);
         }
     }
 
@@ -61,7 +68,7 @@ public final class XmlUtil {
                 : nodeElement.selectSingleNode(xPath);
     }
 
-    private static Object buildFieldValue(Node node, TypeWrapper typeWrapper, String xPath) {
+    private static Object buildFieldValue(Node node, TypeWrapper typeWrapper, String xPath, Map<String, String> xPathMap) {
         if (node == null) {
             LOGGER.warn("cannot find node by xPath : [{}]", xPath);
             return null;
@@ -71,7 +78,7 @@ public final class XmlUtil {
             Object instance = ReflectionUtil.newInstance(classType);
             ClassInfo classInfo = ClassUtil.getClassInfo(classType);
             for (Field field : classInfo.getFields()) {
-                setFieldValue(instance, node, field, typeWrapper);
+                setFieldValue(instance, node, field, typeWrapper, xPathMap);
             }
             return instance;
         } else {
