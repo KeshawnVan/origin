@@ -24,7 +24,6 @@ public final class XmlUtil {
     public static <T> T decode(InputStream inputStream, Class<T> type) {
         T instance = ReflectionUtil.newInstance(type);
         SAXReader saxReader = new SAXReader();
-
         try {
             Document document = saxReader.read(inputStream);
             ClassInfo classInfo = ClassUtil.getClassInfo(type);
@@ -52,13 +51,13 @@ public final class XmlUtil {
         }
     }
 
-    private static List<Node> selectNodes(Node nodeElement, String xPath) {
-        return (List<Node>) nodeElement.selectNodes(xPath);
+    private static List<Node> selectNodes(Node parentNode, String xPath) {
+        return ((List<Node>) parentNode.selectNodes(xPath)).stream().filter(it -> isTrace(parentNode, it)).collect(Collectors.toList());
     }
 
     private static Node getSingleNode(Node nodeElement, String xPath, TypeWrapper parentType) {
         return parentType != null && parentType.isCollection()
-                ? selectNodes(nodeElement, xPath).stream().filter(it -> isTrace(nodeElement, it)).findFirst().orElse(null)
+                ? selectNodes(nodeElement, xPath).stream().findFirst().orElse(null)
                 : nodeElement.selectSingleNode(xPath);
     }
 
@@ -81,6 +80,9 @@ public final class XmlUtil {
     }
 
     private static boolean isTrace(Node parent, Node it) {
+        if (parent instanceof Document) {
+            return true;
+        }
         Node up = it.getParent();
         while (up != null) {
             if (up.equals(parent)) {
