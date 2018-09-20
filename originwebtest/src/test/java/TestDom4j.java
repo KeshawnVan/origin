@@ -6,11 +6,11 @@ import org.junit.Test;
 import star.bean.Students;
 import star.utils.ClassUtil;
 import star.utils.JsonUtil;
+import star.utils.ReflectionUtil;
 import star.utils.XmlUtil;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TestDom4j {
 
@@ -48,5 +48,11 @@ public class TestDom4j {
         xpathMap.put("star.bean.Students.text", "//students/text");
         Students students2 = XmlUtil.decode(ClassUtil.getClassLoader().getResourceAsStream("students.xml"), Students.class, xpathMap);
         System.out.println(JsonUtil.encodeJson(students2));
+    }
+
+    @Test
+    public void getAllKey() {
+        List<String> keys = Arrays.stream(Students.class.getDeclaredFields()).map(field -> Students.class.getName() + "." + field.getName()).collect(Collectors.toList());
+        System.out.println(keys);
     }
 }

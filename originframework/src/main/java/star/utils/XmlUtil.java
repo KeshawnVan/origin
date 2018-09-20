@@ -25,7 +25,6 @@ public final class XmlUtil {
         return decode(inputStream, type, null);
     }
 
-
     public static <T> T decode(InputStream inputStream, Class<T> type, Map<String, String> xPathMap) {
         T instance = ReflectionUtil.newInstance(type);
         SAXReader saxReader = new SAXReader();
@@ -45,30 +44,30 @@ public final class XmlUtil {
         String xPath = CollectionUtil.isEmpty(xPathMap)
                 ? Nullable.of(field.getAnnotation(XPath.class)).map(XPath::value).orElse(null)
                 : xPathMap.get(instance.getClass().getName() + "." + field.getName());
-        Nullable.of(xPath).ifPresent(path -> ReflectionUtil.setField(instance, field, getValue(node, field, path, parentType, xPathMap)));
+        Nullable.of(xPath).ifPresent(path -> ReflectionUtil.setField(instance, field, getFieldValue(node, field, path, parentType, xPathMap)));
     }
 
-    private static Object getValue(Node nodeElement, Field field, String xPath, TypeWrapper parentType, Map<String, String> xPathMap) {
+    private static Object getFieldValue(Node nodeElement, Field field, String xPath, TypeWrapper parentType, Map<String, String> xPathMap) {
         TypeWrapper typeWrapper = ReflectionUtil.typeParse(field.getGenericType());
         if (typeWrapper.isCollection()) {
-            return selectNodes(nodeElement, xPath).stream().map(node -> buildFieldValue(node, typeWrapper, xPath, xPathMap)).collect(Collectors.toList());
+            return selectSubNodes(nodeElement, xPath).stream().map(node -> buildNodeValue(node, typeWrapper, xPath, xPathMap)).collect(Collectors.toList());
         } else {
             Node node = getSingleNode(nodeElement, xPath, parentType);
-            return buildFieldValue(node, typeWrapper, xPath, xPathMap);
+            return buildNodeValue(node, typeWrapper, xPath, xPathMap);
         }
     }
 
-    private static List<Node> selectNodes(Node parentNode, String xPath) {
-        return ((List<Node>) parentNode.selectNodes(xPath)).stream().filter(it -> isTrace(parentNode, it)).collect(Collectors.toList());
+    private static List<Node> selectSubNodes(Node parentNode, String xPath) {
+        return ((List<Node>) parentNode.selectNodes(xPath)).stream().filter(it -> isSubNode(parentNode, it)).collect(Collectors.toList());
     }
 
     private static Node getSingleNode(Node nodeElement, String xPath, TypeWrapper parentType) {
         return parentType != null && parentType.isCollection()
-                ? selectNodes(nodeElement, xPath).stream().findFirst().orElse(null)
+                ? selectSubNodes(nodeElement, xPath).stream().findFirst().orElse(null)
                 : nodeElement.selectSingleNode(xPath);
     }
 
-    private static Object buildFieldValue(Node node, TypeWrapper typeWrapper, String xPath, Map<String, String> xPathMap) {
+    private static Object buildNodeValue(Node node, TypeWrapper typeWrapper, String xPath, Map<String, String> xPathMap) {
         if (node == null) {
             LOGGER.warn("cannot find node by xPath : [{}]", xPath);
             return null;
@@ -86,13 +85,13 @@ public final class XmlUtil {
         }
     }
 
-    private static boolean isTrace(Node parent, Node it) {
-        if (parent instanceof Document) {
+    private static boolean isSubNode(Node parentNode, Node node) {
+        if (parentNode instanceof Document) {
             return true;
         }
-        Node up = it.getParent();
+        Node up = node.getParent();
         while (up != null) {
-            if (up.equals(parent)) {
+            if (up.equals(parentNode)) {
                 return true;
             } else {
                 up = up.getParent();
