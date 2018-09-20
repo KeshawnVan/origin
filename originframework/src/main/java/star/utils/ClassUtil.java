@@ -80,7 +80,8 @@ public final class ClassUtil {
         Set<Class<?>> classSet = new HashSet<>();
         try {
             // 得到指定包名下面的资源
-            Enumeration<URL> urls = getClassLoader().getResources(packageName.replace(DEL, BACKLASH));
+            String basePackagePath = packageName.replace(DEL, BACKLASH);
+            Enumeration<URL> urls = getClassLoader().getResources(basePackagePath);
             while (urls.hasMoreElements()) {
                 URL url = urls.nextElement();
                 if (url != null) {
@@ -90,7 +91,7 @@ public final class ClassUtil {
                         String packagePath = url.getPath().replaceAll(REGEX, BLANK);
                         addFileClass(classSet, packagePath, packageName);
                     } else if (JAR.equals(protocol)) {
-                        addJarClass(classSet, url);
+                        addJarClass(classSet, url, basePackagePath);
                     }
                 }
             }
@@ -102,7 +103,7 @@ public final class ClassUtil {
         return classSet;
     }
 
-    private static void addJarClass(Set<Class<?>> classSet, URL url) throws IOException {
+    private static void addJarClass(Set<Class<?>> classSet, URL url, String basePackagePath) throws IOException {
         JarURLConnection jarURLConnection = (JarURLConnection) url.openConnection();
         if (jarURLConnection != null) {
             JarFile jarFile = jarURLConnection.getJarFile();
@@ -111,7 +112,7 @@ public final class ClassUtil {
                 while (jarEntries.hasMoreElements()) {
                     JarEntry jarEntry = jarEntries.nextElement();
                     String jarEntryName = jarEntry.getName();
-                    if (jarEntryName.endsWith(CLASS) && !jarEntryName.contains($)) {
+                    if (jarEntryName.startsWith(basePackagePath) && jarEntryName.endsWith(CLASS) && !jarEntryName.contains($)) {
                         String className = jarEntryName.substring(0, jarEntryName.lastIndexOf(DEL)).replaceAll(BACKLASH, DEL);
                         doAddClass(classSet, className);
                     }

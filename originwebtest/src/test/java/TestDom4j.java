@@ -55,4 +55,18 @@ public class TestDom4j {
         List<String> keys = Arrays.stream(Students.class.getDeclaredFields()).map(field -> Students.class.getName() + "." + field.getName()).collect(Collectors.toList());
         System.out.println(keys);
     }
+
+    @Test
+    public void getClassSet() {
+//        String packageName = "star.bean";
+//        Map<String, List<String>> clazzFiledMap = ClassUtil.getClassSet(packageName).stream()
+//                .collect(Collectors.toMap(Class::getSimpleName, clazz -> Arrays.stream(clazz.getDeclaredFields())
+//                        .map(field -> clazz.getName() + "." + field.getName()).collect(Collectors.toList())));
+//
+//        System.out.println(JsonUtil.encodeJson(clazzFiledMap));
+        String packageName = "org.apache.commons.io.output";
+        Set<Class<?>> classSet = ClassUtil.getClassSet(packageName);
+        System.out.println(classSet);
+
+    }
 }
