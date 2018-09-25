@@ -18,7 +18,7 @@ public class TestDomUtil {
 
         students.setDomElements(Lists.newArrayList(text, flags, student));
 
-        Map<String, Object> map = DomUtil.decode(students, ClassUtil.getClassLoader().getResourceAsStream("students.xml"));
+        Map<String, Object> map = DomUtil.decode(students, ClassUtil.getClassLoader().getResourceAsStream("students.xml"), "urn:hl7-org:v3");
         System.out.println(JsonUtil.encodeJson(map));
     }
 
@@ -53,7 +53,7 @@ public class TestDomUtil {
         DomElement flags = new DomElement();
         flags.setName("flag");
         flags.setCollection(true);
-        flags.setXpath("students/flag");
+        flags.setXpath("//students/flag");
         return flags;
     }
 

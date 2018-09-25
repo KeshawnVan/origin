@@ -1,24 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="students.xsl"?>
-<students klass="class">
-    <class>
-        <student sn="001">
-            <name>jeff</name>
-            <age>18</age>
-            <addr>1</addr>
-            <addr>2</addr>
-        </student>
-        <student sn="02">
-            <name>lin</name>
-            <age>20</age>
-            <addr>a</addr>
-            <addr>b</addr>
-            <addr>c</addr>
-            <addr>d</addr>
-        </student>
-    </class>
-    <text>test</text>
-    <flag>1</flag>
-    <flag>2</flag>
-    <flag>3</flag>
-</students>
+<PRPA_IN201311UV02 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ITSVersion="XML_1.0" xmlns="urn:hl7-org:v3" xsi:schemaLocation="urn:hl7-org:v3 ../multicacheschemas/PRPA_IN201311UV02.xsd">
+    <students klass="class">
+        <class>
+            <student sn="001">
+                <name>jeff</name>
+                <age>18</age>
+                <addr>1</addr>
+                <addr>2</addr>
+            </student>
+            <student sn="02">
+                <name>lin</name>
+                <age>20</age>
+                <addr>a</addr>
+                <addr>b</addr>
+                <addr>c</addr>
+                <addr>d</addr>
+            </student>
+        </class>
+        <text>test</text>
+        <flag>1</flag>
+        <flag>2</flag>
+        <flag>3</flag>
+    </students>
+</PRPA_IN201311UV02>

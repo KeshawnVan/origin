@@ -1,6 +1,8 @@
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.junit.Test;
 import star.bean.Students;
@@ -68,5 +70,32 @@ public class TestDom4j {
         Set<Class<?>> classSet = ClassUtil.getClassSet(packageName);
         System.out.println(classSet);
 
+    }
+
+    @Test
+    public void testNameSpace() throws Exception{
+        SAXReader saxReader = new SAXReader();
+        Map map = new HashMap();
+        map.put("ns","urn:hl7-org:v3");
+        saxReader.getDocumentFactory().setXPathNamespaceURIs(map);
+        Document document = saxReader.read(ClassUtil.getClassLoader().getResourceAsStream("students.xml"));
+        Node node = document.selectSingleNode("//ns:students/ns:text");
+        System.out.println(node);
+    }
+
+    @Test
+    public void testReplace() throws Exception{
+        String xpath = "//students/class/student";
+        String prefix = xpath.substring(0, 3);
+        String formatPrefix = prefix.equals("//@") ? prefix : prefix.substring(0,1) + "/ns:" + prefix.substring(2,3);
+        String nsXpath = formatPrefix + StringUtils.replaceAll(xpath.substring(3, xpath.length()), "/", "/ns:");
+        System.out.println(nsXpath);
+
+        SAXReader saxReader = new SAXReader();
+        Map map = new HashMap();
+        map.put("ns","urn:hl7-org:v3");
+        saxReader.getDocumentFactory().setXPathNamespaceURIs(map);
+        Document document = saxReader.read(ClassUtil.getClassLoader().getResourceAsStream("students.xml"));
+        System.out.println(document);
     }
 }

@@ -1,5 +1,6 @@
 package star.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
@@ -18,9 +19,14 @@ public final class DomUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DomUtil.class);
 
-    public static Map<String, Object> decode(DomElement domElement, InputStream inputStream) {
+    public static Map<String, Object> decode(DomElement domElement, InputStream inputStream, String xmlns) {
         Map<String, Object> result = new HashMap<>();
         SAXReader saxReader = new SAXReader();
+        Nullable.of(xmlns).ifPresent(nameSpace -> {
+            Map<String, String> config = new HashMap<>(2);
+            config.put("ns", nameSpace);
+            saxReader.getDocumentFactory().setXPathNamespaceURIs(config);
+        });
         try {
             Document document = saxReader.read(inputStream);
             buildMap(domElement, result, document, null);
@@ -40,9 +46,12 @@ public final class DomUtil {
     }
 
     private static Object buildValue(DomElement domElement, Node node, String xpath, Boolean isCollection) {
+        String prefix = xpath.substring(0, 3);
+        String formatPrefix = prefix.equals("//@") ? prefix : prefix.substring(0, 1) + "/ns:" + prefix.substring(2, 3);
+        String nsXpath = formatPrefix + StringUtils.replaceAll(xpath.substring(3, xpath.length()), "/", "/ns:");
         return domElement.getCollection()
-                ? selectSubNodes(node, xpath).stream().map(subNode -> buildNodeValue(subNode, domElement, xpath)).collect(Collectors.toList())
-                : buildNodeValue(getSingleNode(node, xpath, isCollection), domElement, xpath);
+                ? selectSubNodes(node, nsXpath).stream().map(subNode -> buildNodeValue(subNode, domElement, nsXpath)).collect(Collectors.toList())
+                : buildNodeValue(getSingleNode(node, nsXpath, isCollection), domElement, nsXpath);
     }
 
 
