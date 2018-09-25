@@ -46,12 +46,21 @@ public final class DomUtil {
     }
 
     private static Object buildValue(DomElement domElement, Node node, String xpath, Boolean isCollection) {
-        String prefix = xpath.substring(0, 3);
-        String formatPrefix = prefix.equals("//@") ? prefix : prefix.substring(0, 1) + "/ns:" + prefix.substring(2, 3);
-        String nsXpath = formatPrefix + StringUtils.replaceAll(xpath.substring(3, xpath.length()), "/", "/ns:");
+        String nsXpath = formatXpath(xpath);
         return domElement.getCollection()
                 ? selectSubNodes(node, nsXpath).stream().map(subNode -> buildNodeValue(subNode, domElement, nsXpath)).collect(Collectors.toList())
                 : buildNodeValue(getSingleNode(node, nsXpath, isCollection), domElement, nsXpath);
+    }
+
+    private static String formatXpath(String xpath) {
+        String prefix = xpath.substring(0, 3);
+        String formatPrefix = prefix.equals("//@") ? prefix : prefix.substring(0, 1) + "/ns:" + prefix.substring(2, 3);
+        String content = xpath.substring(3, xpath.length());
+        int index = content.indexOf("/@");
+        String formatContent = index > 0
+                ? StringUtils.replaceAll(content.substring(0, index), "/", "/ns:") + content.substring(index, content.length())
+                : StringUtils.replaceAll(content, "/", "/ns:");
+        return formatPrefix + formatContent;
     }
 
 

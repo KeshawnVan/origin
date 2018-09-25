@@ -1,0 +1,214 @@
+<PRPA_IN201311UV02 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ITSVersion="XML_1.0" xmlns="urn:hl7-org:v3" xsi:schemaLocation="urn:hl7-org:v3 ../multicacheschemas/PRPA_IN201311UV02.xsd">
+    <id root="2.16.156.10011.2.5.1.1" extension="22a0f9e0-4454-11dc-a6be-3603d6866807"/>
+    <creationTime value="20130116112855"/>
+    <interactionId root="2.16.156.10011.2.5.1.2" extension="PRPA_IN201311UV02"/>
+    <processingCode code="P"/>
+    <processingModeCode/>
+    <acceptAckCode code="AL"/>
+    <receiver typeCode="RCV">
+        <device classCode="DEV" determinerCode="INSTANCE">
+            <id>
+                <item root="2.16.156.10011.2.5.1.3" extension="111"/>
+            </id>
+        </device>
+    </receiver>
+    <sender typeCode="SND">
+        <device classCode="DEV" determinerCode="INSTANCE">
+            <id>
+                <item root="2.16.156.10011.2.5.1.3" extension="222"/>
+            </id>
+        </device>
+    </sender>
+    <controlActProcess classCode="CACT" moodCode="EVN">
+        <subject typeCode="SUBJ">
+            <registrationRequest classCode="REG" moodCode="RQO">
+                <statusCode code="active"/>
+                <subject1 typeCode="SBJ">
+                    <patient classCode="PAT">
+                        <!--本地系统的患者ID -->
+                        <id>
+                            <item root="2.16.156.10011.2.5.1.4" extension="患者ID"/>
+                        </id>
+                        <statusCode code="active"/>
+                        <effectiveTime>
+                            <any value="20110101"/>
+                        </effectiveTime>
+                        <patientPerson>
+                            <!--身份证号-->
+                            <id>
+                                <item root="2.16.156.10011.1.3" extension="120109197706015516"/>
+                            </id>
+                            <idCategory code="01" codeSysetm="2.16.156.10011.2.3.1.1" codeSystemName="身份证件类别代码表">
+                                <displayName value="居民身份证"/>
+                            </idCategory>
+                            <!--姓名-->
+                            <name xsi:type="LIST_EN">
+                                <item>
+                                    <part value="刘永好"/>
+                                </item>
+                            </name>
+                            <!--联系电话-->
+                            <telecom xsi:type="DSET_TEL">
+                                <item value="028-2222444"/>
+                            </telecom>
+                            <!--性别-->
+                            <administrativeGenderCode code="1" codeSystem="2.16.156.10011.2.3.3.4">
+                                <displayName value="男性"/>
+                            </administrativeGenderCode>
+                            <!--出生时间-->
+                            <birthTime value="19570323"/>
+                            <!--联系地址-->
+                            <addr xsi:type="LIST_AD">
+                                <item>
+                                    <!--非结构化地址（完整地址描述） -->
+                                    <part type="SAL" value="四川省成都市双流县红沙村"/>
+                                    <!--地址-省（自治区、直辖市）   -->
+                                    <part type="STA" value="广东省"/>
+                                    <!--地址-市（地区）   -->
+                                    <part type="CTY" value="广州市"/>
+                                    <!--地址-县（区）   -->
+                                    <part type="CNT" value="越秀区"/>
+                                    <!-- 地址-乡（镇、街道办事处）   -->
+                                    <part type="STB" value="童心街"/>
+                                    <!-- 地址-村（街、路、弄等）   -->
+                                    <part type="STR" value="下塘西路"/>
+                                    <!-- 地址-门牌号码 -->
+                                    <part type="BNR" value="39号"/>
+                                    <!-- 邮政编码-->
+                                    <part type="ZIP" value="510000"/>
+                                </item>
+                                <item>
+                                    <!--非结构化地址（完整地址描述） -->
+                                    <part type="SAL" value="he成都市双流县红沙村"/>
+                                    <!--地址-省（自治区、直辖市）   -->
+                                    <part type="STA" value="广东省"/>
+                                    <!--地址-市（地区）   -->
+                                    <part type="CTY" value="广州市"/>
+                                    <!--地址-县（区）   -->
+                                    <part type="CNT" value="越秀区"/>
+                                    <!-- 地址-乡（镇、街道办事处）   -->
+                                    <part type="STB" value="童心街"/>
+                                    <!-- 地址-村（街、路、弄等）   -->
+                                    <part type="STR" value="下塘西路"/>
+                                    <!-- 地址-门牌号码 -->
+                                    <part type="BNR" value="39号"/>
+                                    <!-- 邮政编码-->
+                                    <part type="ZIP" value="510000"/>
+                                </item>
+                            </addr>
+                            <!--婚姻状况-->
+                            <maritalStatusCode code="10" codeSystem="2.16.156.10011.2.3.3.5">
+                                <displayName value="未婚"/>
+                            </maritalStatusCode>
+                            <!--民族-->
+                            <ethnicGroupCode>
+                                <item code="01" codeSystem="2.16.156.10011.2.3.3.3">
+                                    <displayName value="汉族"/>
+                                </item>
+                            </ethnicGroupCode>
+                            <!--职业类别代码-->
+                            <asEmployee classCode="EMP">
+                                <occupationCode code="13" codeSystem="2.16.156.10011.2.3.3.7">
+                                    <displayName value="专业技术人员"/>
+                                </occupationCode>
+                                <employerOrganization classCode="ORG" determinerCode="INSTANCE">
+                                    <!--工作单位名称-->
+                                    <name xsi:type="LIST_EN">
+                                        <item>
+                                            <part value="XXX学校"/>
+                                        </item>
+                                    </name>
+                                    <contactParty classCode="CON">
+                                        <!--工作联系电话-->
+                                        <telecom xsi:type="DSET_TEL">
+                                            <item value="028-9999999"/>
+                                        </telecom>
+                                    </contactParty>
+                                </employerOrganization>
+                            </asEmployee>
+                            <asOtherIDs classCode="PAT">
+                                <!--健康卡号-->
+                                <id>
+                                    <item root="2.16.156.10011.1.19" extension="38273N237"/>
+                                </id>
+                                <scopingOrganization classCode="ORG" determinerCode="INSTANCE">
+                                    <!--健康卡发放机构代码-->
+                                    <id>
+                                        <item root="2.16.156.10011.1.5" extension="XXXXX"/>
+                                    </id>
+                                </scopingOrganization>
+                            </asOtherIDs>
+                            <asOtherIDs classCode="PAT">
+                                <!--城乡居民健康档案编号-->
+                                <id>
+                                    <item root="2.16.156.10011.1.2" extension="38273N237"/>
+                                </id>
+                                <scopingOrganization classCode="ORG" determinerCode="INSTANCE">
+                                    <!--建档医疗机构组织机构代码-->
+                                    <id>
+                                        <item root="2.16.156.10011.1.5" extension="XXXXX"/>
+                                    </id>
+                                </scopingOrganization>
+                            </asOtherIDs>
+                            <!--联系人-->
+                            <personalRelationship>
+                                <code/>
+                                <!--联系人电话-->
+                                <telecom xsi:type="DSET_TEL">
+                                    <item value="028-8888888"/>
+                                </telecom>
+                                <relationshipHolder1 classCode="PSN" determinerCode="INSTANCE">
+                                    <!--联系人姓名-->
+                                    <name xsi:type="LIST_EN">
+                                        <item>
+                                            <part value="刘好"/>
+                                        </item>
+                                    </name>
+                                </relationshipHolder1>
+                            </personalRelationship>
+                        </patientPerson>
+                        <providerOrganization classCode="ORG" determinerCode="INSTANCE">
+                            <!--组织机构代码-->
+                            <id>
+                                <item root="2.16.156.10011.1.5" extension="XXXXX"/>
+                            </id>
+                            <!--组织机构名称-->
+                            <name xsi:type="LIST_EN">
+                                <item>
+                                    <part value="无锡中医院"/>
+                                </item>
+                            </name>
+                            <contactParty classCode="CON"/>
+                        </providerOrganization>
+                        <!--医疗保险信息-->
+                        <coveredPartyOf typeCode="COV">
+                            <coverageRecord classCode="COV" moodCode="EVN">
+                                <beneficiary typeCode="BEN">
+                                    <beneficiary classCode="MBR">
+                                        <code code="1" codeSystem="2.16.156.10011.2.3.1.248" codeSystemName="医疗保险类别代码">
+                                            <displayName value="城镇职工基本医疗保险"/>
+                                        </code>
+                                    </beneficiary>
+                                </beneficiary>
+                            </coverageRecord>
+                        </coveredPartyOf>
+                    </patient>
+                </subject1>
+                <author typeCode="AUT">
+                    <assignedEntity classCode="ASSIGNED">
+                        <id>
+                            <item root="2.16.156.10011.1.4" extension="登记人ID"/>
+                        </id>
+                        <assignedPerson classCode="PSN" determinerCode="INSTANCE">
+                            <name xsi:type="LIST_EN">
+                                <item>
+                                    <part value="赵武"/>
+                                </item>
+                            </name>
+                        </assignedPerson>
+                    </assignedEntity>
+                </author>
+            </registrationRequest>
+        </subject>
+    </controlActProcess>
+</PRPA_IN201311UV02>

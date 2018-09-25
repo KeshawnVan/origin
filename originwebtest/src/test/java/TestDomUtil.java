@@ -1,4 +1,5 @@
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import star.bean.DomElement;
 import star.utils.ClassUtil;
@@ -64,5 +65,54 @@ public class TestDomUtil {
         text.setName("txt");
         text.setXpath("//students/text");
         return text;
+    }
+
+    @Test
+    public void testA() {
+        DomElement patient = new DomElement();
+        DomElement id = getId();
+        DomElement statusCode = getStatusCode();
+        DomElement effectiveTime = getEffectiveTime();
+        patient.setDomElements(Lists.newArrayList(id, statusCode, effectiveTime));
+        Map<String, Object> map = DomUtil.decode(patient, ClassUtil.getClassLoader().getResourceAsStream("subject.xml"), "urn:hl7-org:v3");
+        System.out.println(map);
+    }
+
+    private DomElement getEffectiveTime() {
+        DomElement effectiveTime = new DomElement();
+        effectiveTime.setCollection(false);
+        effectiveTime.setName("effectiveTime");
+        effectiveTime.setXpath("//controlActProcess/subject/registrationRequest/subject1/patient/effectiveTime/any/@value");
+        return effectiveTime;
+    }
+
+    private DomElement getStatusCode() {
+        DomElement statusCode = new DomElement();
+        statusCode.setName("statusCode");
+        statusCode.setXpath("//controlActProcess/subject/registrationRequest/subject1/patient/statusCode/@code");
+        statusCode.setCollection(false);
+        return statusCode;
+    }
+
+    private DomElement getId() {
+        DomElement id = new DomElement();
+        id.setName("id");
+        id.setCollection(false);
+        id.setXpath("//controlActProcess/subject/registrationRequest/subject1/patient/id/item/@root");
+        return id;
+    }
+
+    @Test
+    public void test() {
+        String path = "//controlActProcess/subject/registrationRequest/subject1/patient/statusCode/@code";
+        String prefix = path.substring(0, 3);
+        String formatPrefix = prefix.equals("//@") ? prefix : prefix.substring(0, 1) + "/ns:" + prefix.substring(2, 3);
+        String content = path.substring(3, path.length());
+        int index = content.indexOf("/@");
+        String formatContent = index > 0
+                ? StringUtils.replaceAll(content.substring(0, index), "/", "/ns:") + content.substring(index, content.length())
+                : StringUtils.replaceAll(content, "/", "/ns:");
+        String nsXpath = formatPrefix + formatContent;
+        System.out.println(nsXpath);
     }
 }
