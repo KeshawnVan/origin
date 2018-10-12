@@ -3,7 +3,6 @@ package star.utils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
-import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
@@ -83,7 +82,7 @@ public final class DomUtil {
                 return sourceAndUp._1;
             }
         }
-        List<Tuple<Node, Node>> up = sourceAndUps.stream().map(sourceAndUp -> new Tuple<>(sourceAndUp._1, (Node)sourceAndUp._2.getParent())).collect(Collectors.toList());
+        List<Tuple<Node, Node>> up = sourceAndUps.stream().map(sourceAndUp -> new Tuple<>(sourceAndUp._1, (Node) sourceAndUp._2.getParent())).collect(Collectors.toList());
         return getJoinNode(parentNode, up);
     }
 
