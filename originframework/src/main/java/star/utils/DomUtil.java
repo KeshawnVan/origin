@@ -9,6 +9,7 @@ import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import star.bean.DomElement;
+import star.bean.Key;
 
 import java.io.InputStream;
 import java.util.*;
@@ -18,8 +19,8 @@ public final class DomUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DomUtil.class);
 
-    public static Map<String, Object> decode(DomElement domElement, InputStream inputStream, String xmlns) {
-        Map<String, Object> result = new HashMap<>();
+    public static Map<Key, Object> decode(DomElement domElement, InputStream inputStream, String xmlns) {
+        Map<Key, Object> result = new HashMap<>();
         SAXReader saxReader = new SAXReader();
         Nullable.of(xmlns).ifPresent(nameSpace -> {
             Map<String, String> config = new HashMap<>(2);
@@ -35,10 +36,10 @@ public final class DomUtil {
         return result;
     }
 
-    private static void buildMap(DomElement domElement, Map<String, Object> result, Node rootNode, Boolean isCollection, Node parentNode) {
+    private static void buildMap(DomElement domElement, Map<Key, Object> result, Node rootNode, Boolean isCollection, Node parentNode) {
         if (CollectionUtil.isNotEmpty(domElement.getDomElements())) {
             for (DomElement element : domElement.getDomElements()) {
-                result.put(element.getName(), buildValue(element, rootNode, element.getXpath(), isCollection, parentNode));
+                result.put(new Key(element.getTable(), element.getColumn(), element.getType()), buildValue(element, rootNode, element.getXpath(), isCollection, parentNode));
             }
         }
     }
@@ -98,7 +99,7 @@ public final class DomUtil {
             return null;
         }
         if (CollectionUtil.isNotEmpty(domElement.getDomElements())) {
-            Map<String, Object> resultMap = new HashMap<>();
+            Map<Key, Object> resultMap = new HashMap<>();
             buildMap(domElement, resultMap, rootNode, domElement.getCollection(), node);
             return resultMap;
         } else {

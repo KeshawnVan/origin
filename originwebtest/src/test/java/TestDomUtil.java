@@ -2,6 +2,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import star.bean.DomElement;
+import star.bean.Key;
 import star.utils.ClassUtil;
 import star.utils.DomUtil;
 import star.utils.JsonUtil;
@@ -19,7 +20,7 @@ public class TestDomUtil {
 
         students.setDomElements(Lists.newArrayList(text, flags, student));
 
-        Map<String, Object> map = DomUtil.decode(students, ClassUtil.getClassLoader().getResourceAsStream("students.xml"), "urn:hl7-org:v3");
+        Map<Key, Object> map = DomUtil.decode(students, ClassUtil.getClassLoader().getResourceAsStream("students.xml"), "urn:hl7-org:v3");
         System.out.println(JsonUtil.encodeJson(map));
     }
 
@@ -28,7 +29,7 @@ public class TestDomUtil {
         DomElement sn = buildSn();
         DomElement address = buildAddress();
         DomElement classId = buildClassId();
-        student.setName("student");
+        student.setColumn("student");
         student.setCollection(true);
         student.setXpath("//students/class/student");
         student.setDomElements(Lists.newArrayList(sn, address, classId));
@@ -37,7 +38,7 @@ public class TestDomUtil {
 
     private DomElement buildClassId() {
         DomElement classId = new DomElement();
-        classId.setName("classId");
+        classId.setColumn("classId");
         classId.setCollection(false);
         classId.setXpath("//students/class/id");
         classId.setJoin(true);
@@ -48,21 +49,21 @@ public class TestDomUtil {
         DomElement address = new DomElement();
         address.setXpath("//students/class/student/addr");
         address.setCollection(true);
-        address.setName("address");
+        address.setColumn("address");
         return address;
     }
 
     private DomElement buildSn() {
         DomElement sn = new DomElement();
         sn.setCollection(false);
-        sn.setName("ssn");
+        sn.setColumn("ssn");
         sn.setXpath("//students/class/student/@sn");
         return sn;
     }
 
     private DomElement buildFlag() {
         DomElement flags = new DomElement();
-        flags.setName("flag");
+        flags.setColumn("flag");
         flags.setCollection(true);
         flags.setXpath("//students/flag");
         return flags;
@@ -72,7 +73,7 @@ public class TestDomUtil {
         DomElement text = new DomElement();
         text.setCollection(false);
         text.setId("123");
-        text.setName("txt");
+        text.setColumn("txt");
         text.setXpath("//students/text");
         return text;
     }
@@ -84,21 +85,21 @@ public class TestDomUtil {
         DomElement statusCode = getStatusCode();
         DomElement effectiveTime = getEffectiveTime();
         patient.setDomElements(Lists.newArrayList(id, statusCode, effectiveTime));
-        Map<String, Object> map = DomUtil.decode(patient, ClassUtil.getClassLoader().getResourceAsStream("subject.xml"), "urn:hl7-org:v3");
+        Map<Key, Object> map = DomUtil.decode(patient, ClassUtil.getClassLoader().getResourceAsStream("subject.xml"), "urn:hl7-org:v3");
         System.out.println(map);
     }
 
     private DomElement getEffectiveTime() {
         DomElement effectiveTime = new DomElement();
         effectiveTime.setCollection(false);
-        effectiveTime.setName("effectiveTime");
+        effectiveTime.setColumn("effectiveTime");
         effectiveTime.setXpath("//controlActProcess/subject/registrationRequest/subject1/patient/effectiveTime/any/@value");
         return effectiveTime;
     }
 
     private DomElement getStatusCode() {
         DomElement statusCode = new DomElement();
-        statusCode.setName("statusCode");
+        statusCode.setColumn("statusCode");
         statusCode.setXpath("//controlActProcess/subject/registrationRequest/subject1/patient/statusCode/@code");
         statusCode.setCollection(false);
         return statusCode;
@@ -106,7 +107,7 @@ public class TestDomUtil {
 
     private DomElement getId() {
         DomElement id = new DomElement();
-        id.setName("id");
+        id.setColumn("id");
         id.setCollection(false);
         id.setXpath("//controlActProcess/subject/registrationRequest/subject1/patient/id/item/@root");
         return id;
