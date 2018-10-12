@@ -1,6 +1,7 @@
 <PRPA_IN201311UV02 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ITSVersion="XML_1.0" xmlns="urn:hl7-org:v3" xsi:schemaLocation="urn:hl7-org:v3 ../multicacheschemas/PRPA_IN201311UV02.xsd">
     <students klass="class">
         <class>
+            <id>class1</id>
             <student sn="001">
                 <name>jeff</name>
                 <age>18</age>
@@ -14,6 +15,12 @@
                 <addr>b</addr>
                 <addr>c</addr>
                 <addr>d</addr>
+            </student>
+        </class>
+        <class>
+            <id>class2</id>
+            <student sn="003">
+                <addr>==</addr>
             </student>
         </class>
         <text>test</text>

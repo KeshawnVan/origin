@@ -27,16 +27,26 @@ public class TestDomUtil {
         DomElement student = new DomElement();
         DomElement sn = buildSn();
         DomElement address = buildAddress();
+        DomElement classId = buildClassId();
         student.setName("student");
         student.setCollection(true);
         student.setXpath("//students/class/student");
-        student.setDomElements(Lists.newArrayList(sn, address));
+        student.setDomElements(Lists.newArrayList(sn, address, classId));
         return student;
+    }
+
+    private DomElement buildClassId() {
+        DomElement classId = new DomElement();
+        classId.setName("classId");
+        classId.setCollection(false);
+        classId.setXpath("//students/class/id");
+        classId.setJoin(true);
+        return classId;
     }
 
     private DomElement buildAddress() {
         DomElement address = new DomElement();
-        address.setXpath("//addr");
+        address.setXpath("//students/class/student/addr");
         address.setCollection(true);
         address.setName("address");
         return address;
@@ -46,7 +56,7 @@ public class TestDomUtil {
         DomElement sn = new DomElement();
         sn.setCollection(false);
         sn.setName("ssn");
-        sn.setXpath("//@sn");
+        sn.setXpath("//students/class/student/@sn");
         return sn;
     }
 

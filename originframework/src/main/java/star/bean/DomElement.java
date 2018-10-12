@@ -7,6 +7,7 @@ public class DomElement {
     private String xpath;
     private String name;
     private Boolean isCollection;
+    private Boolean isJoin = Boolean.FALSE;
     private List<DomElement> domElements;
 
     public String getId() {
@@ -47,5 +48,13 @@ public class DomElement {
 
     public void setDomElements(List<DomElement> domElements) {
         this.domElements = domElements;
+    }
+
+    public Boolean getJoin() {
+        return isJoin;
+    }
+
+    public void setJoin(Boolean join) {
+        isJoin = join;
     }
 }
