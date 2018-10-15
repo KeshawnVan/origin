@@ -2,6 +2,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.junit.Test;
 import star.bean.Company;
+import star.bean.StructureEntity;
 import star.bean.User;
 import star.utils.*;
 
@@ -9,7 +10,9 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static spark.Spark.get;
@@ -95,6 +98,66 @@ public class Test5 {
         LocalDateTime localDateTime = LocalDateTime.of(2018, 9, 2, 0, 0);
         System.out.println(Duration.between(now, localDateTime).toDays());
         System.out.println(Duration.between(LocalDate.now().atStartOfDay(), localDateTime).toDays());
+    }
+
+    @Test
+    public void gener() {
+        String prefix = "  partition NATIONAL_B_D_LOG_P";
+        String value = "  values (";
+        String end = "),";
+        for (int i = 1; i < 41; i++) {
+            System.out.println(prefix + i + value + i + end);
+
+        }
+    }
+
+    @Test
+    public void testCop() {
+        Map<String, String> map = new HashMap<>();
+        map.computeIfPresent("1", (oldKey, oldValue) -> {
+            System.out.println(oldKey);
+            System.out.println(oldValue);
+            return "2";
+        });
+        System.out.println(map);
+    }
+
+    @Test
+    public void resourceSpecSql() {
+        String prefix = "ALTER TABLE RESOURCE_SPEC ADD INFO";
+        String suffix = "_CONSTRAINT VARCHAR2(100);";
+        for (int i = 1; i < 10; i++) {
+            System.out.println(prefix + i + suffix);
+        }
+    }
+
+    static final int hash(Object key) {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+    }
+
+    @Test
+    public void testHash() {
+        String key1 = "98127983719";
+        String key2 = "98127983719";
+        String key3 = "983719";
+        System.out.println(hash(key1));
+        System.out.println(hash(key2));
+        System.out.println(hash(key3));
+    }
+
+    @Test
+    public void test() {
+        ArrayList<Integer> integers = Lists.newArrayList(1, 2, 3, 4, 5);
+        List<List<Integer>> partition = Lists.partition(integers, 10);
+        System.out.println(partition);
+    }
+
+    @Test
+    public void testJsonDecode() {
+        String json = "[{\"说明与描述\":\"消息ID，其中，@root=\\\"待定\\\"\",\"CDR字段\":\"id\",\"元素路径\":\"/id/@extension\",\"是否必填\":\"1.0\",\"CDR表名\":\"PRPA_IN201311UV02\",\"字段类型\":\"\",\"对应的数据元标识符\":\"\"},{\"说明与描述\":\"消息创建时间\",\"CDR字段\":\"creation_time\",\"元素路径\":\"/creationTime/@value\",\"是否必填\":\"1.0\",\"CDR表名\":\"PRPA_IN201311UV02\",\"字段类型\":\"\",\"对应的数据元标识符\":\"\"},{\"说明与描述\":\"状态代码，固定值”active”\",\"CDR字段\":\"status_code\",\"元素路径\":\"/controlActProcess/subject/registrationEvent/statusCode/@code\",\"是否必填\":\"1.0\",\"CDR表名\":\"PRPA_IN201311UV02\",\"字段类型\":\"\",\"对应的数据元标识符\":\"\"},{\"说明与描述\":\"要合并到的患者 ID,其中@root=”待分配的应用系统OID”\",\"CDR字段\":\"patient_id\",\"元素路径\":\"/controlActProcess/subject/registrationEvent/subject1/patient/id/@extension\",\"是否必填\":\"0.0\",\"CDR表名\":\"PRPA_IN201311UV02\",\"字段类型\":\"\",\"对应的数据元标识符\":\"\"},{\"说明与描述\":\"状态代码，固定值”active”\",\"CDR字段\":\"patient_status_code\",\"元素路径\":\"/controlActProcess/subject/registrationEvent/subject1/patient/statusCode/@code\",\"是否必填\":\"1.0\",\"CDR表名\":\"PRPA_IN201311UV02\",\"字段类型\":\"\",\"对应的数据元标识符\":\"\"},{\"说明与描述\":\"患者登记时间\",\"CDR字段\":\"patient_effective_time\",\"元素路径\":\"/controlActProcess/subject/registrationEvent/subject1/patient/effectiveTime/@value\",\"是否必填\":\"1.0\",\"CDR表名\":\"PRPA_IN201311UV02\",\"字段类型\":\"\",\"对应的数据元标识符\":\"DE06.00.218.00\"},{\"说明与描述\":\"身份证号，其中，@root=\\\"2.16.156.10011.2.2.1\\\"\",\"CDR字段\":\"patient_person_id\",\"元素路径\":\"/controlActProcess/subject/registrationEvent/subject1/patient/patientPerson/id/@extension\",\"是否必填\":\"0.0\",\"CDR表名\":\"PRPA_IN201311UV02\",\"字段类型\":\"\",\"对应的数据元标识符\":\"DE02.01.030.00\"},{\"说明与描述\":\"要合并到的姓名\",\"CDR字段\":\"patient_persion_name\",\"元素路径\":\"/controlActProcess/subject/registrationEvent/subject1/patient/patientPerson/name\",\"是否必填\":\"1.0\",\"CDR表名\":\"PRPA_IN201311UV02\",\"字段类型\":\"\",\"对应的数据元标识符\":\"DE02.01.039.00\"},{\"说明与描述\":\"操作人职工代码，其中@root=”待定”\",\"CDR字段\":\"assign_persion_id\",\"元素路径\":\"/controlActProcess/subject/registrationEvent/subject1/custodian/assignedEntity/id/@extension\",\"是否必填\":\"1.0\",\"CDR表名\":\"PRPA_IN201311UV02\",\"字段类型\":\"\",\"对应的数据元标识符\":\"\"},{\"说明与描述\":\"操作人姓名\",\"CDR字段\":\"assign_persion_name\",\"元素路径\":\"/controlActProcess/subject/registrationEvent/subject1/custodian/assignedEntity/assignedPerson/name\",\"是否必填\":\"0.0\",\"CDR表名\":\"PRPA_IN201311UV02\",\"字段类型\":\"\",\"对应的数据元标识符\":\"DE02.01.039.00\"},{\"说明与描述\":\"状态代码，固定值”obsolete”\",\"CDR字段\":\"\",\"元素路径\":\"/controlActProcess/subject/registrationEvent/subject1/replacementOf/priorRegistration/statusCode/@code\",\"是否必填\":\"1.0\",\"CDR表名\":\"\",\"字段类型\":\"\",\"对应的数据元标识符\":\"\"},{\"说明与描述\":\"失效的患者ID,其中@root=”待分配的应用系统OID”\",\"CDR字段\":\"patient_id\",\"元素路径\":\"/controlActProcess/subject/registrationEvent/subject1/replacementOf/priorRegistration/subject1/priorRegisteredRole/id/@extension\",\"是否必填\":\"1.0\",\"CDR表名\":\"PRPA_IN201311UV02\",\"字段类型\":\"\",\"对应的数据元标识符\":\"\"}]";
+        List<StructureEntity> structureEntities = JsonUtil.decodeArrayJson(json, StructureEntity.class);
+        System.out.println(structureEntities);
     }
     public static void main(String[] args) {
         get("/hello", (request, response) -> "Hello World!");

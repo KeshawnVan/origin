@@ -97,4 +97,9 @@ public class TestDom4j {
         Document document = saxReader.read(ClassUtil.getClassLoader().getResourceAsStream("students.xml"));
         System.out.println(document);
     }
+
+    @Test
+    public void testParent() {
+
+    }
 }

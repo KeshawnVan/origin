@@ -126,4 +126,16 @@ public class TestDomUtil {
         String nsXpath = formatPrefix + formatContent;
         System.out.println(nsXpath);
     }
+
+    @Test
+    public void testParent() {
+        DomElement students = new DomElement();
+        DomElement sn = new DomElement();
+        sn.setXpath("//students/class/student[@sn='001']/../id");
+        sn.setCollection(true);
+        sn.setColumn("address");
+        students.setDomElements(Lists.newArrayList(sn));
+        Map<Key, Object> map = DomUtil.decode(students, ClassUtil.getClassLoader().getResourceAsStream("students.xml"), "urn:hl7-org:v3");
+        System.out.println(map);
+    }
 }

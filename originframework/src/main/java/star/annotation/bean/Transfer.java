@@ -13,5 +13,4 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Transfer {
     String value() default "";
-    Class[] adapters() default {};
 }

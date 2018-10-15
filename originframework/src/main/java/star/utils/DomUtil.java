@@ -58,7 +58,7 @@ public final class DomUtil {
         String formatContent = index > 0
                 ? StringUtils.replaceAll(content.substring(0, index), "/", "/ns:") + content.substring(index, content.length())
                 : StringUtils.replaceAll(content, "/", "/ns:");
-        return formatPrefix + formatContent;
+        return StringUtils.replaceAll(formatPrefix + formatContent, "/ns:\\.\\.", "/..");
     }
 
 
