@@ -1,5 +1,4 @@
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.junit.Test;
 import star.bean.Company;
 import star.bean.StructureEntity;
@@ -10,10 +9,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static spark.Spark.get;
 
@@ -159,7 +155,50 @@ public class Test5 {
         List<StructureEntity> structureEntities = JsonUtil.decodeArrayJson(json, StructureEntity.class);
         System.out.println(structureEntities);
     }
+
     public static void main(String[] args) {
         get("/hello", (request, response) -> "Hello World!");
     }
+
+    @Test
+    public void testPrT() {
+        String s = StreamUtil.getString(null);
+//        String s = JsonUtil.encodeJson(null);
+        printTrack();
+        System.out.println(s);
+    }
+
+    void printTrack() {
+        StackTraceElement[] st = Thread.currentThread().getStackTrace();
+        StringBuffer sbf = new StringBuffer();
+        for (StackTraceElement e : st) {
+            if (sbf.length() > 0) {
+                sbf.append(" <- ");
+                sbf.append(System.getProperty("line.separator"));
+            }
+            sbf.append(java.text.MessageFormat.format("{0}.{1}() {2}"
+                    , e.getClassName()
+                    , e.getMethodName()
+                    , e.getLineNumber()));
+        }
+        System.out.println(sbf.toString());
+    }
+
+    @Test
+    public void testrex() {
+        String rex = "^[A-Za-z]{5}\\w{8}";
+        String s = "ASDF1G2345678";
+        System.out.println(s.matches(rex));
+        String rex2 = "\\d{17}";
+        System.out.println("27082812305049294".matches(rex2));
+
+    }
+
+    @Test
+    public void testAsList() {
+        Long[] longs = {1L,2L};
+        List<Long> longList = Arrays.asList(longs);
+        System.out.println(longList);
+    }
+
 }
