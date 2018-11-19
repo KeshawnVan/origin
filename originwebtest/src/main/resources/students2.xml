@@ -1,0 +1,29 @@
+<students klass="class">
+    <class>
+        <id>class1</id>
+        <student sn="001">
+            <name>jeff</name>
+            <age>18</age>
+            <addr>1</addr>
+            <addr>2</addr>
+        </student>
+        <student sn="02">
+            <name>lin</name>
+            <age>20</age>
+            <addr>a</addr>
+            <addr>b</addr>
+            <addr>c</addr>
+            <addr>d</addr>
+        </student>
+    </class>
+    <class>
+        <id>class2</id>
+        <student sn="003">
+            <addr>==</addr>
+        </student>
+    </class>
+    <text>test</text>
+    <flag>1</flag>
+    <flag>2</flag>
+    <flag>3</flag>
+</students>

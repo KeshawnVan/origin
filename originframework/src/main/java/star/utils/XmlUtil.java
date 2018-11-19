@@ -58,7 +58,7 @@ public final class XmlUtil {
     }
 
     private static List<Node> selectSubNodes(Node parentNode, String xPath) {
-        return ((List<Node>) parentNode.selectNodes(xPath)).stream().filter(it -> isSubNode(parentNode, it)).collect(Collectors.toList());
+        return parentNode.selectNodes(xPath).stream().filter(it -> isSubNode(parentNode, it)).collect(Collectors.toList());
     }
 
     private static Node getSingleNode(Node nodeElement, String xPath, TypeWrapper parentType) {

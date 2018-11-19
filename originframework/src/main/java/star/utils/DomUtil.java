@@ -68,7 +68,7 @@ public final class DomUtil {
             List<Tuple<Node, Node>> sourceAndUps = joinNodes.stream().map(node -> new Tuple<>(node, node)).collect(Collectors.toList());
             return Collections.singletonList(getJoinNode(parentNode, sourceAndUps));
         } else {
-            return ((List<Node>) rootNode.selectNodes(xPath)).stream().filter(it -> isSubNode(parentNode, it)).collect(Collectors.toList());
+            return rootNode.selectNodes(xPath).stream().filter(it -> isSubNode(parentNode, it)).collect(Collectors.toList());
         }
     }
 
