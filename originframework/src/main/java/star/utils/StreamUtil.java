@@ -25,7 +25,7 @@ public final class StreamUtil {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, UTF_8));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line);
+                stringBuilder.append(line).append("\n");
             }
         } catch (Exception e) {
             LOGGER.error("get string failure", e);

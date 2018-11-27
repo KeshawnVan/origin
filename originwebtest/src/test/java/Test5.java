@@ -1,4 +1,6 @@
 import com.google.common.collect.Lists;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -12,6 +14,8 @@ import javax.servlet.ServletInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -382,5 +386,35 @@ public class Test5 {
     @Test
     public void test2() {
         System.out.println(String.valueOf(1111417780L));
+    }
+
+    @Test
+    public void sdm() throws Exception{
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String time = "2018-11-08 12:12:12";
+        System.out.println(simpleDateFormat.parse(time));
+    }
+
+    @Test
+    public void clear() {
+        ArrayList<Integer> integers = Lists.newArrayList(1, 2, 3);
+        integers.clear();
+        System.out.println(integers);
+        integers.add(1);
+        System.out.println(integers);
+    }
+
+    @Test
+    public void testFormat() {
+        DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("+0"));
+        System.out.println(DATE_TIME_FORMATTER.format(Instant.now()));
+    }
+
+    @Test
+    public void testDownload() throws Exception{
+        String url = "https://startimestv-service-data.s3.eu-west-1.amazonaws.com/dev/12323.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20181127T052040Z&X-Amz-SignedHeaders=host&X-Amz-Expires=899&X-Amz-Credential=AKIAIV4HHHAXIVKVVE3A%2F20181127%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Signature=69aaabe56334759f51bd46b128e54e120239f311e431b838ac6d975844ce7793";
+        HttpResponse<InputStream> inputStreamHttpResponse = Unirest.get(url).asBinary();
+        String content = StreamUtil.getString(inputStreamHttpResponse.getBody());
+        System.out.println(content);
     }
 }
