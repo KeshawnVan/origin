@@ -19,10 +19,9 @@ import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
-import static spark.Spark.get;
 
 public class Test5 {
 
@@ -167,9 +166,6 @@ public class Test5 {
         System.out.println(structureEntities);
     }
 
-    public static void main(String[] args) {
-        get("/hello", (request, response) -> "Hello World!");
-    }
 
     @Test
     public void testPrT() {
@@ -207,13 +203,13 @@ public class Test5 {
 
     @Test
     public void testAsList() {
-        Long[] longs = {1L,2L};
+        Long[] longs = {1L, 2L};
         List<Long> longList = Arrays.asList(longs);
         System.out.println(longList);
     }
 
     @Test
-    public void testStream() throws Exception{
+    public void testStream() throws Exception {
         byte[] buffer = new byte[1024];
         final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(new byte[0]);
         ServletInputStream servletInputStream = new ServletInputStream() {
@@ -327,7 +323,7 @@ public class Test5 {
     }
 
     @Test
-    public void read() throws Exception{
+    public void read() throws Exception {
         String fileName = "cs302363.emm";
         File file = FileUtil.createFile("C:\\Users\\10007675\\Documents\\WeChat Files\\fkx0703\\Files\\2018-11-05");
         for (File dir : file.listFiles()) {
@@ -342,7 +338,7 @@ public class Test5 {
     }
 
     @Test
-    public void  formatSql() {
+    public void formatSql() {
         String sql = "CREATE TABLE `action` (\n" +
                 "\t`id` INT (10) NOT NULL AUTO_INCREMENT COMMENT '标识|fankx|2018-11-05',\n" +
                 "\t`name` VARCHAR (100) NOT NULL COMMENT '名称|fankx|2018-11-05',\n" +
@@ -383,13 +379,14 @@ public class Test5 {
         Integer remove = integers.remove(1);
         System.out.println(integers);
     }
+
     @Test
     public void test2() {
         System.out.println(String.valueOf(1111417780L));
     }
 
     @Test
-    public void sdm() throws Exception{
+    public void sdm() throws Exception {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time = "2018-11-08 12:12:12";
         System.out.println(simpleDateFormat.parse(time));
@@ -411,10 +408,33 @@ public class Test5 {
     }
 
     @Test
-    public void testDownload() throws Exception{
+    public void testDownload() throws Exception {
         String url = "https://startimestv-service-data.s3.eu-west-1.amazonaws.com/dev/12323.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20181127T052040Z&X-Amz-SignedHeaders=host&X-Amz-Expires=899&X-Amz-Credential=AKIAIV4HHHAXIVKVVE3A%2F20181127%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Signature=69aaabe56334759f51bd46b128e54e120239f311e431b838ac6d975844ce7793";
         HttpResponse<InputStream> inputStreamHttpResponse = Unirest.get(url).asBinary();
         String content = StreamUtil.getString(inputStreamHttpResponse.getBody());
         System.out.println(content);
+    }
+
+    @Test
+    public void testZip() throws Exception {
+        String path = "C:\\Users\\10007675\\Downloads\\users.zip";
+        getZipContent(path);
+    }
+
+    private void getZipContent(String path) throws IOException {
+        ZipFile zipFile = new ZipFile(path);
+        Enumeration<? extends ZipEntry> entries = zipFile.entries();
+        while (entries.hasMoreElements()) {
+            ZipEntry zipEntry = entries.nextElement();
+            InputStream inputStream = zipFile.getInputStream(zipEntry);
+            String string = StreamUtil.getString(inputStream);
+            System.out.println(string);
+        }
+    }
+
+    @Test
+    public void testFindFirst() {
+        Optional<Integer> first = Lists.newArrayList(null, 1).stream().findFirst();
+        System.out.println(first);
     }
 }
