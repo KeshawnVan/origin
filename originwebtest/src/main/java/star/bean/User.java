@@ -25,8 +25,6 @@ public class User extends BaseDTO{
 
     private Status status;
 
-    private List<Long> ids;
-
     public User() {
     }
 
@@ -92,13 +90,5 @@ public class User extends BaseDTO{
 
     public void gene(List<User> users){
 
-    }
-
-    public List<Long> getIds() {
-        return ids;
-    }
-
-    public void setIds(List<Long> ids) {
-        this.ids = ids;
     }
 }

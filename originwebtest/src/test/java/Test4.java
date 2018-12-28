@@ -370,7 +370,6 @@ public class Test4 {
              arrayList.add(CastUtil.castLong(NumberUtil.getRandomNum(100000)));
         }
         User manufacture = (User) PojoManufactureUtil.manufacture(User.class);
-        manufacture.setIds(arrayList);
         String json = JsonUtil.encodeJson(manufacture);
         System.out.println(json);
     }

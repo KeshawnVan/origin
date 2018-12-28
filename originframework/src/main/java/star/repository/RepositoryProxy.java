@@ -44,11 +44,11 @@ public class RepositoryProxy implements InvocationHandler {
 
     public RepositoryProxy(Class<?> repositoryInterface) {
         this.repositoryInterface = repositoryInterface;
+        init();
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] params) throws Throwable {
-        init();
         String methodName = method.getName();
         String argsMethodName = RepositoryManager.generateArgsMethodName(methodName, params);
         String sql = buildSql(method, params, argsMethodName);

@@ -8,10 +8,8 @@ import star.bean.User;
 import star.dao.UserRepository;
 import star.service.TestService;
 import star.utils.JsonUtil;
-import star.utils.PojoManufactureUtil;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**
