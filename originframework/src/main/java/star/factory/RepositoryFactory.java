@@ -1,11 +1,10 @@
 package star.factory;
 
-import star.repository.interfaces.CommonRepository;
 import star.repository.RepositoryProxy;
+import star.repository.interfaces.CommonRepository;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -18,7 +17,7 @@ public final class RepositoryFactory {
     private static Map<Class<?>,CommonRepository> buildRepositoryMap(){
         Set<Class<?>> repositoryInterfaces = ClassFactory.getClassSetBySuper(CommonRepository.class);
         return repositoryInterfaces.stream()
-                .collect(Collectors.toMap(Function.identity(), cls -> new RepositoryProxy(cls).getProxy()));
+                .collect(Collectors.toMap(x -> x, cls -> new RepositoryProxy(cls).getProxy()));
     }
 
     public static Map<Class<?>, CommonRepository> getRepositoryMap() {
