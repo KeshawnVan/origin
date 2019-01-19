@@ -1,3 +1,5 @@
+package other;
+
 import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;

@@ -1,9 +1,12 @@
+package other;
+
 import com.google.common.collect.Lists;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
+import star.bean.BaseDTO;
 import star.bean.Company;
 import star.bean.StructureEntity;
 import star.bean.User;
@@ -436,5 +439,24 @@ public class Test5 {
     public void testFindFirst() {
         Optional<Integer> first = Lists.newArrayList(null, 1).stream().findFirst();
         System.out.println(first);
+    }
+
+    @Test
+    public void testG() {
+        List<Company> companies = new ArrayList<>();
+        t(companies);
+        companies.add(new Company());
+        Company baseDTO = new Company();
+        List<Company> arrayList = Lists.newArrayList(baseDTO);
+    }
+
+    @Test
+    public void testRight() {
+        System.out.println(1>>1);
+        System.out.println(NumberUtil.scale2(Math.pow(8D, 8D)));
+    }
+
+    public static void t(List<? extends BaseDTO> baseDTOS) {
+        BaseDTO baseDTO = baseDTOS.get(0);
     }
 }

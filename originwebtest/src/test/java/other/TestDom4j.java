@@ -1,3 +1,5 @@
+package other;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Attribute;
 import org.dom4j.Document;

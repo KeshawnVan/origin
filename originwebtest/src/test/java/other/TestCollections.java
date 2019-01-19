@@ -1,3 +1,5 @@
+package other;
+
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.impl.factory.Lists;
 import org.junit.Test;

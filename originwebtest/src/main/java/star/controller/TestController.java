@@ -27,7 +27,7 @@ public class TestController {
     @Inject
     private TestService testService;
 
-    @Action(value = "/hello", method = RequestMethod.GET)
+    @Action(value = "/hello1", method = RequestMethod.GET)
     public String hello(@QueryParam("n") String name, Integer age, HttpServletRequest httpServletRequest, HttpSession session) {
         System.out.println(testService.hashCode());
         testService.hello();
