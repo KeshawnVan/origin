@@ -1,14 +1,9 @@
 # origin
 
 ## 简介
-这是一个参考Spring和Smart Framework的Java框架，实现了一些常用功能
+这是一个参考Spring和Smart Framework的Java框架，架构如下图所示：
 
-## 主要特性
-* IOC
-* AOP
-* Repository
-* Transaction
-* DispatcherServlet
+![avatar](https://github.com/KeshawnVan/origin/blob/master/originframework/src/main/resources/image/origin.png?raw=true)
 
 ## 快速开始
 下面将通过简单的代码展示如何创建一个简单的Web项目
