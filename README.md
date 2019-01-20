@@ -47,23 +47,12 @@ origin的Bean内部架构大致如下图所示：
 
 使用@Inject可以实现依赖注入，下面是一个简单的例子
 ~~~
-package star.ioc;
-
-import star.annotation.bean.Component;
-
 @Component
 public class BeanA {
     public void hello(){
         System.out.println("I am BeanA");
     }
 }
-
-package star.ioc;
-
-import star.annotation.bean.Component;
-import star.annotation.bean.Inject;
-import star.core.LoadCore;
-import star.factory.BeanFactory;
 
 @Component
 public class BeanB {
