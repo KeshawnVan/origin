@@ -1,7 +1,7 @@
 # origin
 
 ## 简介
-这是一个参考Spring和Smart Framework的Java框架，架构如下图所示：
+这是一个参考Spring和Smart Framework的Java框架，主要架构如下图所示：
 
 ![avatar](https://github.com/KeshawnVan/origin/blob/master/originframework/src/main/resources/image/origin.png?raw=true)
 
@@ -37,7 +37,11 @@ public class HelloController {
 ## 控制反转
 控制反转（Inversion of Control，缩写为IoC），是面向对象编程中的一种设计原则，可以用来减低计算机代码之间的耦合度。其中最常见的方式叫做依赖注入（Dependency Injection，简称DI），还有一种方式叫“依赖查找”（Dependency Lookup）。通过控制反转，对象在被创建的时候，由一个调控系统内所有对象的外界实体，将其所依赖的对象的引用传递给它。也可以说，依赖被注入到对象中。
 
-origin使用依赖注入来实现控制反转，用户在使用origin时需要指定基本包路径来描述需要被托管的有效范围
+origin使用依赖注入来实现控制反转，用户在使用origin时需要指定基本包路径来描述依赖注入的作用范围
+
+origin的Bean内部架构大致如下图所示：
+
+![avatar](https://github.com/KeshawnVan/origin/blob/master/originframework/src/main/resources/image/BeanContext.png?raw=true)
 
 在Class定义上使用@Controller，@Service，@Component注解标明将该类托管给origin容器，容器内的对象默认为单例，如果需要每次注入都使用新对象可以使用@Fresh注解
 
