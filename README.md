@@ -36,7 +36,7 @@ public class HelloController {
     }
 }
 ~~~
-* 通过tomcat发布该项目，接着访问：http://localhost:8080/${application name}/hello
+* 通过tomcat发布该项目，接着访问：http://localhost:8080/${applicationName}/hello
 * 页面会返回"welcome use origin !"
 
 ## 控制反转
@@ -128,4 +128,17 @@ public class BeanB {
 使用@Inject(${beanId})即可指定对应的实现类进行注入
 
 bean的默认beanId为Class名首字母变小写，如果需要手动指定beanId，可以在声明bean时在注解内填写beanId，如@Service("beanId")
+
+如果不想修改之后重新编译或者习惯使用配置文件可以按照以下规则进行配置，配置文件内的声明优先于注解
+~~~
+beanIdMapping:
+  - id: test123
+    bean: star.service.impl.TestServiceImpl
+  - id: test321
+    bean: star.service.impl.TestServiceImpl2
+
+implementMapping:
+  - interface: star.service.TestService
+    beanId: test123
+~~~
 
