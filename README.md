@@ -41,7 +41,7 @@ origin使用依赖注入来实现控制反转，用户在使用origin时需要�
 
 在Class定义上使用@Controller，@Service，@Component注解标明将该类托管给origin容器，容器内的对象默认为单例，如果需要每次注入都使用新对象可以使用@Fresh注解
 
-使用@Inject可以使用依赖注入，下面是一个简单的例子
+使用@Inject可以实现依赖注入，下面是一个简单的例子
 ~~~
 package star.ioc;
 
@@ -118,7 +118,7 @@ public class BeanB {
     }
 }
 ~~~
-如果同一个接口存在多个实现类并且注入时为指定beanId时会抛出异常
+如果同一个接口存在多个实现类并且注入时未指定beanId时会抛出异常
 
 使用@Inject(${beanId})即可指定对应的实现类进行注入
 
