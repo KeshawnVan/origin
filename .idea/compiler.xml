@@ -18,5 +18,9 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_STRING" value="-parameters" />
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="originframework" options="" />
+      <module name="originwebtest" options="" />
+    </option>
   </component>
 </project>

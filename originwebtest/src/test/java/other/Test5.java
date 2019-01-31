@@ -22,6 +22,9 @@ import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -452,11 +455,125 @@ public class Test5 {
 
     @Test
     public void testRight() {
-        System.out.println(1>>1);
+        System.out.println(1 >> 1);
         System.out.println(NumberUtil.scale2(Math.pow(8D, 8D)));
     }
 
     public static void t(List<? extends BaseDTO> baseDTOS) {
         BaseDTO baseDTO = baseDTOS.get(0);
+    }
+
+    @Test
+    public void testPlusDay() {
+        LocalDate now = LocalDate.now();
+        System.out.println(now);
+        System.out.println(now.plusDays(3));
+    }
+
+    @Test
+    public void castS() {
+        String config109 = "-DGIT_PASSWORD=root\n" +
+                "-DGIT_USERNAME=1q2w3e4R\n" +
+                "-Dpartner_service=10.0.251.109\n" +
+                "-Dproblem_service=10.0.251.109\n" +
+                "-Dnote_service=10.0.251.109\n" +
+                "-Dcollection_center_service=10.0.251.109\n" +
+                "-Dresource_service=10.0.251.109\n" +
+                "-Daccount_center_service=10.0.251.109\n" +
+                "-Dsystem_query_service=10.0.251.109\n" +
+                "-Dresource_center_service=10.0.251.109\n" +
+                "-Dcard_center_service=10.0.251.109\n" +
+                "-Diom_service=10.0.251.109\n" +
+                "-Dchannel_service=10.0.251.109\n" +
+                "-Darea_service=10.0.251.109\n" +
+                "-Dproblem_center_service=10.0.251.109\n" +
+                "-Drequest_graduate_service=10.0.251.109\n" +
+                "-Dcustomer_center_service=10.0.251.109\n" +
+                "-Dorder_center_service=10.0.251.109\n" +
+                "-Dcard_service=10.0.251.109\n" +
+                "-Dcheck_service=10.0.251.109\n" +
+                "-Daccount_service=10.0.251.109\n" +
+                "-Diom_center_service=10.0.251.109\n" +
+                "-Dpms_center_service=10.0.251.109\n" +
+                "-Dsystem_service=10.0.251.109\n" +
+                "-Dcustomer_service=10.0.251.109\n" +
+                "-Dknowledge_service=10.0.251.109\n" +
+                "-Dproduct_service=10.0.251.109\n" +
+                "-Djob_service=10.0.251.109\n" +
+                "-Dpms_frontend_conax_service=10.0.251.109\n" +
+                "-Dpms_partition_service=10.0.251.109\n" +
+                "-Dapi_gateway_service=10.0.251.109\n" +
+                "-Dcollection_service=10.0.251.109\n" +
+                "-Dorder_service=10.0.251.109\n" +
+                "-Dnote_center_service=10.0.251.109\n" +
+                "-Dmessage_center_service=10.0.251.109\n" +
+                "-Drest_port=8080\n" +
+                "-Dstariboss_version=109";
+        System.out.println(config109.replaceAll("109", "187"));
+    }
+
+    @Test
+    public void testFor() {
+        DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("+0"));
+        String format = DATE_TIME_FORMATTER.format(LocalDate.now().atStartOfDay());
+        System.out.println(format);
+
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.of("+0"));
+        System.out.println(dateFormatter.format(LocalDate.now()));
+
+        System.out.println(LocalDate.now().toString());
+    }
+
+    @Test
+    public void testFile() {
+        File file = FileUtil.createFile("C:\\Users\\Administrator\\IdeaProjects\\stariboss\\employee-web\\finance_other\\partner-ui\\src\\main\\webapp\\messages");
+        File[] files = file.listFiles();
+        System.out.println(false);
+    }
+
+    @Test
+    public void n() {
+        int[] items = {4, 1, 2, 1, 2};
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int item : items) {
+            Integer count = map.get(item);
+            if (count == null) {
+                map.put(item, 1);
+            } else {
+                map.remove(item);
+            }
+        }
+        System.out.println(map.values());
+    }
+
+    @Test
+    public void poll() throws Exception{
+        BlockingQueue<String> queue = new LinkedBlockingQueue<>();
+        System.out.println("start poll");
+        String poll = queue.poll(10, TimeUnit.SECONDS);
+        System.out.println("poll end");
+    }
+
+    @Test
+    public void testDateMin() {
+        Date date = new Date();
+        Date min = new Date(System.currentTimeMillis() - 1000 * 60);
+        System.out.println(date);
+        System.out.println(min);
+    }
+
+    @Test
+    public void compare() {
+        Integer[] array = {6,1,3,4,5};
+        System.out.println(findMax(1, array));
+    }
+
+    private static <T> T findMax(T x, Object[] array) {
+        T max = (T) array[0];
+        for (Object o : array) {
+            Comparable<? super T> comparable = (Comparable<? super T>) o;
+            if (comparable.compareTo(max) > 0) max = (T) o;
+        }
+        return max;
     }
 }
