@@ -6,10 +6,7 @@ import com.mashape.unirest.http.Unirest;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
-import star.bean.BaseDTO;
-import star.bean.Company;
-import star.bean.StructureEntity;
-import star.bean.User;
+import star.bean.*;
 import star.utils.*;
 
 import javax.servlet.ReadListener;
@@ -565,10 +562,10 @@ public class Test5 {
     @Test
     public void compare() {
         Integer[] array = {6,1,3,4,5};
-        System.out.println(findMax(1, array));
+        System.out.println(findMax(new ParameterType<Integer>(Integer.class), array));
     }
 
-    private static <T> T findMax(T x, Object[] array) {
+    private static <T> T findMax(ParameterType<T> type, Object[] array) {
         T max = (T) array[0];
         for (Object o : array) {
             Comparable<? super T> comparable = (Comparable<? super T>) o;
