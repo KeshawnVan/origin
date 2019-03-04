@@ -164,12 +164,6 @@
             <version>3.7</version>
         </dependency>
 
-        <!-- Commons-Codec -->
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.11</version>
-        </dependency>
 
         <!-- Commons-Beanutils -->
         <dependency>
@@ -223,11 +217,6 @@
             <version>3.0.0</version>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>dom4j</groupId>-->
-            <!--<artifactId>dom4j</artifactId>-->
-            <!--<version>1.6.1</version>-->
-        <!--</dependency>-->
         <!-- https://mvnrepository.com/artifact/org.dom4j/dom4j -->
         <dependency>
             <groupId>org.dom4j</groupId>
@@ -240,6 +229,14 @@
             <artifactId>jaxen</artifactId>
             <version>1.1.6</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.33.Final</version>
+        </dependency>
+
 
     </dependencies>
 

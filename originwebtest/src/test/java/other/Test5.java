@@ -573,4 +573,17 @@ public class Test5 {
         }
         return max;
     }
+
+    @Test
+    public void testEquals() {
+        List<String> a = Lists.newArrayList("a", "b");
+        List<String> b = Lists.newArrayList("b", "a");
+        a.removeAll(b);
+        System.out.println(a);
+    }
+
+    @Test
+    public void getDate(){
+        System.out.println(new Date(1550718879644L));
+    }
 }
