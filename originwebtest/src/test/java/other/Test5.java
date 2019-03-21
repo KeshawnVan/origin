@@ -585,5 +585,19 @@ public class Test5 {
     @Test
     public void getDate(){
         System.out.println(new Date(1550718879644L));
+        System.out.println(LocalDate.now());
+    }
+
+    @Test
+    public void reduce() {
+        Tuple<Long, Long> tuple1 = new Tuple<>(1L,2L);
+        Tuple<Long, Long> tuple2 = new Tuple<>(1L,2L);
+        Tuple<Long, Long> tuple3 = new Tuple<>(1L,2L);
+        Tuple<Long, Long> tuple = Lists.newArrayList(tuple1, tuple2, tuple3).stream().reduce((re, current) -> {
+            System.out.println(re);
+            System.out.println(current);
+            return new Tuple<>(re._1 + current._1, current._2 + re._2);
+        }).orElse(null);
+        System.out.println(tuple._1 + ":" + tuple._2);
     }
 }
