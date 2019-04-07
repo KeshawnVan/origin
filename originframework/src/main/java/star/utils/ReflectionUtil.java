@@ -3,7 +3,6 @@ package star.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import star.bean.TypeWrapper;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -83,7 +82,9 @@ public final class ReflectionUtil {
     }
 
     public static TypeWrapper typeParse(Type type) {
-        Class<?> cls = type instanceof ParameterizedType ? ((ParameterizedTypeImpl) type).getRawType() : (Class) type;
+        Class<?> cls = type instanceof ParameterizedType
+                ? (Class<?>) ((ParameterizedType) type).getRawType()
+                : (Class) type;
         return Collection.class.isAssignableFrom(cls)
                 ? new TypeWrapper(getRawClass(type), getActualTypeArguments(type), Boolean.TRUE)
                 : new TypeWrapper(cls, new Type[0], Boolean.FALSE);
@@ -101,7 +102,7 @@ public final class ReflectionUtil {
      * @return
      */
     public static Class<?> getRawClass(Type type) {
-        return ((ParameterizedTypeImpl) type).getRawType();
+        return (Class<?>) ((ParameterizedType) type).getRawType();
     }
 
 
