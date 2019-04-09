@@ -15,6 +15,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -544,7 +547,7 @@ public class Test5 {
     }
 
     @Test
-    public void poll() throws Exception{
+    public void poll() throws Exception {
         BlockingQueue<String> queue = new LinkedBlockingQueue<>();
         System.out.println("start poll");
         String poll = queue.poll(10, TimeUnit.SECONDS);
@@ -561,7 +564,7 @@ public class Test5 {
 
     @Test
     public void compare() {
-        Integer[] array = {6,1,3,4,5};
+        Integer[] array = {6, 1, 3, 4, 5};
         System.out.println(findMax(new ParameterType<Integer>(Integer.class), array));
     }
 
@@ -583,21 +586,46 @@ public class Test5 {
     }
 
     @Test
-    public void getDate(){
+    public void getDate() {
         System.out.println(new Date(1550718879644L));
         System.out.println(LocalDate.now());
     }
 
     @Test
     public void reduce() {
-        Tuple<Long, Long> tuple1 = new Tuple<>(1L,2L);
-        Tuple<Long, Long> tuple2 = new Tuple<>(1L,2L);
-        Tuple<Long, Long> tuple3 = new Tuple<>(1L,2L);
+        Tuple<Long, Long> tuple1 = new Tuple<>(1L, 2L);
+        Tuple<Long, Long> tuple2 = new Tuple<>(1L, 2L);
+        Tuple<Long, Long> tuple3 = new Tuple<>(1L, 2L);
         Tuple<Long, Long> tuple = Lists.newArrayList(tuple1, tuple2, tuple3).stream().reduce((re, current) -> {
             System.out.println(re);
             System.out.println(current);
             return new Tuple<>(re._1 + current._1, current._2 + re._2);
         }).orElse(null);
         System.out.println(tuple._1 + ":" + tuple._2);
+    }
+
+    @Test
+    public void paygate() throws Exception {
+        String url = "http://docs.paygate.co.za/#testing";
+        String url2 = "https://www.paygate.co.za/payxml/process.trans";
+        String request = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<protocol ver=\"4.0\" pgid=\"23741015807\" pwd=\"crm.com\"><authtx cref=\"771634349\" cname=\"Zhifeng Wang\" cc=\"5222502465348890\" exp=\"022023\" budp=\"0\" amt=\"10000\" cur=\"ZAR\" cvv=\"633\" bno=\"\"/></protocol>";
+        HttpResponse<String> stringHttpResponse = Unirest.post(url2)
+                .header("Content-Type", "text/xml; charset=UTF-8")
+                .body(request)
+                .asString();
+        stringHttpResponse.getBody();
+        System.out.println(stringHttpResponse.getBody());
+    }
+
+    @Test
+    public void testHttp() throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://github.com/"))
+                .GET()
+                .build();
+        HttpClient httpClient = HttpClient.newHttpClient();
+        var stringHttpResponse = httpClient.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+        System.out.println(stringHttpResponse.body());
     }
 }

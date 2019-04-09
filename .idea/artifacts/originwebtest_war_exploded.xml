@@ -14,7 +14,7 @@
           <element id="module-output" name="originwebtest" />
         </element>
         <element id="directory" name="lib">
-          <element id="archive" name="origin-framework-1.0-SNAPSHOT.jar">
+          <element id="archive" name="origin-framework-1.1-SNAPSHOT.jar">
             <element id="module-output" name="originframework" />
           </element>
           <element id="library" level="project" name="Maven: junit:junit:4.11" />
