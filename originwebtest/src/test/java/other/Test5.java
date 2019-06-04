@@ -7,6 +7,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import star.bean.*;
+import star.service.TestService;
+import star.service.impl.TestServiceImpl2;
 import star.utils.*;
 
 import javax.servlet.ReadListener;
@@ -15,16 +17,24 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -627,5 +637,265 @@ public class Test5 {
         HttpClient httpClient = HttpClient.newHttpClient();
         var stringHttpResponse = httpClient.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
         System.out.println(stringHttpResponse.body());
+    }
+
+    @Test
+    public void setClassLoader() {
+    }
+
+    @Test
+    public void testEmName() {
+        System.out.println(Status.VALID.name());
+    }
+
+    @Test
+    public void testStreamAndThreadLocal() {
+        ThreadLocal<Long> cache = new ThreadLocal<>();
+        cache.set(100L);
+        System.out.println(Thread.currentThread());
+        System.out.println(cache.get());
+        System.out.println("====");
+        Integer integer = List.of(1, 2).stream().map(x -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(Thread.currentThread());
+            System.out.println(cache.get());
+            return x;
+        }).reduce((x, a) -> x + a).get();
+    }
+
+    @Test
+    public void testDouble() {
+        double _0 = 0;
+        System.out.println(_0 > 0);
+    }
+
+    @Test
+    public void testProxyMethod() {
+        TestService service = new TestServiceImpl2();
+        InvocationHandler invocationHandler = ((proxy, method, args) -> {
+            System.out.println("begin proxy");
+            Object invoke = method.invoke(service);
+            System.out.println("end proxy");
+            return invoke;
+        });
+        TestService proxyInstance = (TestService) Proxy.newProxyInstance(ClassUtil.getClassLoader(), service.getClass().getInterfaces(), invocationHandler);
+        proxyInstance.hello();
+    }
+
+    @Test
+    public void testMapGen() {
+        String json = "{\"3819053-resource_back_times\":1,\"10083-old_resource_change_end_date\":\"2016-10-27\",\"3819053-old_resource_change_end_date\":\"2016-10-27\",\"3819061-resource_back_times\":1,\"10001-old_resource_change_end_date\":null}";
+        HashMap hashMap = JsonUtil.decodeJson(json, HashMap.class);
+        System.out.println(hashMap);
+    }
+
+    @Test
+    public void testSort() {
+        Comparator<String> comparator = (String o1, String o2) -> {
+            if (null == o1 && null == o2) {
+                return 0;
+            } else if (null == o1) {
+                return 1;
+            } else if (null == o2) {
+                return -1;
+            } else {
+                return o1.compareTo(o2);
+            }
+        };
+        User u1 = new User();
+        u1.setName("1");
+        User u2 = new User();
+        u2.setName("2");
+        User u3 = new User();
+        List<User> users = List.of(u1, u3, u2).stream().sorted(Comparator.nullsLast((r1, r2) -> comparator.compare(r1.getName(), r2.getName()))).collect(Collectors.toList());
+        System.out.println(JsonUtil.encodeJson(users));
+    }
+
+    @Test
+    public void testReplace() {
+        User u1 = new User();
+        u1.setName("fkx");
+        u1.setAge(10);
+        System.out.println(JsonUtil.encodeJson(u1).replace(u1.getName(), "name"));
+    }
+
+    @Test
+    public void testFor2() throws Exception {
+        List<Object> objects = List.of();
+        for (int i = 0; i < objects.size(); i++) {
+            Object o = objects.get(i);
+            System.out.println(o);
+        }
+        Thread.sleep(0);
+        System.out.println("---");
+    }
+
+    @Test
+    public void testStack() {
+        try {
+            User u1 = new User();
+            u1.setName("fkx");
+            if (1 == 1) throw new RuntimeException();
+            u1.setAge(10);
+        } catch (RuntimeException e) {
+            e.getStackTrace();
+            StringBuilder stringBuilder = new StringBuilder();
+            for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+                stringBuilder.append("\t").append(stackTraceElement).append("\n");
+            }
+            System.out.println(stringBuilder.toString());
+            System.out.println("---------");
+            System.out.println(StackUtil.getCurrentThreadStack());
+        }
+    }
+
+    @Test
+    public void testClock() throws Exception {
+        long currentTimeMillis = System.currentTimeMillis();
+        long nanoTime = System.nanoTime();
+        Thread.sleep(1000);
+        System.out.println(System.currentTimeMillis() - currentTimeMillis);
+        System.out.println(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - nanoTime));
+    }
+
+    @Test
+    public void testSortS() {
+        User user = new User();
+        user.setAge(1);
+        user.setName("a");
+        User user1 = new User();
+        user1.setAge(2);
+        user1.setName("b");
+        User user2 = new User();
+        user2.setAge(1);
+        user2.setName("c");
+        List<User> collect = List.of(user, user1, user2).stream().sorted(Comparator.comparing(User::getAge)).sorted(Comparator.comparing(User::getName)).collect(Collectors.toList());
+        System.out.println(collect);
+    }
+
+    @Test
+    public void testComputeIfAbsent() throws Exception {
+        ConcurrentHashMap<String, Long> concurrentHashMap = new ConcurrentHashMap<>();
+        Runnable put = () -> {
+            long nanoTime = System.nanoTime();
+            Long test = concurrentHashMap.computeIfAbsent("test", key -> {
+                System.out.println("put " + nanoTime);
+                return nanoTime;
+            });
+            System.out.println(test);
+        };
+        new Thread(put).start();
+        new Thread(put).start();
+        new Thread(put).start();
+        new Thread(put).start();
+        new Thread(put).start();
+        Thread.sleep(1000);
+        System.out.println("-----------------");
+        System.out.println(concurrentHashMap.get("test"));
+    }
+
+    @Test
+    public void testComputeIfAbsent2() {
+        ConcurrentHashMap<String, Long> concurrentHashMap = new ConcurrentHashMap<>();
+        concurrentHashMap.computeIfAbsent("test", key -> 1L);
+        concurrentHashMap.computeIfAbsent("test", key -> 2L);
+        System.out.println(concurrentHashMap.get("test"));
+    }
+
+    @Test
+    public void testSeq() {
+        int[] ints = {10, 9, 2, 5, 7, 18};
+        System.out.println(maxSeq(ints));
+    }
+
+    public int maxSeq(int[] array) {
+        int max = 0;
+        int count = 0;
+        int lastNum = Integer.MIN_VALUE;
+        // 遍历
+        for (int i : array) {
+            // 如果当前值大于前一位，计数器+1
+            if (i > lastNum) {
+                count++;
+                lastNum = i;
+            } else {
+                // count比当前最大值大，替换max
+                if (count > max) {
+                    max = count;
+                }
+                // 重置count为0
+                count = 0;
+                lastNum = Integer.MIN_VALUE;
+            }
+        }
+        if (count > max) {
+            max = count;
+        }
+        return max;
+    }
+
+    @Test
+    public void groupByNull() {
+        User user = new User();
+        user.setAge(1);
+        user.setName("a");
+        User user1 = new User();
+        user1.setAge(2);
+        user1.setName("b");
+        User user2 = new User();
+        user2.setName("c");
+        Map<Integer, List<User>> map = List.of(user, user1, user2).stream().collect(Collectors.groupingBy(User::getAge));
+        System.out.println(map);
+    }
+
+    @Test
+    public void testLastDayOfNextMonth() {
+        LocalDate lastDayOfNextMonth = LocalDate.now().with(TemporalAdjusters.firstDayOfNextMonth()).with(TemporalAdjusters.lastDayOfMonth());
+        System.out.println(lastDayOfNextMonth);
+        long between = ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.now().plusDays(2));
+        System.out.println(between);
+        System.out.println(LocalDate.now().getMonthValue());
+        long between1 = ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.now().with(TemporalAdjusters.lastDayOfMonth()));
+        System.out.println(between1);
+    }
+
+    @Test
+    public void testDaysca() {
+        LocalDate lastDayOfMonth = LocalDate.now().with(TemporalAdjusters.firstDayOfNextMonth());
+        LocalDate lastDayOfNextMonth = lastDayOfMonth.with(TemporalAdjusters.lastDayOfMonth());
+        LocalDate localDate5 = LocalDate.of(2019, 5, 27);
+        LocalDate localDate6 = LocalDate.of(2019, 6, 6);
+        System.out.println(ChronoUnit.DAYS.between(localDate5, lastDayOfMonth));
+        System.out.println(ChronoUnit.DAYS.between(localDate6, lastDayOfNextMonth));
+    }
+
+    @Test
+    public void testInteger() {
+        User user = new User();
+        user.setAge(15);
+        System.out.println(user.getAge() == 15);
+    }
+
+    @Test
+    public void testRemovePrefix() {
+        System.out.println(repeatRemovePrefix("000123", "0"));
+    }
+
+    public String repeatRemovePrefix(String content, String prefix) {
+        if (StringUtil.isEmpty(prefix)) return content;
+        if (StringUtil.isEmpty(content)) return "";
+        if (!content.startsWith(prefix)) return content;
+        return repeatRemovePrefix(content.substring(prefix.length()), prefix);
+    }
+
+    @Test
+    public void double2Int(){
+        Double d = 12.0D;
+        System.out.println(d);
+        System.out.println(d.intValue());
     }
 }

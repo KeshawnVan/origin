@@ -16,11 +16,18 @@ import java.util.List;
 public class TestServiceImpl2 implements TestService {
     public void hello() {
         System.out.println("good");
+        findByNamesAndAge();
     }
 
     @Override
     public List<User> findByNamesAndAge() {
+        System.out.println("findByNamesAndAge");
+        in();
         return null;
+    }
+
+    public void in() {
+        System.out.println("in");
     }
 
     @Override
