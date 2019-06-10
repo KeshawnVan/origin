@@ -1,6 +1,7 @@
 package star.bean;
 
 import star.annotation.bean.Component;
+import star.annotation.bean.ExcelColumn;
 import star.annotation.bean.Inject;
 import star.annotation.repository.Table;
 import star.service.TestService;
@@ -18,14 +19,17 @@ public class UserDTO extends BaseDTO{
 
     private Long id;
 
+    @ExcelColumn(index = 1, value = "名称")
     private String name;
 
     private Integer age;
 
+    @ExcelColumn(index = 2, value = "生日")
     private Instant birthday;
 
     private Status status;
 
+    @ExcelColumn(index = 3, value = "创建人标识")
     private Long createId;
 
     public UserDTO() {
