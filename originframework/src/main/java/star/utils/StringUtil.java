@@ -1,7 +1,5 @@
 package star.utils;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -49,7 +47,11 @@ public final class StringUtil {
     }
 
     public static boolean isEmpty(String string) {
-        return string == null || StringUtils.isEmpty(string.trim());
+        return string == null || empty(string.trim());
+    }
+
+    private static boolean empty(final String cs) {
+        return cs == null || cs.length() == 0;
     }
 
     public static boolean isNotEmpty(String string) {
@@ -70,7 +72,16 @@ public final class StringUtil {
     }
 
     public static boolean checkStringIsAllDigital(String str) {
-        return StringUtils.isNumeric(str);
+        if (isEmpty(str)) {
+            return false;
+        }
+        final int sz = str.length();
+        for (int i = 0; i < sz; i++) {
+            if (!Character.isDigit(str.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static boolean isSame(Object first, Object second) {
