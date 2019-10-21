@@ -1,5 +1,6 @@
 package star.convert;
 
+import com.google.common.collect.Lists;
 import star.annotation.bean.ExcelColumn;
 import star.utils.CollectionUtil;
 import star.utils.ReflectionUtil;
@@ -65,7 +66,7 @@ public class ConverterFactory {
      * @return
      */
     public List<Class> getAllConverter() {
-        return List.of(String2DateConverter.class, Long2DoubleConverter.class);
+        return Lists.newArrayList(String2DateConverter.class, Long2DoubleConverter.class);
     }
 
     class ClassAndGenericType {

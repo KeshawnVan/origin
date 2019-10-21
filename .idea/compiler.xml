@@ -11,14 +11,15 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="origin" target="11" />
-      <module name="originframework" target="11" />
-      <module name="originwebtest" target="11" />
+      <module name="origin" target="1.8" />
+      <module name="originframework" target="1.8" />
+      <module name="originwebtest" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_STRING" value="-parameters" />
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="origin" options="" />
       <module name="originframework" options="" />
       <module name="originwebtest" options="" />
     </option>

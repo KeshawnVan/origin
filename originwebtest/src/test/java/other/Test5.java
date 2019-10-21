@@ -19,11 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -628,16 +623,16 @@ public class Test5 {
         System.out.println(stringHttpResponse.getBody());
     }
 
-    @Test
-    public void testHttp() throws Exception {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://github.com/"))
-                .GET()
-                .build();
-        HttpClient httpClient = HttpClient.newHttpClient();
-        var stringHttpResponse = httpClient.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
-        System.out.println(stringHttpResponse.body());
-    }
+//    @Test
+//    public void testHttp() throws Exception {
+//        HttpRequest request = HttpRequest.newBuilder()
+//                .uri(URI.create("https://github.com/"))
+//                .GET()
+//                .build();
+//        HttpClient httpClient = HttpClient.newHttpClient();
+//        var stringHttpResponse = httpClient.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+//        System.out.println(stringHttpResponse.body());
+//    }
 
     @Test
     public void setClassLoader() {
@@ -655,7 +650,7 @@ public class Test5 {
         System.out.println(Thread.currentThread());
         System.out.println(cache.get());
         System.out.println("====");
-        Integer integer = List.of(1, 2).stream().map(x -> {
+        Integer integer = Lists.newArrayList(1, 2).stream().map(x -> {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -711,7 +706,7 @@ public class Test5 {
         User u2 = new User();
         u2.setName("2");
         User u3 = new User();
-        List<User> users = List.of(u1, u3, u2).stream().sorted(Comparator.nullsLast((r1, r2) -> comparator.compare(r1.getName(), r2.getName()))).collect(Collectors.toList());
+        List<User> users = Lists.newArrayList(u1, u3, u2).stream().sorted(Comparator.nullsLast((r1, r2) -> comparator.compare(r1.getName(), r2.getName()))).collect(Collectors.toList());
         System.out.println(JsonUtil.encodeJson(users));
     }
 
@@ -725,7 +720,7 @@ public class Test5 {
 
     @Test
     public void testFor2() throws Exception {
-        List<Object> objects = List.of();
+        List<Object> objects = Lists.newArrayList();
         for (int i = 0; i < objects.size(); i++) {
             Object o = objects.get(i);
             System.out.println(o);
@@ -773,7 +768,7 @@ public class Test5 {
         User user2 = new User();
         user2.setAge(1);
         user2.setName("c");
-        List<User> collect = List.of(user, user1, user2).stream().sorted(Comparator.comparing(User::getAge)).sorted(Comparator.comparing(User::getName)).collect(Collectors.toList());
+        List<User> collect = Lists.newArrayList(user, user1, user2).stream().sorted(Comparator.comparing(User::getAge)).sorted(Comparator.comparing(User::getName)).collect(Collectors.toList());
         System.out.println(collect);
     }
 
@@ -848,7 +843,7 @@ public class Test5 {
         user1.setName("b");
         User user2 = new User();
         user2.setName("c");
-        Map<Integer, List<User>> map = List.of(user, user1, user2).stream().collect(Collectors.groupingBy(User::getAge));
+        Map<Integer, List<User>> map = Lists.newArrayList(user, user1, user2).stream().collect(Collectors.groupingBy(User::getAge));
         System.out.println(map);
     }
 
@@ -893,9 +888,31 @@ public class Test5 {
     }
 
     @Test
-    public void double2Int(){
+    public void double2Int() {
         Double d = 12.0D;
         System.out.println(d);
         System.out.println(d.intValue());
+    }
+
+    @Test
+    public void testFinallyReturn() {
+        int x = 0;
+        System.out.println(finallyReturn(x));
+    }
+
+    public int finallyReturn(int x) {
+        try {
+            return ++x;
+        } finally {
+            return ++x;
+        }
+    }
+
+    @Test
+    public void testKeyValueJson() {
+        Map<String, String> map = new HashMap<>();
+        map.put("key", "myKey");
+        map.put("value", "{\"value\":\"myValue\",\"key\":\"myKey\"}");
+        System.out.println(JsonUtil.encodeJson(map));
     }
 }
